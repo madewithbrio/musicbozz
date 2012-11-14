@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>WebSocket</title>
+
+<style>
+ html,body{font:normal 0.9em arial,helvetica;}
+ #log {width:440px; height:200px; border:1px solid #7F9DB9; overflow:auto;}
+ #msg {width:330px;}
+</style>
+<script src="http://autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
+<script>
+var musicbozz = (function(){
+   var sess;
+   var wsuri = "ws://localhost:9000";
+   var gameRoom;
+   var public_interface = {};
+
+   var onEventTrigger = function(topic, event) {
+      console.log(event);
+   };
+
+   public_interface.connect = function() {
+      ab.connect(wsuri,
+         function (session) {
+            sess = session;
+            console.log("Connected to " + wsuri);
+         },
+         function (code, reason) {
+            sess = null;
+            console.log("Connection lost (" + reason + ")");
+         }
+      );
+   };
+
+   public_interface.joinGame = function(room) {
+      if (typeof room === "undefined") { room = Math.floor(Math.random()*11); }
+      console.log("join to game room: " + room);
+      gameRoom = "http://localhost/game/"+room;
+      sess.subscribe(gameRoom, onEventTrigger);
+   };
+
+   public_interface.setPlayerName = function(name) {
+      sess.call(gameRoom, 'setPlayerName', name).then(
+    
+         // RPC success callback
+         function (res) {
+            console.log("got result: " + res);
+         },
+    
+         // RPC error callback
+         function (error, desc) {
+            console.log("error: " + desc);
+         }
+      );
+   };
+
+   public_interface.listPlayers = function() {
+      sess.call(gameRoom, 'listPlayers').then(
+    
+         // RPC success callback
+         function (res) {
+            console.log("got result: ");
+            console.log(res);
+         },
+    
+         // RPC error callback
+         function (error, desc) {
+            console.log("error: " + desc);
+         }
+      );
+   };
+
+   public_interface.newQuestion = function() {
+      sess.call(gameRoom, 'newQuestion').then(
+    
+         // RPC success callback
+         function (res) {
+            console.log("got result: ");
+            console.log(res);
+         },
+    
+         // RPC error callback
+         function (error, desc) {
+            console.log("error: " + desc);
+         }
+      );
+   };
+
+   window.onload = function() {
+      public_interface.connect();
+   };
+   
+   return public_interface;
+})();
+</script>
+</head>
+<body>
+  <h1>Game Room #1</h1>
+  <button onclick="publishEvent();">Publish Event</button>
+  <button onclick="callProcedure();">Call Procedure</button>
+  <button onclick="SetName();">Call SetName</button>
+</body>
+</html>
