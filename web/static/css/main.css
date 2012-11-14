@@ -121,11 +121,13 @@ a {text-decoration:none;color:#333;}
 
 
 
-/**************/
-/*** HEADER ***/
-/**************/
-body > header {height:50px;background:#53ACD6;}
-body > header .logo {display:block;width:220px;height:50px;margin:0 auto;background:transparent url(../img/logo.png) no-repeat 0 0;background-size:220px auto;}
+/***********/
+/*** APP ***/
+/***********/
+.app {display:none;}
+
+.app > header {height:50px;background:#53ACD6;}
+.app > header .logo {display:block;width:220px;height:50px;margin:0 auto;background:transparent url(../img/logo.png) no-repeat 0 0;background-size:220px auto;}
 
 .players {list-style:none;padding:0 10px;background:#333;}
 .players li {float:left;width:25%;}
