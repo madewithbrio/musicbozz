@@ -1,6 +1,6 @@
 
 var musicbozz = (function(){
-	var sess, wsuri = "ws://localhost:9000", gameRoom, partialTemplates = {}, master = null;
+	var sess, wsuri = "ws://62.28.238.103:9000", gameRoom, partialTemplates = {}, master = null;
 
 	var getTemplate = function(name) {
 		if (typeof name === "string" && typeof partialTemplates[name] === "string") { return partialTemplates[name] }

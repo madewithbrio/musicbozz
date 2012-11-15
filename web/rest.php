@@ -15,7 +15,7 @@ header("Content-type: text/xml; charset=utf-8");
 ?>
 <question>
 	<url><![CDATA[<?php print $question->trackPreview; ?>]]></url>
-	<type><?php print $question->type; ?></type>
+	<type><![CDATA[<?php print Question_Type::getQuery($question->type); ?>]]></type>
 	<solutions>
 		<?php foreach ($question->solutions as $solution) { ?>
 		<solution><![CDATA[<?php print $solution; ?>]]></solution>
