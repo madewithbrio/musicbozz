@@ -1,6 +1,6 @@
 
 var musicbozz = (function(){
-	var sess, wsuri = "ws://localhost:9000", gameRoom, partialTemplates = {}, master = null;
+	var sess, wsuri = "ws://62.28.238.103:9000", gameRoom, partialTemplates = {}, master = null;
 
 	var getTemplate = function(name) {
 		if (typeof name === "string" && typeof partialTemplates[name] === "string") { return partialTemplates[name] }
@@ -50,9 +50,9 @@ var musicbozz = (function(){
         	$('#start_game').hide();
         } else {
         	if (typeof res[1].name !== 'undefined') {
-        		$('#start_game').removeClass('inactive');	
+        		$('#start_game .go').removeClass('inactive');	
         	} else {
-        		$('#start_game').addClass('inactive');	
+        		$('#start_game .go').addClass('inactive');	
         	}
         }
 	};
@@ -114,7 +114,7 @@ var musicbozz = (function(){
 				playerName 	= $form.find('input[name="name"]').val();
 
 			if (sess == null) {
-				alert("not connect to server.");
+				alert("Sorry! You're connected to the server, whatever that means...");
 				return;
 			}
 
@@ -127,11 +127,14 @@ var musicbozz = (function(){
 			startApp();
 		});
 
-		$("#start_game").bind('click', function(e) {
-			$('#start_game').hide();
-			sess.call(gameRoom, 'newQuestion').then(function() {
-				// setTimeout here ?
-			}, renderError);
+		$("#start_game a").bind('click', function(e) {
+			if($('#start_game .go').hasClass('inactive')) {
+			} else {
+				$('#start_game').hide();
+				sess.call(gameRoom, 'newQuestion').then(function() {
+					// setTimeout here ?
+				}, renderError);
+			}
 		});
 
 		$(document).delegate('a[data-element="answer"]', 'click', function(e){

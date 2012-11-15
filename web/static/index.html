@@ -32,7 +32,7 @@
             <a href="/" title="music bozz" class="start_logo"></a>
             <p>Escreve o teu nome e cala-te, se é que achas que sabes alguma coisinha de música.</p>
             <form action="#newRoom" method="post" class="for_christs_sake_lets_just_get_on_with_it">
-                <input type="text" name="name" placeholder="o teu nome" value="" />
+                <input type="text" name="name" placeholder="o teu nome" value="" required />
                 <input type="submit" value="Entrar" data-action="join" />
             </form>
             <p>Depois podes convidar uns amigos para lhes dares uma sova.</p>
@@ -42,13 +42,13 @@
             <a href="/" title="music bozz" class="start_logo"></a>
             <p>Foste convidado para um jogo de cultura musical para gente grande. Escreve o teu nome e cala-te, se é que queres jogar.</p>
             <form action="#joinRoom" method="post" class="for_christs_sake_lets_just_get_on_with_it">
-                <input type="text" name="name" placeholder="o teu nome" value="" />
+                <input type="text" name="name" placeholder="o teu nome" value="" required />
                 <input type="submit" value="Entrar" data-action="join"/>
             </form>
             <div class="fuck_the_invitation">
                 <p>Ou então caga nisso e cria o teu próprio jogo com outros amigos.</p>
                 <form action="#newRoom" method="post" class="for_christs_sake_lets_just_get_on_with_it">
-                    <input type="text" name="name" placeholder="o teu nome" value="" />
+                    <input type="text" name="name" placeholder="o teu nome" value="" required />
                     <input type="submit" value="Entrar" data-action="join"/>
                 </form>
             </div>
@@ -98,8 +98,14 @@
                     </li>
                 </ul>
 
-                <p>Arranja uns amigos para lhes dares uma sova. Escolhe a opção de adicionar amigos aqui em cima.</p>
-                <a href="" class="start_game inactive" id="start_game">Bora lá jogar!</a>
+                <div id="start_game" class="start_game">
+                    <p>Arranja uns amigos para lhes dares uma sova. Escolhe uma opção de convite:</p>
+                    <ul class="buttons clearfix">
+                        <li><a href="sms:" class="button" >Via SMS</a></li>
+                        <li><a href="#" class="button" >Via link</a></li>
+                    </ul>
+                    <a href="" class="button go inactive" >Bora lá jogar!</a>
+                </div>
 
                 <div class="question" data-template="question"></div>
             </div>
@@ -110,6 +116,11 @@
         </section>
 
         <script type="text/mustache" data-element="template" data-name="question">
+            <div class="song_scrubber">
+                <div class="bar total_time"></div>
+                <div class="bar remaining_time"></div>
+                <p class="timer">30s</p>
+            </div>
             <p class="question_number">{{number}} de 20</p>
             <p class="query">{{query}}</p>
             <ul class="answers">

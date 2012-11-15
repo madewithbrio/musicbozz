@@ -98,20 +98,27 @@ textarea {
 * {-webkit-font-smoothing:antialiased;}
 body {font-family:'Lato','Raleway',sans-serif;color:#333;}
 p,ul {padding:0;margin:0;}
+ul {list-style:none;}
 a {text-decoration:none;color:#333;}
 .active {display:block!important;}
 
+
+.buttons {}
+.buttons li {float:left;margin:0 5px;}
+
+.button {display:block;padding:10px;background:#333;text-transform:uppercase;text-align:center;color:#FFF;}
+.button .inactive {background:#CCC;color:#AAA;}
 
 
 /*************/
 /*** START ***/
 /*************/
-.start_logo {display:block;height:130px;background:transparent url(../img/start_ogo.png) no-repeat 0 0;background-size:320px auto;}
+.start_logo {display:block;height:70px;margin:10px 0 0 0;background:transparent url(../img/start_logo.png) no-repeat 0 0;background-size:320px auto;}
 
 .start {font-size:26px;font-weight:300;display:none;}
-.start p {padding:0 10px;}
+.start p {padding:0 20px;}
 
-.for_christs_sake_lets_just_get_on_with_it {position:relative;height:40px;padding:0 0 20px 0;margin:10px 10px 0 10px;font-size:20px;}
+.for_christs_sake_lets_just_get_on_with_it {position:relative;height:40px;padding:0 0 10px 0;margin:10px 20px 0 20px;font-size:20px;}
 .for_christs_sake_lets_just_get_on_with_it input[type="text"] {position:absolute;top:0;left:0;right:50px;height:34px;padding:2px 5px;font-family:'Lato','Raleway',sans-serif;border:1px solid #333;}
 .for_christs_sake_lets_just_get_on_with_it input[type="text"]:focus {border-color:#53ACD6;outline:none;}
 .for_christs_sake_lets_just_get_on_with_it input[type="submit"] {position:absolute;top:0;right:0;width:40px;height:40px;background:#53ACD6 url(../img/go.png) no-repeat 0 0;background-size:40px auto;text-indent:-999999em;border:none;color:#FFF;}
@@ -129,19 +136,19 @@ a {text-decoration:none;color:#333;}
 .app > header {height:50px;background:#53ACD6;}
 .app > header .logo {display:block;width:220px;height:50px;margin:0 auto;background:transparent url(../img/logo.png) no-repeat 0 0;background-size:220px auto;}
 
-.players {list-style:none;padding:0 10px;background:#333;}
+.players {padding:0 10px;background:#333;}
 .players li {float:left;width:25%;}
 .players li a {display:block;padding:5px;text-align:center;color:#FFF;}
 .players li a .total_points {font-size:20px;font-weight:900;}
-.players li a .thumb {position:relative;width:60px;height:60px;margin:0 auto;background:rgba(255,255,255,0.1);}
+.players li a .thumb {position:relative;width:60px;height:60px;margin:0 auto;background:rgba(255,255,255,0.1) url(../img/bg_thumb.png) no-repeat 0 0;background-size:60px auto;}
 .players li a .thumb img {width:100%;}
 .players li a .thumb .score {position:absolute;top:0;left:0;width:100%;font-size:26px;font-weight:900;line-height:60px;color:#FFF;display:none;}
 .players li a .thumb .score.positive {background:rgba(163,179,0,0.7);}
 .players li a .thumb .score.negative {background:rgba(226,74,74,0.7);}
 .players li a .name {font-size:10px;font-weight:900;text-transform:uppercase;line-height:20px;}
 
-.start_game {display:block;width:260px;padding:10px;margin:30px auto;background:#53ACD6;text-transform:uppercase;text-align:center;color:#FFF;}
-.start_game.inactive {background:#CCC;color:#AAA;}
+.start_game {padding:10px;}
+.start_game .go {margin:30px auto;background:#53ACD6;}
 
 .question {padding:10px;}
 .question .question_number {font-size:12px;font-weight:900;}
@@ -158,6 +165,13 @@ a {text-decoration:none;color:#333;}
 .question .answers li a.correct:after {background:green;}
 .question .answers li a.wrong:after {background:red;}
 
+
+.song_scrubber {position:relative;height:30px;margin:10px;}
+.song_scrubber .bar,
+.song_scrubber .timer {position:absolute;top:0;left:0;width:100%;height:30px;}
+.song_scrubber .total_time {background:rgba(0,0,0,0.1);}
+.song_scrubber .remaining_time {background:#53ACD6;}
+.song_scrubber .timer {line-height:30px;text-align:center;color:#333;}
 
 
 
