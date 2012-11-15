@@ -26,7 +26,7 @@ class GameRoom extends Topic
 
 	public function getQuestion() {
 		if (null === $this->question) {
-			$this->question = Question::factory(Question_Type::getRandom(), $this->questionNumber);
+			$this->question = Question::factory(Question_Type::getRandom(), ++$this->questionNumber);
 		}
 		return $this->question;
 	}
@@ -36,7 +36,6 @@ class GameRoom extends Topic
 		$this->answers = array();
 		$this->playersReadyToPlay = 0;
 
-		++$this->questionNumber;
 		return $this->getQuestion();
 	}
 
@@ -45,7 +44,8 @@ class GameRoom extends Topic
 		$data 				= array($player->getSessionId(), $answer, $isCorrect);
 		$this->answers[] 	= $data;
 		$position 			= (null === $answer) ? 5 : sizeof($this->answers);
-		return array_merge($data, $position);
+		$data[] 			= $position;
+		return $data;
 	}
 
 	public function incPlayersReady() {

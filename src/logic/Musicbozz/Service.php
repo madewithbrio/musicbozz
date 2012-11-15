@@ -14,7 +14,6 @@ class Service implements WampServerInterface {
         $action = array_shift($params);
         switch($action) {
             case 'setPlayerName':
-                printf (" > setPlayerName at %s \n", $gameRoom->getId());
                 $this->setPlayerName($player, $id, $gameRoom, $params);
                 break;
 
@@ -88,23 +87,20 @@ class Service implements WampServerInterface {
 
     private function timeEnded(ConnectionInterface $player, $id, $gameRoom, array $params) {
         $result = $gameRoom->addAnswer($player, null);
-        $player->callResult($id, array());
-
         $this->processAnswer($player, $gameRoom, $result);
 
         if ($gameRoom->isAllPlayersAllreadyResponde()) {
         }
+        $player->callResult($id, array());
     }
 
     private function setAnswer(ConnectionInterface $player, $id, $gameRoom, array $params) {
         $result = $gameRoom->addAnswer($player, $params[0]);
-        $player->callResult($id, array());
-
-
         $this->processAnswer($player, $gameRoom, $result);
 
         if ($gameRoom->isAllPlayersAllreadyResponde()) {
         }
+        $player->callResult($id, array());
     }
 
     private function setReadyToPlay(ConnectionInterface $player, $id, $gameRoom) {
@@ -125,12 +121,13 @@ class Service implements WampServerInterface {
         }
 
         $player->addScore($score);
+        if ($gameMode->isBroadcastPlayerHaveAnswer()) {
 
-        if ($gameMode->isBoardcastPlayerHaveAnswer()) {
+            $event = array();
             $event['action'] = "playerAnswer";
             $event['data'] = array();
             $event['data']['player'] = $player->toWs();
-            if ($gameMode->isBoardcastPlayerAnswer()) {
+            if ($gameMode->isBroadcastPlayerAnswer()) {
                 $event['data']['answer'] = $result[1];
             }
             if ($gameMode->isBroadcastPlayerQuestionScore()) {
@@ -140,6 +137,8 @@ class Service implements WampServerInterface {
                 $event['data']['totalScore'] = $player->getScore();
             }
             $gameRoom->broadcast($event);
+        } else {
+            print "> no broadcast in this game mode\n";
         }
     }
 

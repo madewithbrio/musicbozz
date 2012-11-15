@@ -19,7 +19,7 @@ class Player extends WampConnection {
 	}
 
 	public function setName($name) { $this->name = $name; }
-	public function addScore($soce) { $this->score += $score; }
+	public function addScore($score) { $this->score += $score; }
 
 	public function getName() { return $this->name; }
 	public function getScore() { return $this->score; }
@@ -28,7 +28,7 @@ class Player extends WampConnection {
 		return array(
 			'name' 	=> $this->getName(),
 			'score' => $this->getScore(),
-			'id' 	=> $this->getSessionId
+			'id' 	=> $this->getSessionId()
 			);
 	}
 }
