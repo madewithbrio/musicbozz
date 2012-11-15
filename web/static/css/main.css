@@ -103,11 +103,11 @@ a {text-decoration:none;color:#333;}
 .active {display:block!important;}
 
 
-.buttons {}
-.buttons li {float:left;margin:0 5px;}
+.buttons {padding:10px 0;text-align:center;}
+.buttons li {display:inline-block;margin:0 10px 0 0}
 
 .button {display:block;padding:10px;background:#333;text-transform:uppercase;text-align:center;color:#FFF;}
-.button .inactive {background:#CCC;color:#AAA;}
+.button.inactive {background:#CCC!important;color:#AAA!important;}
 
 
 /*************/
@@ -144,11 +144,13 @@ a {text-decoration:none;color:#333;}
 .players li a .thumb img {width:100%;}
 .players li a .thumb .score {position:absolute;top:0;left:0;width:100%;font-size:26px;font-weight:900;line-height:60px;color:#FFF;display:none;}
 .players li a .thumb .score.positive {background:rgba(163,179,0,0.7);}
+.players li a .thumb .score.positive:before {content:"+";}
 .players li a .thumb .score.negative {background:rgba(226,74,74,0.7);}
 .players li a .name {font-size:10px;font-weight:900;text-transform:uppercase;line-height:20px;}
+.players li a.no_player .name {position:absolute;top:0;left:0;width:100%;padding:10px 0 0 0;font-size:14px;color:rgba(255,255,255,0.5);}
 
 .start_game {padding:10px;}
-.start_game .go {margin:30px auto;background:#53ACD6;}
+.start_game .go {margin:10px auto;background:#53ACD6;}
 
 .question {padding:10px;}
 .question .question_number {font-size:12px;font-weight:900;}
@@ -174,7 +176,8 @@ a {text-decoration:none;color:#333;}
 .song_scrubber .timer {line-height:30px;text-align:center;color:#333;}
 
 
-
+.overlay {position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;}
+.modal {position:absolute;top:50%;left:50%;width:260px;padding:10px;height:200px;margin:-110px 0 0 -140px;background:#EEE;display:none;}
 
 
 

@@ -144,6 +144,13 @@ var musicbozz = (function(){
 			}
 		});
 
+		$(document).delegate('a[href="#share"]', 'click', function(e) {
+			//generate room link at this point
+			$('.overlay').addClass('active');
+			$('#share').addClass('active');
+			$('#share #room_link').select();
+		});
+
 		$(document).delegate('a[data-element="answer"]', 'click', function(e){
 			var $li = $(this).parent();
 			var answer = $li.parent().find('li').index($li);
