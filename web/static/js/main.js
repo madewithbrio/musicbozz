@@ -134,6 +134,12 @@ var musicbozz = (function(){
 			}, renderError);
 		});
 
+		$(document).delegate('a[data-element="answer"]', 'click', function(e){
+			var $li = $(this).parent();
+			var answer = $li.parent().find('li').index($li);
+			sess.call(gameRoom, 'setAnswer', answer);
+		});
+
 		// prevent default all link and submit actions
 		$(document).delegate('a', 'click', function(e){e.preventDefault();});
 		$(document).delegate('form', 'submit', function(e){e.preventDefault();});

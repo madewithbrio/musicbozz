@@ -30,6 +30,10 @@ class Service implements WampServerInterface {
                 $this->timeEnded($player, $id, $gameRoom, $params);
                 break;
 
+            case 'setAnswer':
+                $this->setAnswer($player, $id, $gameRoom, $params);
+                break;
+
             default:
                 $player->callError($id, $gameRoom, 'RPC not supported yet');
                 break;
@@ -71,10 +75,10 @@ class Service implements WampServerInterface {
 
     private function getNewQuestion(ConnectionInterface $player, $id, $gameRoom, array $params) {
         $question = $gameRoom->getNewQuestion();
-        $data=array();
-        $data['action'] = 'newQuestion';
-        $data['data'] = $question->toWs();
-        $gameRoom->broadcast($data);
+        $event=array();
+        $event['action'] = 'newQuestion';
+        $event['data'] = $question->toWs();
+        $gameRoom->broadcast($event);
         $player->callResult($id, array());
     }
 
@@ -82,13 +86,29 @@ class Service implements WampServerInterface {
         $gameRoom->addAnswer($player, null);
         $player->callResult($id, array());
         if ($gameRoom->isAllPlayersAllreadyResponde()) {
-        /**
-            $data=array();
-            $data['action'] = 'AllPlayersAllreadyResponde';
-            $data['data'] = array();
-            $gameRoom->broadcast($data); 
-        **/
-            /** @todo **/
+
+        }
+    }
+
+    private function setAnswer(ConnectionInterface $player, $id, $gameRoom, array $params) {
+        $gameRoom->addAnswer($player, $params[0]);
+        $player->callResult($id, array());
+
+        $tthis->notifyAfterAnswer($player, $gameRoom, $params);
+        if ($gameRoom->isAllPlayersAllreadyResponde()) {
+        }
+    }
+
+    private function notifyAfterAnswer(ConnectionInterface $player, $gameRoom, array $params) {
+        $gameMode = $gameRoom->getGameMode();
+        if ($gameMode->isBoardcastPlayerHaveAnswer()) {
+            $event['action'] = "playerAnswer";
+            $event['data'] = array();
+            $event['data']['player'] = $player->toWs();
+            if ($gameMode->isBoardcastPlayerAnswer()) {
+                $event['data']['answer'] = $params[0];
+            }
+            $gameRoom->broadcast($event);
         }
     }
 
@@ -96,9 +116,7 @@ class Service implements WampServerInterface {
         $players = $gameRoom->getIterator();
         $result = array_fill(0,4,array()); $i = 0;
         foreach ($players as $_player) {
-            $playerItem['name'] = $_player->getName();
-            $playerItem['score'] = $_player->getScore();
-            $result[$i++] = $playerItem;
+            $result[$i++] = $_player->toWs();
         }
         return $result;
     }

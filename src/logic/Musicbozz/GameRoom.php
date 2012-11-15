@@ -9,6 +9,7 @@ class GameRoom extends Topic
 	private $questionNumber = 0;
 	private $question;
 	private $answers;
+	private $gameMode;
 
 	/**
 	 * @ override
@@ -42,5 +43,12 @@ class GameRoom extends Topic
 
 	public function isAllPlayersAllreadyResponde() {
 		return sizeof($this->answers) == $this->count();
+	}
+
+	public function getGameMode() {
+		if (null === $this->gameMode) {
+			$this->gameMode = GameMode::factory('normal');
+		}
+		return $this->gameMode;
 	}
 }

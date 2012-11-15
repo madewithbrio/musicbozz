@@ -114,7 +114,7 @@
             <p class="query">{{query}}</p>
             <ul class="answers">
                 {{#solutions}}
-                <li><a href="#">{{.}}</a></li>
+                <li><a href="#" data-element="answer">{{.}}</a></li>
                 {{/solutions}}
             </ul>
             <audio id="player">
@@ -131,7 +131,7 @@
         <script type="text/mustache" data-element="template" data-name="player">
             <li>
                 {{#name}}
-                <a href="#">
+                <a href="#" data-player-id="{{id}}">
                     <p class="total_points">{{score}}</p>
                     <div class="thumb">
                         <img src="http://lorempixel.com/60/60/people" alt="" />
