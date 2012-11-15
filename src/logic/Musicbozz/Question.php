@@ -59,8 +59,10 @@ class Question {
 	}
 
 	public function isCorrectAnswer($answer) { 
-		if ($answer == null) return true;
-		return $answer == $this->correct; 
+		var_dump($answer);
+		var_dump($this->correct);
+		if ($answer === null) return true;
+		return $answer === $this->correct; 
 	}
 
 	public function toWs() {

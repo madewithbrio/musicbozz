@@ -100,7 +100,7 @@ class Service implements WampServerInterface {
 
         if ($gameRoom->isAllPlayersAllreadyResponde()) {
         }
-        $player->callResult($id, array());
+        $player->callResult($id, array('res' => $result[2]));
     }
 
     private function setReadyToPlay(ConnectionInterface $player, $id, $gameRoom) {
@@ -112,7 +112,9 @@ class Service implements WampServerInterface {
         }
     }
 
-    private function processAnswer(ConnectionInterface $player, $gameRoom, array $result) {
+    private function processAnswer(ConnectionInterface $player, $gameRoom, $result) {
+        if (null === $result) return;
+
         $gameMode = $gameRoom->getGameMode();
         if ($result[2]) { // correct
             $score = $gameMode->getScoreForCorrectAnswer($result[3]);
@@ -137,8 +139,12 @@ class Service implements WampServerInterface {
                 $event['data']['totalScore'] = $player->getScore();
             }
             $gameRoom->broadcast($event);
-        } else {
-            print "> no broadcast in this game mode\n";
+        }
+
+        if ($gameRoom->isAllPlayersAllreadyResponde()) {
+            $event = array();
+            $event['action'] = "allPlayersAllreadyResponde";
+            $gameRoom->broadcast($event);
         }
     }
 

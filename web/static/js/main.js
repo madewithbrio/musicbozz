@@ -1,6 +1,25 @@
+if (!Function.prototype.bind ) {
+	Function.prototype.bind = function( obj ) {
+		var slice = [].slice,
+				args = slice.call(arguments, 1), 
+				self = this, 
+				nop = function () {}, 
+				bound = function () {
+					return self.apply( this instanceof nop ? this : ( obj || {} ), 
+															args.concat( slice.call(arguments) ) );
+				};
+
+		nop.prototype = self.prototype;
+
+		bound.prototype = new nop();
+
+		return bound;
+	};
+}
+
 //"ws://62.28.238.103:9000"
 var musicbozz = (function(){
-	var sess, wsuri = "ws://localhost:9000", gameRoom, partialTemplates = {}, master = null;
+	var sess, wsuri = "ws://62.28.238.103:9000", gameRoom, partialTemplates = {}, master = null;
 
 	var convertDecimalToMinSec = function(decimal) {
 		var hours = Math.floor(decimal/3600,10),
@@ -94,6 +113,15 @@ var musicbozz = (function(){
 		$playerContainer.find('p.score').addClass(clazzName).addClass('active').html(data.questionScore);
 	};
 
+	var resetPlayerAnswer = function() {
+		setTimeout((function(){
+			var $playerContainer = $('a[data-player-id]');
+			$playerContainer.find('p.score').removeClass('active positive negative');
+			if (master) { this.ws.call(gameRoom, 'newQuestion'); }
+			}).bind({ws: sess})
+		,1000);
+	}
+
 	var getInviteRoom = function() {
 		var room = /invite=(\d+)/.exec(window.location.hash);
 		if (!room) return undefined;
@@ -117,6 +145,11 @@ var musicbozz = (function(){
 
 			case 'playerAnswer':
 				renderPlayerAnswer(e.data);
+				break;
+
+			case 'allPlayersAllreadyResponde':
+				$("#player").get(0).pause();
+				resetPlayerAnswer();
 				break;
 
 			default:
@@ -183,8 +216,12 @@ var musicbozz = (function(){
 		$(document).delegate('a[data-element="answer"]', 'click', function(e){
 			var $li = $(this).parent();
 			var answer = $li.parent().find('li').index($li);
-			$("#player").get(0).pause();
-			sess.call(gameRoom, 'setAnswer', answer);
+			//$("#player").get(0).pause();
+			sess.call(gameRoom, 'setAnswer', answer).then(function(data){
+				var clazzName = data.res ? 'correct' : 'wrong';
+				$li.children().addClass(clazzName);
+				$li.parent().addClass('has_answer');
+			}, renderError);
 		});
 
 		// prevent default all link and submit actions
