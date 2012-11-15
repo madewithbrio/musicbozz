@@ -6,8 +6,9 @@ use \Ratchet\Wamp\Topic;
 
 class GameRoom extends Topic
 {
-
+	private $questionNumber = 0;
 	private $question;
+	private $answers;
 
 	/**
 	 * @ override
@@ -23,13 +24,23 @@ class GameRoom extends Topic
 
 	public function getQuestion() {
 		if (null === $this->question) {
-			$this->question = Question::factory(Question_Type::getRandom());
+			$this->question = Question::factory(Question_Type::getRandom(), $this->questionNumber);
 		}
 		return $this->question;
 	}
 
 	public function getNewQuestion(){
 		$this->question = null;
+		$this->answers = array();
+		++$this->questionNumber;
 		return $this->getQuestion();
+	}
+
+	public function addAnswer(ConnectionInterface $player, $answer) {
+		$this->answers[] = array($player->getSessionId(), $answer);
+	}
+
+	public function isAllPlayersAllreadyResponde() {
+		return sizeof($this->answers) == $this->count();
 	}
 }

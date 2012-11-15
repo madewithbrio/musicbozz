@@ -13,7 +13,7 @@ class Player extends WampConnection {
 		$this->name = $name;
 		$this->score = $score;
 	}
-
+	
 	public function getSessionId() {
 		return $this->WAMP->sessionId;
 	}

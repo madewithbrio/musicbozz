@@ -14,6 +14,7 @@ class Service implements WampServerInterface {
         $action = array_shift($params);
         switch($action) {
             case 'setPlayerName':
+                printf (" > setPlayerName at %s \n", $gameRoom->getId());
                 $this->setPlayerName($player, $id, $gameRoom, $params);
                 break;
 
@@ -25,6 +26,10 @@ class Service implements WampServerInterface {
                 $this->getNewQuestion($player, $id, $gameRoom, $params);
                 break;
 
+            case 'timeEnded':
+                $this->timeEnded($player, $id, $gameRoom, $params);
+                break;
+
             default:
                 $player->callError($id, $gameRoom, 'RPC not supported yet');
                 break;
@@ -33,11 +38,13 @@ class Service implements WampServerInterface {
 
     // join to game
     public function onSubscribe(ConnectionInterface $player, $gameRoom) {
-
+        printf (" > new join at %s \n", $gameRoom->getId());
+        $playersList = $this->getPlayers($player, $gameRoom);
+        $gameRoom->broadcast(array('action' => 'newPlayer', 'data' => $playersList));
     }
 
     public function onUnSubscribe(ConnectionInterface $player, $gameRoom) {
-
+        printf (" > leave %s \n", $gameRoom->getId());
     }
 
     public function onOpen(ConnectionInterface $player) {}
@@ -50,30 +57,49 @@ class Service implements WampServerInterface {
             $oldName = $player->getName();
             $player->setName($newName);
             $player->callResult($id, array('msg' => "Name changed"));
+
+            $playersList = $this->getPlayers($player, $gameRoom);
             $gameRoom->broadcast(array('action' => 'playerNameChange', 
-                                       'data' => sprintf("%s have change name to %s", $oldName, $newName)));
+                                       'data'   => $playersList));
         }
     }
 
     private function listPlayers(ConnectionInterface $player, $id, $gameRoom, array $params) {
-        $players = $gameRoom->getIterator();
-        $result = array();
-        foreach ($players as $_player) {
-            $playerItem['name'] = $_player->getName();
-            $playerItem['score'] = $_player->getScore();
-            $playerItem['isMe'] = $_player->getSessionId() == $player->getSessionId();
-            $result[] = $playerItem;
-        }
+        $result = $this->getPlayers($player, $gameRoom);
         $player->callResult($id, $result);
     }
 
     private function getNewQuestion(ConnectionInterface $player, $id, $gameRoom, array $params) {
         $question = $gameRoom->getNewQuestion();
-        var_dump($question);
         $data=array();
         $data['action'] = 'newQuestion';
         $data['data'] = $question->toWs();
         $gameRoom->broadcast($data);
         $player->callResult($id, array());
+    }
+
+    private function timeEnded(ConnectionInterface $player, $id, $gameRoom, array $params) {
+        $gameRoom->addAnswer($player, null);
+        $player->callResult($id, array());
+        if ($gameRoom->isAllPlayersAllreadyResponde()) {
+        /**
+            $data=array();
+            $data['action'] = 'AllPlayersAllreadyResponde';
+            $data['data'] = array();
+            $gameRoom->broadcast($data); 
+        **/
+            /** @todo **/
+        }
+    }
+
+    private function getPlayers(ConnectionInterface $player, $gameRoom) {
+        $players = $gameRoom->getIterator();
+        $result = array_fill(0,4,array()); $i = 0;
+        foreach ($players as $_player) {
+            $playerItem['name'] = $_player->getName();
+            $playerItem['score'] = $_player->getScore();
+            $result[$i++] = $playerItem;
+        }
+        return $result;
     }
 }

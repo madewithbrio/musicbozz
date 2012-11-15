@@ -8,6 +8,7 @@ class Question {
 
 	public $trackPreview;
 	public $type;
+	public $number;
 	public $solutions;
 	public $correct;
 
@@ -20,11 +21,12 @@ class Question {
 		return self::$catalogServiceInstance;
 	}
 
-	public static function factory($type = Question_Type::ARTIST, $retry = 0) {
+	public static function factory($type = Question_Type::ARTIST, $number = 1, $retry = 0) {
 		$track = self::getCatalogInstance()->getRandomTrack();
 
 		$question = new static;
 		$question->type = $type;
+		$question->number = $number;
 		$question->trackPreview = $track->PreviewUrl;
 
 		switch ($type) {
@@ -48,18 +50,17 @@ class Question {
 		// it's a good question, if not retry get other
 		if (sizeof($question->solutions) < 2) {
 			if ($retry >= 2) throw new \Exception("dont have solutions");
-		 	return self::factory($type, ++$retry); 
+		 	return self::factory($type, $number, ++$retry); 
 		}
-
-		var_dump($question);
 		return $question;
 	}
 
 	public function toWs() {
 		return array(
+			'number' 	=> $this->number,
 			'url' 		=> $this->trackPreview,
 			'solutions' => $this->solutions,
-			'type' 		=> $this->type
+			'query' 	=> Question_Type::getQuery($this->type)
 			);
 	}
 }
@@ -70,5 +71,57 @@ class Question_Type {
 
 	public static function getRandom() {
 		return rand(1,2);
+	}
+
+	public static function getQuery($type) {
+		switch ($type) {
+			case self::ARTIST:
+				return "Qual o nome do artista?";
+			
+			case self::TRACK:
+				return "Qual o nome da musica?";
+			default:
+				# code...
+				break;
+		}
+	}
+}
+
+interface Question_Workflow {
+	public function isBoardcastPlayerHaveAnswer();
+	public function isBoardcastPlayerAnswer();
+	public function getScoreForCorrectAnswer($position);
+	public function getScoreForBadAnswer();
+}
+
+final class Question_Normal implements Question_Workflow {
+
+	public function isBoardcastPlayerHaveAnswer() { return true; }
+	public function isBoardcastPlayerAnswer() { return true; }
+	public function getScoreForCorrectAnswer($position) {
+		return 200;
+	}
+
+	public function getScoreForBadAnswer() {
+		return -200;
+	}
+}
+
+final class Question_Speed implements Question_Workflow {
+
+	public function isBoardcastPlayerHaveAnswer() { return true; }
+	public function isBoardcastPlayerAnswer() { return false; }
+	public function getScoreForCorrectAnswer($position) {
+		switch($position) {
+			case 1: return 500;
+			case 2: return 300;
+			case 3: return 200;
+			case 4: return 100;
+			default: return 0;
+		}
+	}
+
+	public function getScoreForBadAnswer() {
+		return 0;
 	}
 }
