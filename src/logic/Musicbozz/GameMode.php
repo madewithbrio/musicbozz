@@ -13,16 +13,42 @@ class GameMode {
 }
 
 interface GameMode_Workflow {
-	public function isBoardcastPlayerHaveAnswer();
-	public function isBoardcastPlayerAnswer();
+	public function isBroadcastPlayerHaveAnswer();
+	public function isBroadcastPlayerAnswer();
+	public function isBroadcastPlayerQuestionScore();
+	public function isBroadcastPlayerTotalScore();
+
 	public function getScoreForCorrectAnswer($position);
 	public function getScoreForBadAnswer();
 }
 
+final class GameMode_Standard implements GameMode_Workflow {
+	public function isBroadcastPlayerHaveAnswer() { return true; }
+	public function isBroadcastPlayerAnswer() { return false; }
+	public function isBroadcastPlayerQuestionScore() { return true; }
+	public function isBroadcastPlayerTotalScore() { return true; }
+
+	public function getScoreForCorrectAnswer($position){
+		switch($position) {
+			case 1: return 50;
+			case 2: return 40;
+			case 3: return 30;
+			case 4: return 20;
+			default: return 0;
+		}		
+	}
+	public function getScoreForBadAnswer() {
+		return -20;
+	}
+}
+
 final class GameMode_Normal implements GameMode_Workflow {
 
-	public function isBoardcastPlayerHaveAnswer() { return true; }
-	public function isBoardcastPlayerAnswer() { return true; }
+	public function isBroadcastPlayerHaveAnswer() { return true; }
+	public function isBroadcastPlayerAnswer() { return true; }
+	public function isBroadcastPlayerQuestionScore() { return true; }
+	public function isBroadcastPlayerTotalScore() { return true; }
+
 	public function getScoreForCorrectAnswer($position) {
 		return 200;
 	}
@@ -34,8 +60,11 @@ final class GameMode_Normal implements GameMode_Workflow {
 
 final class GameMode_Speed implements GameMode_Workflow {
 
-	public function isBoardcastPlayerHaveAnswer() { return true; }
-	public function isBoardcastPlayerAnswer() { return false; }
+	public function isBroadcastPlayerHaveAnswer() { return true; }
+	public function isBroadcastPlayerAnswer() { return false; }
+	public function isBroadcastPlayerQuestionScore() { return true; }
+	public function isBroadcastPlayerTotalScore() { return true; }
+
 	public function getScoreForCorrectAnswer($position) {
 		switch($position) {
 			case 1: return 500;

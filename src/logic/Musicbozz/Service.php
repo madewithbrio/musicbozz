@@ -34,6 +34,10 @@ class Service implements WampServerInterface {
                 $this->setAnswer($player, $id, $gameRoom, $params);
                 break;
 
+            case 'setReadyToPlay':
+                $this->setReadyToPlay($player, $id, $gameRoom);
+                break;
+
             default:
                 $player->callError($id, $gameRoom, 'RPC not supported yet');
                 break;
@@ -83,30 +87,57 @@ class Service implements WampServerInterface {
     }
 
     private function timeEnded(ConnectionInterface $player, $id, $gameRoom, array $params) {
-        $gameRoom->addAnswer($player, null);
+        $result = $gameRoom->addAnswer($player, null);
         $player->callResult($id, array());
-        if ($gameRoom->isAllPlayersAllreadyResponde()) {
 
+        $this->processAnswer($player, $gameRoom, $result);
+
+        if ($gameRoom->isAllPlayersAllreadyResponde()) {
         }
     }
 
     private function setAnswer(ConnectionInterface $player, $id, $gameRoom, array $params) {
-        $gameRoom->addAnswer($player, $params[0]);
+        $result = $gameRoom->addAnswer($player, $params[0]);
         $player->callResult($id, array());
 
-        $tthis->notifyAfterAnswer($player, $gameRoom, $params);
+
+        $this->processAnswer($player, $gameRoom, $result);
+
         if ($gameRoom->isAllPlayersAllreadyResponde()) {
         }
     }
 
-    private function notifyAfterAnswer(ConnectionInterface $player, $gameRoom, array $params) {
+    private function setReadyToPlay(ConnectionInterface $player, $id, $gameRoom) {
+        $gameRoom->incPlayersReady();
+        if ($gameRoom->isAllPlayersReady()) {
+            $event=array();
+            $event['action'] = 'allPlayersReady';
+            $gameRoom->broadcast($event);  
+        }
+    }
+
+    private function processAnswer(ConnectionInterface $player, $gameRoom, array $result) {
         $gameMode = $gameRoom->getGameMode();
+        if ($result[2]) { // correct
+            $score = $gameMode->getScoreForCorrectAnswer($result[3]);
+        } else { // bad
+            $score = $gameMode->getScoreForBadAnswer();
+        }
+
+        $player->addScore($score);
+
         if ($gameMode->isBoardcastPlayerHaveAnswer()) {
             $event['action'] = "playerAnswer";
             $event['data'] = array();
             $event['data']['player'] = $player->toWs();
             if ($gameMode->isBoardcastPlayerAnswer()) {
-                $event['data']['answer'] = $params[0];
+                $event['data']['answer'] = $result[1];
+            }
+            if ($gameMode->isBroadcastPlayerQuestionScore()) {
+                $event['data']['questionScore'] = $score;
+            }
+            if ($gameMode->isBroadcastPlayerTotalScore()) {
+                $event['data']['totalScore'] = $player->getScore();
             }
             $gameRoom->broadcast($event);
         }

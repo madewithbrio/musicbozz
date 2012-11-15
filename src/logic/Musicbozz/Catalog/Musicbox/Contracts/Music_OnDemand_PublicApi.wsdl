@@ -1713,7 +1713,7 @@
   <service name="PublicApi">
     <documentation>Public Api for music box service</documentation>
     <port name="PublicApiSoapSecure" binding="tns:PublicApiSoapSecure">
-      <soap:address location="https://services.bk.sapo.pt/Music/OnDemand/PublicApi" />
+      <soap:address location="https://services.sapo.pt/Music/OnDemand/PublicApi" />
     </port>
   </service>
 </definitions>

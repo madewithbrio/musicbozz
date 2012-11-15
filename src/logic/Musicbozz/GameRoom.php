@@ -9,6 +9,7 @@ class GameRoom extends Topic
 	private $questionNumber = 0;
 	private $question;
 	private $answers;
+	private $playersReadyToPlay = 0;
 	private $gameMode;
 
 	/**
@@ -33,12 +34,26 @@ class GameRoom extends Topic
 	public function getNewQuestion(){
 		$this->question = null;
 		$this->answers = array();
+		$this->playersReadyToPlay = 0;
+
 		++$this->questionNumber;
 		return $this->getQuestion();
 	}
 
 	public function addAnswer(ConnectionInterface $player, $answer) {
-		$this->answers[] = array($player->getSessionId(), $answer);
+		$isCorrect 			= $this->getQuestion()->isCorrectAnswer($answer);
+		$data 				= array($player->getSessionId(), $answer, $isCorrect);
+		$this->answers[] 	= $data;
+		$position 			= (null === $answer) ? 5 : sizeof($this->answers);
+		return array_merge($data, $position);
+	}
+
+	public function incPlayersReady() {
+		++$this->playersReadyToPlay;
+	}
+
+	public function isAllPlayersReady() {
+		return $this->playersReadyToPlay == $this->count();
 	}
 
 	public function isAllPlayersAllreadyResponde() {
@@ -47,7 +62,7 @@ class GameRoom extends Topic
 
 	public function getGameMode() {
 		if (null === $this->gameMode) {
-			$this->gameMode = GameMode::factory('normal');
+			$this->gameMode = GameMode::factory('Standard');
 		}
 		return $this->gameMode;
 	}
