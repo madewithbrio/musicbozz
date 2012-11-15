@@ -7,6 +7,7 @@ class Question {
 	private static $catalogServiceInstance;
 
 	public $trackPreview;
+	public $image;
 	public $type;
 	public $number;
 	public $solutions;
@@ -27,7 +28,9 @@ class Question {
 		$question = new static;
 		$question->type = $type;
 		$question->number = $number;
+
 		$question->trackPreview = $track->PreviewUrl;
+		$question->image = $track->LargeAlbumCover;
 
 		switch ($type) {
 			case Question_Type::TRACK:
@@ -53,6 +56,11 @@ class Question {
 		 	return self::factory($type, $number, ++$retry); 
 		}
 		return $question;
+	}
+
+	public function isCorrectAnswer($answer) { 
+		if ($answer == null) return true;
+		return $answer == $this->correct; 
 	}
 
 	public function toWs() {

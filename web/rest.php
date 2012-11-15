@@ -22,4 +22,5 @@ header("Content-type: text/xml; charset=utf-8");
 		<?php } ?>
 	</solutions>
 	<correct><?php print $question->correct; ?></correct>
+	<image><?php print $question->image; ?></image>
 </question>

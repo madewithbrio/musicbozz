@@ -59,8 +59,11 @@ var musicbozz = (function(){
 
 	var renderQuestion = function(data) {
 		$('div[data-template="question"]').html(Mustache.render(getTemplate('question'), data));
-		var player = $("#player").get(0)
-		player.play();
+		var player = $("#player").get(0);
+
+		$(player).bind('canplay.player', function() {
+			sess.call(gameRoom, 'setReadyToPlay');
+		})
 		$(player).bind('ended.player', function() { 
 			sess.call(gameRoom, 'timeEnded');
 		});
@@ -81,6 +84,10 @@ var musicbozz = (function(){
 		
 			case 'newQuestion':
 				renderQuestion(e.data);
+				break;
+
+			case 'allPlayersReady':
+				$("#player").get(0).play();
 				break;
 
 			default:
