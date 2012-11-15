@@ -14,7 +14,6 @@ class Service implements WampServerInterface {
         $action = array_shift($params);
         switch($action) {
             case 'setPlayerName':
-                printf (" > setPlayerName at %s \n", $gameRoom->getId());
                 $this->setPlayerName($player, $id, $gameRoom, $params);
                 break;
 
@@ -88,23 +87,20 @@ class Service implements WampServerInterface {
 
     private function timeEnded(ConnectionInterface $player, $id, $gameRoom, array $params) {
         $result = $gameRoom->addAnswer($player, null);
-        $player->callResult($id, array());
-
         $this->processAnswer($player, $gameRoom, $result);
 
         if ($gameRoom->isAllPlayersAllreadyResponde()) {
         }
+        $player->callResult($id, array());
     }
 
     private function setAnswer(ConnectionInterface $player, $id, $gameRoom, array $params) {
         $result = $gameRoom->addAnswer($player, $params[0]);
-        $player->callResult($id, array());
-
-
         $this->processAnswer($player, $gameRoom, $result);
 
         if ($gameRoom->isAllPlayersAllreadyResponde()) {
         }
+        $player->callResult($id, array('res' => $result[2]));
     }
 
     private function setReadyToPlay(ConnectionInterface $player, $id, $gameRoom) {
@@ -116,7 +112,9 @@ class Service implements WampServerInterface {
         }
     }
 
-    private function processAnswer(ConnectionInterface $player, $gameRoom, array $result) {
+    private function processAnswer(ConnectionInterface $player, $gameRoom, $result) {
+        if (null === $result) return;
+
         $gameMode = $gameRoom->getGameMode();
         if ($result[2]) { // correct
             $score = $gameMode->getScoreForCorrectAnswer($result[3]);
@@ -125,12 +123,13 @@ class Service implements WampServerInterface {
         }
 
         $player->addScore($score);
+        if ($gameMode->isBroadcastPlayerHaveAnswer()) {
 
-        if ($gameMode->isBoardcastPlayerHaveAnswer()) {
+            $event = array();
             $event['action'] = "playerAnswer";
             $event['data'] = array();
             $event['data']['player'] = $player->toWs();
-            if ($gameMode->isBoardcastPlayerAnswer()) {
+            if ($gameMode->isBroadcastPlayerAnswer()) {
                 $event['data']['answer'] = $result[1];
             }
             if ($gameMode->isBroadcastPlayerQuestionScore()) {
@@ -139,6 +138,12 @@ class Service implements WampServerInterface {
             if ($gameMode->isBroadcastPlayerTotalScore()) {
                 $event['data']['totalScore'] = $player->getScore();
             }
+            $gameRoom->broadcast($event);
+        }
+
+        if ($gameRoom->isAllPlayersAllreadyResponde()) {
+            $event = array();
+            $event['action'] = "allPlayersAllreadyResponde";
             $gameRoom->broadcast($event);
         }
     }

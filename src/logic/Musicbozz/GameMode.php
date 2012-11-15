@@ -5,9 +5,9 @@ class GameMode {
 
 	private function __construct() {}
 	public static function factory($mode) {
-		$reflectionClass = new ReflectionClass("GameMode_".$mode);
-		if (!$reflectionClass->isSubclassOf("GameMode_Workflow")) throw new Exception("class ".$mode." is not GameMode_Workflow", -1);
-		if (!$reflectionClass->IsInstantiable()) throw new Exception("class ".$mode." is not instantiable", -1);
+		$reflectionClass = new \ReflectionClass("Musicbozz\GameMode_".$mode);
+		if (!$reflectionClass->isSubclassOf("Musicbozz\GameMode_Workflow")) throw new \Exception("class ".$mode." is not GameMode_Workflow", -1);
+		if (!$reflectionClass->IsInstantiable()) throw new \Exception("class ".$mode." is not instantiable", -1);
 		return $reflectionClass->newInstance();
 	}
 }
@@ -76,6 +76,6 @@ final class GameMode_Speed implements GameMode_Workflow {
 	}
 
 	public function getScoreForBadAnswer() {
-		return 0;
+		return -100;
 	}
 }

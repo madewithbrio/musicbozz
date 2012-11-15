@@ -15,18 +15,24 @@ class GameRoom extends Topic
 	/**
 	 * @ override
 	 */
-	public function add(ConnectionInterface $conn) {
-		if ($this->count() >= 4){
-			$conn->close();
+	public function add(ConnectionInterface $player) {
+		if ($this->count() == 0) {
+			$player->setMaster(true);
+			$this->questionNumber = 0;
+		}
+
+		// room closed
+		if ($this->questionNumber != 0 || $this->count() >= 4) {
+			$player->close();
 			return;
 		}
-		parent::add($conn);
+		parent::add($player);
 	}
 
 
 	public function getQuestion() {
 		if (null === $this->question) {
-			$this->question = Question::factory(Question_Type::getRandom(), $this->questionNumber);
+			$this->question = Question::factory(Question_Type::getRandom(), ++$this->questionNumber);
 		}
 		return $this->question;
 	}
@@ -36,16 +42,20 @@ class GameRoom extends Topic
 		$this->answers = array();
 		$this->playersReadyToPlay = 0;
 
-		++$this->questionNumber;
 		return $this->getQuestion();
 	}
 
 	public function addAnswer(ConnectionInterface $player, $answer) {
+		foreach ($this->answers as $_answer) {
+			if ($_answer[0] == $player->getSessionId()) return;
+		}
+
 		$isCorrect 			= $this->getQuestion()->isCorrectAnswer($answer);
 		$data 				= array($player->getSessionId(), $answer, $isCorrect);
 		$this->answers[] 	= $data;
 		$position 			= (null === $answer) ? 5 : sizeof($this->answers);
-		return array_merge($data, $position);
+		$data[] 			= $position;
+		return $data;
 	}
 
 	public function incPlayersReady() {
@@ -61,9 +71,15 @@ class GameRoom extends Topic
 	}
 
 	public function getGameMode() {
-		if (null === $this->gameMode) {
-			$this->gameMode = GameMode::factory('Standard');
-		}
+		//if (null === $this->gameMode) {
+			if ($this->questionNumber < 5) {
+				$this->gameMode = GameMode::factory('Standard');
+			} else if ($this->questionNumber < 10) {
+				$this->gameMode = GameMode::factory('Normal');
+			} else {
+				$this->gameMode = GameMode::factory('Speed');
+			}
+		//}
 		return $this->gameMode;
 	}
 }

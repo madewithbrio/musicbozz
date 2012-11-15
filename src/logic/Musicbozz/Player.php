@@ -7,6 +7,7 @@ use \Ratchet\Wamp\WampConnection;
 class Player extends WampConnection {
 	private $name;
 	private $score;
+	private $master;
 
 	public function __construct (Conn $conn, $name = "player", $score = 0) {
 		parent::__construct($conn);
@@ -19,16 +20,19 @@ class Player extends WampConnection {
 	}
 
 	public function setName($name) { $this->name = $name; }
-	public function addScore($soce) { $this->score += $score; }
+	public function addScore($score) { $this->score += $score; }
 
 	public function getName() { return $this->name; }
 	public function getScore() { return $this->score; }
 
+	public function setMaster($bool) { $this->master = $master; }
+	public function isMaster() { return $this->master; }
+	
 	public function toWs() {
 		return array(
 			'name' 	=> $this->getName(),
 			'score' => $this->getScore(),
-			'id' 	=> $this->getSessionId
+			'id' 	=> $this->getSessionId()
 			);
 	}
 }

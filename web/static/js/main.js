@@ -1,6 +1,35 @@
+if (!Function.prototype.bind ) {
+	Function.prototype.bind = function( obj ) {
+		var slice = [].slice,
+				args = slice.call(arguments, 1), 
+				self = this, 
+				nop = function () {}, 
+				bound = function () {
+					return self.apply( this instanceof nop ? this : ( obj || {} ), 
+															args.concat( slice.call(arguments) ) );
+				};
 
+		nop.prototype = self.prototype;
+
+		bound.prototype = new nop();
+
+		return bound;
+	};
+}
+
+//"ws://62.28.238.103:9000"
 var musicbozz = (function(){
 	var sess, wsuri = "ws://62.28.238.103:9000", gameRoom, partialTemplates = {}, master = null;
+
+	var convertDecimalToMinSec = function(decimal) {
+		var hours = Math.floor(decimal/3600,10),
+			mins  = Math.floor((decimal - hours*60)/60,10),
+  		    secs  = Math.floor(decimal - mins*60);
+  		if (mins < 10) mins = "0" + mins;  
+  		if (secs < 10) secs = "0" + secs;
+  		if (hours > 0) mins = hours + ":" + mins;
+  		return mins+":"+secs;
+	};
 
 	var getTemplate = function(name) {
 		if (typeof name === "string" && typeof partialTemplates[name] === "string") { return partialTemplates[name] }
@@ -61,13 +90,37 @@ var musicbozz = (function(){
 		$('div[data-template="question"]').html(Mustache.render(getTemplate('question'), data));
 		var player = $("#player").get(0);
 
+		$(player).bind('timeupdate.player', function(e){
+			if ((player.currentTime != undefined)) {
+			    played = parseInt((100 - (player.currentTime / player.duration) * 100), 10);
+			    scrubber = $('div.song_scrubber');
+			    scrubber.find('.remaining_time').css({width: played + '%'});
+			    scrubber.find('p.timer').html(convertDecimalToMinSec(player.duration - player.currentTime));
+			}
+		});
 		$(player).bind('canplay.player', function() {
 			sess.call(gameRoom, 'setReadyToPlay');
-		})
+		});
 		$(player).bind('ended.player', function() { 
 			sess.call(gameRoom, 'timeEnded');
 		});
 	};
+
+	var renderPlayerAnswer = function(data) {
+		var $playerContainer = $('a[data-player-id="'+data.player.id+'"]');
+		$playerContainer.find('p.total_points').html(data.totalScore);
+		var clazzName = data.questionScore > 0 ? 'positive' : 'negative';
+		$playerContainer.find('p.score').addClass(clazzName).addClass('active').html(data.questionScore);
+	};
+
+	var resetPlayerAnswer = function() {
+		setTimeout((function(){
+			var $playerContainer = $('a[data-player-id]');
+			$playerContainer.find('p.score').removeClass('active positive negative');
+			if (master) { this.ws.call(gameRoom, 'newQuestion'); }
+			}).bind({ws: sess})
+		,1000);
+	}
 
 	var getInviteRoom = function() {
 		var room = /invite=(\d+)/.exec(window.location.hash);
@@ -88,6 +141,15 @@ var musicbozz = (function(){
 
 			case 'allPlayersReady':
 				$("#player").get(0).play();
+				break;
+
+			case 'playerAnswer':
+				renderPlayerAnswer(e.data);
+				break;
+
+			case 'allPlayersAllreadyResponde':
+				$("#player").get(0).pause();
+				resetPlayerAnswer();
 				break;
 
 			default:
@@ -154,7 +216,12 @@ var musicbozz = (function(){
 		$(document).delegate('a[data-element="answer"]', 'click', function(e){
 			var $li = $(this).parent();
 			var answer = $li.parent().find('li').index($li);
-			sess.call(gameRoom, 'setAnswer', answer);
+			//$("#player").get(0).pause();
+			sess.call(gameRoom, 'setAnswer', answer).then(function(data){
+				var clazzName = data.res ? 'correct' : 'wrong';
+				$li.children().addClass(clazzName);
+				$li.parent().addClass('has_answer');
+			}, renderError);
 		});
 
 		// prevent default all link and submit actions
