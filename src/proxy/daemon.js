@@ -39,6 +39,7 @@ var proxy = http.createServer(
 				break;
 
 			case 'pull':
+				if (!instanceList[id]) return http_error(response, 500, 'invalid id');
 				break;
 
 			default: return http_error(response, 500, 'invalid action');
