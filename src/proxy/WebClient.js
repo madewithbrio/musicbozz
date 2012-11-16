@@ -10,33 +10,50 @@ WebClient = function() {
 		ws = new WebSocket.Client('ws://62.28.238.103:9000/'),
 		timestamp = now(),
 		events = [],
-		room;
+		room = null,
+		isConnected = false;
 
-	var getRoomURL = function() { return "http://localhost/game/" + this.room; };
+	ws.client = interface_public;
 
-	ws.onopen = function(event) {
-	  console.log('open');
+	ws.onopen = function(event) 
+	{
+		this.client.setConnected();
+console.log('open');
 //	  ws.send('Hello, world!');
 	};
 
-	ws.onmessage = function(event) {
-		console.log('message', event.data);
+	ws.onmessage = function(event)
+	{
+console.log('message', event.data);
 		var data = JSON.parse(event.data);
 		var typeId = data[0];
-		if (typeId == 0) 
-			ws.send(JSON.serialize([5, this.getRoomURL()]));
+		if (typeId == 0)
+		{
+			if (this.client.roomIsSet())
+			{
+				var subscribeMessage = JSON.stringify([5, this.client.getRoomURL()]);
+console.log("sending subscribe", subscribeMessage);
+				this.send(subscribeMessage);
+			}
+		}
 		else if (typeId == 3 || typeId == 4 || typeId == 8) 
-			this.events.push(data[2]);
+			this.client.addEvent(data[2]);
 	};
 
-	ws.onclose = function(event) {
-	  console.log('close', event.code, event.reason);
-	  ws = null;
+	ws.onclose = function(event)
+	{
+		isConnected = false;
+console.log('close', event.code, event.reason);
+		ws = null;
 	};
 
 	interface_public.send = function(action, param)
 	{
-		if ('subscribe' == action) return this.room = param;
+console.log('try send', action, isConnected, this.roomIsSet());
+		if ('subscribe' == action) return room = param;
+		if (!isConnected) return false;
+		if (!this.roomIsSet()) return false;
+
 		var data = [2, hash.newId(), this.getRoomURL(), action];
 		if (param) data.push(param);
 console.log("sending", data);
@@ -45,16 +62,20 @@ console.log("sending", data);
 
 	interface_public.getEvents = function()
 	{
-		var events = this.events;
-		this.events = [];
-		this.timestamp = now();
-		return events;
+console.log('getEvents', events.length, events);
+		var eventsCopy = events;
+		events = [];
+		timestamp = now();
+console.log('getEvents return', eventsCopy.length, eventsCopy);
+		return eventsCopy;
 	};
 
-	interface_public.expired = function()
-	{
-		return now() - this.timestamp > 120000;
-	};
+	interface_public.addEvent = function(e) { events.push(e); };
+	interface_public.expired = function() { return now() - timestamp > 120000; };
+	interface_public.getRoomURL = function() { return "http://localhost/game/" + room; };
+	interface_public.roomIsSet = function() { return !!room; };
+	interface_public.disconnect = function() { ws.close(); };
+	interface_public.setConnected = function() { isConnected = true; };
 
 	return interface_public;
 }
@@ -66,8 +87,8 @@ hash.idlen = 16;
 hash.newId = function()
 {
    var id = "";
-   for (var i = 0; i < ab.idlen; i += 1) {
-      id += ab.idchars.charAt(Math.floor(Math.random() * ab.idchars.length));
+   for (var i = 0; i < hash.idlen; i += 1) {
+      id += hash.idchars.charAt(Math.floor(Math.random() * hash.idchars.length));
    }
    return id;
 };
