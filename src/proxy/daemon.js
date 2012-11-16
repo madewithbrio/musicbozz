@@ -89,9 +89,11 @@ clearClients();
 
 function to_xml(data)
 {
+	var l = data.length;
+
 console.log(data);
-	var xml = '<?xml version="1.0" encoding="utf-8"?>\n<Events>';
-	for(var i = 0, l = data.length; i < l; i++)
+	var xml = '<?xml version="1.0" encoding="utf-8"?>\n<Events><TotalEvents>' + l + '</TotalEvents>';
+	for(var i = 0; i < l; i++)
 	{
 		var ev = data[i];
 		xml += "<Event>";
