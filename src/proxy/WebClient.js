@@ -60,7 +60,9 @@ console.log('try send', action, isConnected, this.roomIsSet());
 		if ('subscribe' == action)
 		{
 			room = param;
-			if (isSubscribed) ws.sendSubscribe(); 
+			if (isSubscribed) 
+				if (ws) ws.sendSubscribe();
+				else return false;
 			return true; 
 		}
 		if (!isConnected) return false;
