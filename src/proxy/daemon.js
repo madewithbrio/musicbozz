@@ -118,7 +118,7 @@ function to_xml_val(data)
 			if (data.hasOwnProperty(key))
 			{
 				if (isNaN(key))
-					xml+= "<" + key + ">" + to_xml_val(data[key]) + "</" + key + ">";
+					xml+= "<" + key + "><![CDATA[" + to_xml_val(data[key]) + "]]></" + key + ">";
 				else
 					xml+= "<ListItem>" + to_xml_val(data[key]) + "</ListItem>";
 			}

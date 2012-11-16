@@ -182,6 +182,10 @@ var musicbozz = (function(){
 				action 		= $form.attr('action'),
 				playerName 	= $form.find('input[name="name"]').val();
 
+			if ($form.find('input[name="room"]').length) {
+				room 		= $form.find('input[name="room"]').val();
+			}
+			
 			if (sess == null) {
 				alert("Sorry! You're connected to the server, whatever that means...");
 				return;
