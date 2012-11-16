@@ -8,8 +8,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>music bozz</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
-
+        
+        <!-- Mobile viewport optimization h5bp.com/ad -->
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
         <link href='http://fonts.googleapis.com/css?family=Raleway:400,900,700,500,300,600,800,200,100' rel='stylesheet' type='text/css'>
@@ -40,7 +43,7 @@
 
         <section class="start by_invitation">
             <a href="/" title="music bozz" class="start_logo"></a>
-            <p>Foste convidado para um jogo de cultura musical para gente grande. Escreve o teu nome e cala-te, se é que queres jogar.</p>
+            <p>Foste convidado para um jogo de cultura musical <span class="room_id"></span> para gente grande. Escreve o teu nome e cala-te, se é que queres jogar.</p>
             <form action="#joinRoom" method="post" class="for_christs_sake_lets_just_get_on_with_it">
                 <input type="text" name="name" placeholder="o teu nome" value="" required autofocus />
                 <input type="submit" value="Entrar" data-action="join"/>
@@ -58,7 +61,7 @@
 
             <header>
                 <a href="/" title="music bozz" class="logo"></a>
-                <p class="room">Sala <span id="room_id">10</span></p>
+                <p class="room">Sala <span class="room_id">10</span></p>
             </header>
 
             <div class="main">
@@ -67,7 +70,7 @@
                 <div id="start_game" class="start_game">
                     <p>Arranja uns amigos para lhes dares uma sova:</p>
                     <ul class="buttons clearfix">
-                        <li><a href="sms:" class="button">Enviar SMS</a></li>
+                        <li class="sms"><a href="sms:" class="button">Enviar SMS</a></li>
                         <li><a href="#share" class="button">Partilhar link</a></li>
                     </ul>
                     <a href="" class="button go inactive">Bora lá jogar!</a>
@@ -85,6 +88,9 @@
                 </div>
             </footer>
 
+            <audio id="player" preload>
+                <source />
+            </audio>
         </section>
 
         <script type="text/mustache" data-element="template" data-name="question">
@@ -102,9 +108,6 @@
                 <li><a href="#" data-element="answer">{{.}}</a></li>
                 {{/solutions}}
             </ul>
-            <audio id="player" preload>
-                <source src="{{url}}" />
-            </audio>
         </script>
 
         <script type="text/mustache" data-element="template" data-name="players">
