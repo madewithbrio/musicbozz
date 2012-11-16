@@ -11,7 +11,8 @@ WebClient = function() {
 		timestamp = now(),
 		events = [],
 		room = null,
-		isConnected = false;
+		isConnected = false,
+		isSubscribed = false;
 
 	ws.client = interface_public;
 
@@ -31,9 +32,8 @@ console.log('message', event.data);
 		{
 			if (this.client.roomIsSet())
 			{
-				var subscribeMessage = JSON.stringify([5, this.client.getRoomURL()]);
-console.log("sending subscribe", subscribeMessage);
-				this.send(subscribeMessage);
+				this.sendSubscribe();
+				isSubscribed = true;
 			}
 		}
 		else if (typeId == 3 || typeId == 4 || typeId == 8) 
@@ -47,10 +47,22 @@ console.log('close', event.code, event.reason);
 		ws = null;
 	};
 
+	ws.sendSubscribe = function()
+	{
+		var subscribeMessage = JSON.stringify([5, this.client.getRoomURL()]);
+console.log("sending subscribe", subscribeMessage);
+		this.send(subscribeMessage);
+	};
+
 	interface_public.send = function(action, param)
 	{
 console.log('try send', action, isConnected, this.roomIsSet());
-		if ('subscribe' == action) return room = param;
+		if ('subscribe' == action)
+		{
+			room = param;
+			if (isSubscribed) ws.sendSubscribe(); 
+			return true; 
+		}
 		if (!isConnected) return false;
 		if (!this.roomIsSet()) return false;
 
@@ -63,11 +75,10 @@ console.log("sending", data);
 
 	interface_public.getEvents = function()
 	{
-console.log('getEvents', events.length, events);
+if (events.length) console.log('getEvents', events.length, events);
 		var eventsCopy = events;
 		events = [];
 		timestamp = now();
-console.log('getEvents return', eventsCopy.length, eventsCopy);
 		return eventsCopy;
 	};
 

@@ -62,12 +62,14 @@ if (action != 'pull') console.log(id, action, param);
 		}
 if (action != 'pull') console.log(events);
 		response.writeHead(200, {'Content-Type': contentType});
+console.log("====\n" + events + "\n====");
 		response.end(events);
 	}
 );
 
 function http_error(response, code, text)
 {
+console.log("---- Error returned: " + text);
     response.writeHead(code, {'Content-Type': 'text/plain'});
     response.end(text);
 };
@@ -118,12 +120,12 @@ function to_xml_val(data)
 			if (data.hasOwnProperty(key))
 			{
 				if (isNaN(key))
-					xml+= "<" + key + "><![CDATA[" + to_xml_val(data[key]) + "]]></" + key + ">";
+					xml+= "<" + key + ">" + to_xml_val(data[key]) + "</" + key + ">";
 				else
 					xml+= "<ListItem>" + to_xml_val(data[key]) + "</ListItem>";
 			}
 		return xml;
 	}
 	else
-		return data;
+		return '<![CDATA[' + data + ']]>';
 }
