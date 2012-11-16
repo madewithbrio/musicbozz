@@ -18,6 +18,7 @@ class GameRoom extends Topic
 	public function add(ConnectionInterface $player) {
 		if ($this->count() == 0) {
 			$player->setMaster(true);
+			print "unlock room ";
 			$this->questionNumber = 0;
 		}
 
@@ -46,14 +47,16 @@ class GameRoom extends Topic
 	}
 
 	public function addAnswer(ConnectionInterface $player, $answer) {
+		$position = 1;
 		foreach ($this->answers as $_answer) {
 			if ($_answer[0] == $player->getSessionId()) return;
+			if ($_answer[2]) $position++;
 		}
 
 		$isCorrect 			= $this->getQuestion()->isCorrectAnswer($answer);
 		$data 				= array($player->getSessionId(), $answer, $isCorrect);
 		$this->answers[] 	= $data;
-		$position 			= (null === $answer) ? 5 : sizeof($this->answers);
+		if ($isCorrect || null === $answers) { $position = 5; }
 		$data[] 			= $position;
 		return $data;
 	}

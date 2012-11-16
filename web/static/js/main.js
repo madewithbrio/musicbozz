@@ -66,6 +66,8 @@ var musicbozz = (function(){
 		console.log("join to game room: " + room);
 		gameRoom = "http://localhost/game/"+room;
 		sess.subscribe(gameRoom,onEvent);
+		$('.room_id').html(room);
+		location.hash = "#room="+room;
 	};
 
 	var listPlayers = function() {
@@ -89,21 +91,8 @@ var musicbozz = (function(){
 	var renderQuestion = function(data) {
 		$('div[data-template="question"]').html(Mustache.render(getTemplate('question'), data));
 		var player = $("#player").get(0);
-
-		$(player).bind('timeupdate.player', function(e){
-			if ((player.currentTime != undefined)) {
-			    played = parseInt((100 - (player.currentTime / player.duration) * 100), 10);
-			    scrubber = $('div.song_scrubber');
-			    scrubber.find('.remaining_time').css({width: played + '%'});
-			    scrubber.find('p.timer').html(convertDecimalToMinSec(player.duration - player.currentTime));
-			}
-		});
-		$(player).bind('canplay.player', function() {
-			sess.call(gameRoom, 'setReadyToPlay');
-		});
-		$(player).bind('ended.player', function() { 
-			sess.call(gameRoom, 'timeEnded');
-		});
+		$(player).children().attr('src', data.url);
+		player.load();
 	};
 
 	var renderPlayerAnswer = function(data) {
@@ -125,7 +114,7 @@ var musicbozz = (function(){
 	}
 
 	var getInviteRoom = function() {
-		var room = /invite=(\d+)/.exec(window.location.hash);
+		var room = /room=(\d+)/.exec(window.location.hash);
 		if (!room) return undefined;
 		return room[1];
 	};
@@ -174,12 +163,17 @@ var musicbozz = (function(){
 
 		room = getInviteRoom();
 		if (typeof room !== 'undefined') {
+			$('.room_id').html(room);
 			$('section.start.by_invitation').addClass('active');
 		} else {
 			$('section.start.new_game').addClass('active');
 		}
 
 		$('input[type="submit"][data-action="join"]').bind('click', function(e){
+			
+			player.play();
+			player.pause();
+
 			var $form 		= $(this).parent(), 
 				action 		= $form.attr('action'),
 				playerName 	= $form.find('input[name="name"]').val();
@@ -217,7 +211,7 @@ var musicbozz = (function(){
 			//generate room link at this point
 			$('.overlay').addClass('active');
 			$('.modal').addClass('active');
-			$('#share #room_link').select();
+			$('#share #room_link').val(window.location).select();
 		});
 
 		$(document).delegate('a[data-element="answer"]', 'click.answer', function(e){
@@ -231,6 +225,28 @@ var musicbozz = (function(){
 				$li.parent().addClass('has_answer');
 			}, renderError);
 		});
+
+		var player = $('#player').get(0);
+		$('input[type="submit"][data-action="join"]').bind('touchstart', function(){
+			alert("dafv");
+
+		});
+
+		$(player).bind('timeupdate.player', function(e){
+			if ((player.currentTime != undefined)) {
+			    played = parseInt((100 - (player.currentTime / player.duration) * 100), 10);
+			    scrubber = $('div.song_scrubber');
+			    scrubber.find('.remaining_time').css({width: played + '%'});
+			    scrubber.find('p.timer').html(convertDecimalToMinSec(player.duration - player.currentTime));
+			}
+		});
+		$(player).bind('canplay.player', function() {
+			sess.call(gameRoom, 'setReadyToPlay');
+		});
+		$(player).bind('ended.player', function() { 
+			sess.call(gameRoom, 'timeEnded');
+		});
+
 
 		// prevent default all link and submit actions
 		$(document).delegate('a', 'click', function(e){e.preventDefault();});
