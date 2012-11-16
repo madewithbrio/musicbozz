@@ -34,9 +34,11 @@ var proxy = http.createServer(
 			case 'newQuestion':
 			case 'timeEnded':
 			case 'setReadyToPlay':
-			case 'pull':
 				if (!instanceList[id]) instanceList[id] = new WebClient(id);
 				instanceList[id].send(action, param); 
+				break;
+
+			case 'pull':
 				break;
 
 			default: return http_error(response, 500, 'invalid action');
@@ -46,12 +48,14 @@ console.log(id, action, param);
 		if (url.match(/\?xml$/))
 		{
 			contentType = 'text/xml';
-			events = to_xml(instanceList[id].getEvents());
+			if (action == 'pull') events = to_xml(instanceList[id].getEvents());
+			else events = to_xml([]);
 		}
 		else
 		{
 			contentType = 'application/json‎';
-			events = JSON.stringify(instanceList[id].getEvents());
+			if (action == 'pull') events = JSON.stringify(instanceList[id].getEvents());
+			else events = '[]';
 		}
 console.log(events);
 		response.writeHead(200, {'Content-Type': contentType});
