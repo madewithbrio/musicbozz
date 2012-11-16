@@ -98,7 +98,7 @@ console.log(data);
 	{
 		var ev = data[i];
 		xml += "<Event>";
-		if (!ev.action) ev.action = '';
+		if (!ev.action) ev.action = 'ignore';
 		xml += to_xml_val(ev);
 console.log(ev);
 		xml += "</Event>";
