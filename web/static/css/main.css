@@ -96,11 +96,13 @@ textarea {
 
 
 * {-webkit-font-smoothing:antialiased;}
-body {font-family:'Lato','Raleway',sans-serif;font-size:26px;font-weight:300;color:#333;}
+body {position:relative;font-family:'Lato','Raleway',sans-serif;font-size:26px;font-weight:300;color:#333;}
 p,ul {padding:0;margin:0;}
 ul {list-style:none;}
 a {text-decoration:none;color:#333;}
 .active {display:block!important;}
+
+.loader {position:fixed;top:50%;left:50%;width:50px;height:50px;margin:-25px 0 0 -25px;background:red;}
 
 
 .buttons {padding:10px 0;text-align:center;}
@@ -113,10 +115,11 @@ a {text-decoration:none;color:#333;}
 /*************/
 /*** START ***/
 /*************/
-.start_logo {display:block;height:70px;margin:10px auto 0 auto;background:transparent url(../img/start_logo.png) no-repeat 0 0;background-size:320px auto;}
+.start_logo {display:block;width:320px;height:70px;padding:10px 0 0 0;margin:0 auto;background:transparent url(../img/start_logo.png) no-repeat 0 0;background-size:320px auto;}
 
-.start {display:none;}
+.start {background:#FFF;display:none;}
 .start p {padding:0 20px;}
+.start .room_id {margin:-25px 0 0 0;font-size:18px;font-weight:900;text-transform:uppercase;text-align:center;}
 
 .for_christs_sake_lets_just_get_on_with_it {position:relative;height:40px;padding:0 0 10px 0;margin:10px 20px 0 20px;font-size:20px;}
 .for_christs_sake_lets_just_get_on_with_it input[type="text"] {position:absolute;top:0;left:0;right:50px;height:34px;padding:2px 5px;font-family:'Lato','Raleway',sans-serif;border:1px solid #333;-webkit-appearance:none;}
@@ -131,9 +134,9 @@ a {text-decoration:none;color:#333;}
 /***********/
 /*** APP ***/
 /***********/
-.app {display:none;}
+.app {min-height:600px;background:#FFF;display:none;}
 
-.app > header {height:50px;background:#53ACD6;}
+.app > header {position:relative;height:50px;background:#53ACD6;}
 .app > header .logo {display:block;width:220px;height:50px;margin:0 auto;background:transparent url(../img/logo.png) no-repeat 0 -6px;background-size:220px auto;}
 .app > header .room {position:absolute;top:30px;left:0;width:100%;font-size:12px;font-weight:900;text-align:center;text-transform:uppercase;color:#FFF;}
 
@@ -301,8 +304,9 @@ a {text-decoration:none;color:#333;}
    Modify as content requires.
    ========================================================================== */
 
-@media only screen and (min-width: 35em) {
-    /* Style adjustments for viewports that meet the condition */
+@media only screen and (min-width: 640px) {
+html {padding:50px;background:#333;}
+body {max-width:320px;margin:0 auto;}
 }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5),

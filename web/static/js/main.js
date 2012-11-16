@@ -163,7 +163,7 @@ var musicbozz = (function(){
 
 		room = getInviteRoom();
 		if (typeof room !== 'undefined') {
-			$('.room_id').html(room);
+			$('.room_id').html('sala ' + room);
 			$('section.start.by_invitation').addClass('active');
 		} else {
 			$('section.start.new_game').addClass('active');

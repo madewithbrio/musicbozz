@@ -34,21 +34,32 @@ var proxy = http.createServer(
 			case 'newQuestion':
 			case 'timeEnded':
 			case 'setReadyToPlay':
-			case 'pull':
 				if (!instanceList[id]) instanceList[id] = new WebClient(id);
 				instanceList[id].send(action, param); 
+				break;
+
+			case 'pull':
+				if (!instanceList[id]) return http_error(response, 500, 'invalid id');
 				break;
 
 			default: return http_error(response, 500, 'invalid action');
 		}
 console.log(id, action, param);
-		response.writeHead(200, {'Content-Type': 'text/plain'});
 
 		if (url.match(/\?xml$/))
-			events = to_xml(instanceList[id].getEvents());
+		{
+			contentType = 'text/xml';
+			if (action == 'pull') events = to_xml(instanceList[id].getEvents());
+			else events = to_xml([]);
+		}
 		else
-			events = JSON.stringify(instanceList[id].getEvents());
+		{
+			contentType = 'application/json‎';
+			if (action == 'pull') events = JSON.stringify(instanceList[id].getEvents());
+			else events = '[]';
+		}
 console.log(events);
+		response.writeHead(200, {'Content-Type': contentType});
 		response.end(events);
 	}
 );
@@ -79,9 +90,11 @@ clearClients();
 
 function to_xml(data)
 {
+	var l = data.length;
+
 console.log(data);
-	var xml = '<Events>';
-	for(var i = 0, l = data.length; i < l; i++)
+	var xml = '<?xml version="1.0" encoding="utf-8"?>\n<Events><TotalEvents>' + l + '</TotalEvents>';
+	for(var i = 0; i < l; i++)
 	{
 		var ev = data[i];
 		xml += "<Event>";
