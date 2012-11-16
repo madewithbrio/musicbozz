@@ -23,7 +23,12 @@ class Question {
 	}
 
 	public static function factory($type = Question_Type::ARTIST, $number = 1, $retry = 0) {
-		$track = self::getCatalogInstance()->getRandomTrack();
+		$source = $number > 15 ? 'RecommendedTracks' : 'TopTracks';
+		if ($number < 5) { $slice = array(1,30); }
+		else if ($number < 10) { $slice = array(31, 60); }
+		else { $slice = array(61,100); }
+
+		$track = self::getCatalogInstance()->getRandomTrack($source, $slice);
 
 		$question = new static;
 		$question->type = $type;

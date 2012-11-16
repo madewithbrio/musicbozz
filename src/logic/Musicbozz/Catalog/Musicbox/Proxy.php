@@ -193,6 +193,14 @@ class Proxy
 		return $this->doRequest('GetRecommendedTracks', $request);		
 	}
 
+	//GetTopTracks
+	public function GetTopTracks()
+	{
+		$request = new \stdClass;
+		$request->MBCredentials = self::getMBCredentials();
+		return $this->doRequest('GetTopTracks', $request);		
+	}
+	
 	public function Search($searchTerm)
 	{
 		$request = new \stdClass;

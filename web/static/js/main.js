@@ -19,7 +19,7 @@ if (!Function.prototype.bind ) {
 
 //"ws://62.28.238.103:9000"
 var musicbozz = (function(){
-	var sess, wsuri = "ws://62.28.238.103:9000", gameRoom, partialTemplates = {}, master = null;
+	var sess, wsuri = "ws://localhost:9000", gameRoom, partialTemplates = {}, master = null;
 
 	var convertDecimalToMinSec = function(decimal) {
 		var hours = Math.floor(decimal/3600,10),

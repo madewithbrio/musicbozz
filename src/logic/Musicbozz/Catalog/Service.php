@@ -15,12 +15,16 @@ class Service {
 		return $this->musicBoxInstance;
 	}
 
-	public function getRandomTrack($source = 'RecommendedTracks') {
+	public function getRandomTrack($source = 'TopTracks', $slice = null) {
 		$track = null;
 		switch ($source) {
+			case 'TopTracks':
+				$track = $this->_findTrackInTopTracks($slice);
+				break;
 
+			case 'RecommendedTracks':
 			default:
-				$track = $this->_findTrackInRecommendedTracks();
+				$track = $this->_findTrackInRecommendedTracks($slice);
 				break;
 		}
 		return $track;
@@ -75,10 +79,29 @@ class Service {
 	}
 
 	/** **/
-	private function _findTrackInRecommendedTracks() {
+	private function _findTrackInRecommendedTracks($slice) {
 		$result = $this->getMusicBoxInstance()->GetRecommendedTracks();
 		$tracks = $result->TrackList->Track;
-		$trackIdx = rand(0, sizeof($tracks));
+		$max = sizeof($tracks);
+		if (null !== $slice && $max >= $slice[1]) {
+			$trackIdx = rand($slice[0], $slice[1]);
+		} else {
+			$trackIdx = rand(0, $max);
+		}
+		
+		return $tracks[$trackIdx];
+	}
+
+	private function _findTrackInTopTracks($slice){
+		$result = $this->getMusicBoxInstance()->GetTopTracks();
+		$tracks = $result->TrackList->Track;
+		$max = sizeof($tracks);
+		if (null !== $slice && $max >= $slice[1]) {
+			$trackIdx = rand($slice[0], $slice[1]);
+		} else {
+			$trackIdx = rand(0, $max);
+		}
+		
 		return $tracks[$trackIdx];
 	}
 }
