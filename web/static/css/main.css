@@ -121,15 +121,19 @@ a {text-decoration:none;color:#333;}
 .start p {padding:0 20px;}
 .start .room_id {margin:-25px 0 0 0;font-size:18px;font-weight:900;text-transform:uppercase;text-align:center;}
 
-.for_christs_sake_lets_just_get_on_with_it {position:relative;height:40px;padding:0 0 10px 0;margin:10px 20px 0 20px;font-size:20px;}
-.for_christs_sake_lets_just_get_on_with_it input[type="text"],
-.for_christs_sake_lets_just_get_on_with_it input[type="tel"] {position:absolute;top:0;left:0;right:50px;height:34px;padding:2px 5px;font-family:'Lato','Raleway',sans-serif;border:1px solid #333;-webkit-appearance:none;}
-.for_christs_sake_lets_just_get_on_with_it input[type="text"]:focus,
-.for_christs_sake_lets_just_get_on_with_it input[type="tel"]:focus {border-color:#53ACD6;outline:none;}
-.for_christs_sake_lets_just_get_on_with_it input[type="submit"] {position:absolute;top:0;right:0;width:40px;height:40px;background:#53ACD6 url(../img/go.png) no-repeat 0 0;background-size:40px auto;text-indent:-999999em;border:none;color:#FFF;}
+form {position:relative;height:40px;padding:0 0 10px 0;margin:10px 20px 0 20px;font-size:20px;}
+form input[type="text"],
+form input[type="tel"] {position:absolute;top:0;left:0;right:50px;height:34px;padding:2px 5px;font-family:'Lato','Raleway',sans-serif;border:1px solid #333;-webkit-appearance:none;}
+form input[type="text"]:focus,
+form input[type="tel"]:focus {border-color:#53ACD6;outline:none;}
+form input[type="submit"] {position:absolute;top:0;right:0;width:40px;height:40px;background:#53ACD6 url(../img/go.png) no-repeat 0 0;background-size:40px auto;text-indent:-999999em;border:none;color:#FFF;}
+
+form.i_know_the_room {height:90px;}
+form.i_know_the_room input[type="tel"],
+form.i_know_the_room input[type="submit"] {top:50px;}
 
 .start .fuck_the_invitation {padding:10px 0;margin:10px 0 0 0;background:#53ACD6;}
-.start .fuck_the_invitation .for_christs_sake_lets_just_get_on_with_it input[type="submit"] {background-color:#333;}
+.start .fuck_the_invitation form input[type="submit"] {background-color:#333;}
 
 
 
@@ -157,6 +161,8 @@ a {text-decoration:none;color:#333;}
 
 .start_game {padding:10px;}
 .start_game .go {margin:10px auto;background:#53ACD6;}
+
+.stand_by {padding:10px;}
 
 .question {padding:10px;}
 .question .question_number {font-size:12px;font-weight:900;opacity:0.5;}
