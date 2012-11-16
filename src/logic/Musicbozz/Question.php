@@ -34,8 +34,8 @@ class Question {
 		$question->type = $type;
 		$question->number = $number;
 
-		$question->trackPreview = str_replace ('http://streamer.nmusic.sapo.pt/', 'http://62.28.238.103/', $track->PreviewUrl);
-		$question->image = $track->LargeAlbumCover;
+		$question->trackPreview = str_replace ('streamer.nmusic.sapo.pt', '62.28.238.103', $track->PreviewUrl);
+		$question->image = str_replace ('streamer.nmusic.sapo.pt', '62.28.238.103', $track->LargeAlbumCover);
 
 		switch ($type) {
 			case Question_Type::TRACK:
