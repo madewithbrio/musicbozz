@@ -70,6 +70,10 @@ class GameRoom extends Topic
 		return sizeof($this->answers) == $this->count();
 	}
 
+	public function isLastQuestion() {
+		return ($this->questionNumber >= 20);
+	}
+
 	public function getGameMode() {
 		//if (null === $this->gameMode) {
 			if ($this->questionNumber < 5) {

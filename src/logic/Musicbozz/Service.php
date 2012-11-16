@@ -144,6 +144,8 @@ class Service implements WampServerInterface {
         if ($gameRoom->isAllPlayersAllreadyResponde()) {
             $event = array();
             $event['action'] = "allPlayersAllreadyResponde";
+            $event['data'] = array();
+            $event['data']['over'] = $gameRoom->isLastQuestion();
             $gameRoom->broadcast($event);
         }
     }

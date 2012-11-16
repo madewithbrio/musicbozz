@@ -19,7 +19,7 @@ if (!Function.prototype.bind ) {
 
 //"ws://62.28.238.103:9000"
 var musicbozz = (function(){
-	var sess, wsuri = "ws://localhost:9000", gameRoom, partialTemplates = {}, master = null;
+	var sess, wsuri = "ws://62.28.238.103:9000", gameRoom, partialTemplates = {}, master = null;
 
 	var convertDecimalToMinSec = function(decimal) {
 		var hours = Math.floor(decimal/3600,10),
@@ -113,12 +113,13 @@ var musicbozz = (function(){
 		$playerContainer.find('p.score').addClass(clazzName).addClass('active').html(data.questionScore);
 	};
 
-	var resetPlayerAnswer = function() {
+	var resetPlayerAnswer = function(data) {
 		setTimeout((function(){
 			var $playerContainer = $('a[data-player-id]');
 			$playerContainer.find('p.score').removeClass('active positive negative');
-			if (master) { this.ws.call(gameRoom, 'newQuestion'); }
-			}).bind({ws: sess})
+			if (master && !this.isOver) { this.ws.call(gameRoom, 'newQuestion'); }
+			if (this.isOver) { $('div.question').html(""); }
+			}).bind({ws: sess, isOver: data.over})
 		,1000);
 	}
 
@@ -149,7 +150,7 @@ var musicbozz = (function(){
 
 			case 'allPlayersAllreadyResponde':
 				$("#player").get(0).pause();
-				resetPlayerAnswer();
+				resetPlayerAnswer(e.data);
 				break;
 
 			default:
@@ -218,11 +219,12 @@ var musicbozz = (function(){
 			$('#share #room_link').select();
 		});
 
-		$(document).delegate('a[data-element="answer"]', 'click', function(e){
+		$(document).delegate('a[data-element="answer"]', 'click.answer', function(e){
+			$('a[data-element="answer"]').unbind('click.answer');
 			var $li = $(this).parent();
 			var answer = $li.parent().find('li').index($li);
-			//$("#player").get(0).pause();
 			sess.call(gameRoom, 'setAnswer', answer).then(function(data){
+				if (null == data.res) return;
 				var clazzName = data.res ? 'correct' : 'wrong';
 				$li.children().addClass('selected ' + clazzName);
 				$li.parent().addClass('has_answer');
