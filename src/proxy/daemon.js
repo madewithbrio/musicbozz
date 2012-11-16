@@ -35,7 +35,9 @@ var proxy = http.createServer(
 			case 'timeEnded':
 			case 'setReadyToPlay':
 				if (!instanceList[id]) instanceList[id] = new WebClient(id);
-				instanceList[id].send(action, param); 
+				var res = instanceList[id].send(action, param);
+				if (!res) return http_error(response, 500, 'not ready yet! have you subscribed?');
+
 				break;
 
 			case 'pull':
@@ -44,7 +46,7 @@ var proxy = http.createServer(
 
 			default: return http_error(response, 500, 'invalid action');
 		}
-console.log(id, action, param);
+if (action != 'pull') console.log(id, action, param);
 
 		if (url.match(/\?xml$/))
 		{
@@ -58,7 +60,7 @@ console.log(id, action, param);
 			if (action == 'pull') events = JSON.stringify(instanceList[id].getEvents());
 			else events = '[]';
 		}
-console.log(events);
+if (action != 'pull') console.log(events);
 		response.writeHead(200, {'Content-Type': contentType});
 		response.end(events);
 	}
@@ -81,7 +83,7 @@ console.log(id, "expired");
 console.log("instanceList", instanceList);
 		}
 			
-	setTimeout(clearClients, 10000);
+	setTimeout(clearClients, 1000);
 };
 
 proxy.listen(9001);
@@ -92,14 +94,15 @@ function to_xml(data)
 {
 	var l = data.length;
 
-console.log(data);
+//console.log(data);
 	var xml = '<?xml version="1.0" encoding="utf-8"?>\n<Events><TotalEvents>' + l + '</TotalEvents>';
 	for(var i = 0; i < l; i++)
 	{
 		var ev = data[i];
 		xml += "<Event>";
+		if (!ev.action) ev.action = 'ignore';
 		xml += to_xml_val(ev);
-console.log(ev);
+//console.log(ev);
 		xml += "</Event>";
 	} 
 	return xml += "</Events>";
@@ -108,7 +111,7 @@ console.log(ev);
 function to_xml_val(data)
 {
 	var xml = '';
-console.log("   to_xml_val", data);
+//console.log("   to_xml_val", data);
 	if ('object' == typeof(data))
 	{
 		for (var key in data)
