@@ -58,6 +58,7 @@ console.log('try send', action, isConnected, this.roomIsSet());
 		if (param) data.push(param);
 console.log("sending", data);
 		ws.send(JSON.stringify(data));
+		return true;
 	};
 
 	interface_public.getEvents = function()
@@ -71,7 +72,7 @@ console.log('getEvents return', eventsCopy.length, eventsCopy);
 	};
 
 	interface_public.addEvent = function(e) { events.push(e); };
-	interface_public.expired = function() { return now() - timestamp > 120000; };
+	interface_public.expired = function() { return now() - timestamp > 30000; };
 	interface_public.getRoomURL = function() { return "http://localhost/game/" + room; };
 	interface_public.roomIsSet = function() { return !!room; };
 	interface_public.disconnect = function() { if (ws) ws.close(); };
