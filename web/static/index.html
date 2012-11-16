@@ -35,22 +35,29 @@
             <a href="/" title="music bozz" class="start_logo"></a>
             <p>Escreve o teu nome e cala-te, se é que achas que sabes alguma coisinha de música.</p>
             <form action="#newRoom" method="post" class="for_christs_sake_lets_just_get_on_with_it">
-                <input type="text" name="name" placeholder="o teu nome" value="" required autofocus />
+                <input type="text" name="name" placeholder="o teu nome" value="" required />
                 <input type="submit" value="Entrar" data-action="join" />
             </form>
             <p>Depois podes convidar uns amigos para lhes dares uma sova.</p>
+            <div class="fuck_the_invitation">
+                <p>Já sabes a sala em que queres entrar? Então vá!!</p>
+                <form action="#newRoom" method="post" class="for_christs_sake_lets_just_get_on_with_it">
+                    <input type="text" name="name" placeholder="nº da sala" value="" required />
+                    <input type="submit" value="Entrar" data-action="join"/>
+                </form>
+            </div>
         </section>
 
         <section class="start by_invitation">
             <a href="/" title="music bozz" class="start_logo"></a>
             <p class="room_id"></p>
-            <p>Escreve o teu nome e cala-te, se é que queres jogar.</p>
+            <p>Recebeste um convite, certo? Então escreve o teu nome e cala-te, se é que achas que sabes alguma coisinha de música.</p>
             <form action="#joinRoom" method="post" class="for_christs_sake_lets_just_get_on_with_it">
-                <input type="text" name="name" placeholder="o teu nome" value="" required autofocus />
+                <input type="text" name="name" placeholder="o teu nome" value="" required />
                 <input type="submit" value="Entrar" data-action="join"/>
             </form>
             <div class="fuck_the_invitation">
-                <p>Ou então caga nisso e cria o teu próprio jogo com outros amigos. Deves estar com medinho de perder contra o panasca que te convidou para isto.</p>
+                <p>Ou então caga nisso e cria o teu próprio jogo com outros amigos. Deves estar com medinho de perder contra o boss que te convidou para isto.</p>
                 <form action="#newRoom" method="post" class="for_christs_sake_lets_just_get_on_with_it">
                     <input type="text" name="name" placeholder="o teu nome" value="" required />
                     <input type="submit" value="Entrar" data-action="join"/>
@@ -69,7 +76,7 @@
                 <ul class="players clearfix" data-template="players"></ul>
 
                 <div id="start_game" class="start_game">
-                    <p>Arranja uns amigos para lhes dares uma sova:</p>
+                    <p>Arranja uns amigos para lhes dares uma sova.</p>
                     <ul class="buttons clearfix">
                         <li class="sms"><a href="sms:" class="button">Enviar SMS</a></li>
                         <li><a href="#share" class="button">Partilhar link</a></li>
@@ -118,10 +125,10 @@
         <script type="text/mustache" data-element="template" data-name="player">
             <li>
                 {{#name}}
-                <a href="#" data-player-id="{{id}}">
+                <a href="#" data-player-id="{{id}}" class="player">
                     <p class="total_points">{{score}}</p>
                     <div class="thumb">
-                        <img src="http://lorempixel.com/60/60/people?1" alt="" />
+                        <img src="img/avatar.png" alt="" />
                         <p class="score">0</p>
                     </div>
                     <p class="name ellipsis">{{name}}</p>

@@ -102,7 +102,7 @@ ul {list-style:none;}
 a {text-decoration:none;color:#333;}
 .active {display:block!important;}
 
-.loader {position:fixed;top:50%;left:50%;width:50px;height:50px;margin:-25px 0 0 -25px;background:red;display:none;}
+.loader {position:fixed;top:50%;left:50%;width:50px;height:50px;margin:-25px 0 0 -25px;background:transparent url(../img/loader.gif) no-repeat 0 0;background-size:50px 50px;}
 
 
 .buttons {padding:10px 0;text-align:center;}
@@ -126,7 +126,7 @@ a {text-decoration:none;color:#333;}
 .for_christs_sake_lets_just_get_on_with_it input[type="text"]:focus {border-color:#53ACD6;outline:none;}
 .for_christs_sake_lets_just_get_on_with_it input[type="submit"] {position:absolute;top:0;right:0;width:40px;height:40px;background:#53ACD6 url(../img/go.png) no-repeat 0 0;background-size:40px auto;text-indent:-999999em;border:none;color:#FFF;}
 
-.start .fuck_the_invitation {padding:10px 0 0 0;background:#53ACD6;}
+.start .fuck_the_invitation {padding:10px 0;margin:10px 0 0 0;background:#53ACD6;}
 .start .fuck_the_invitation .for_christs_sake_lets_just_get_on_with_it input[type="submit"] {background-color:#333;}
 
 
@@ -305,7 +305,7 @@ a {text-decoration:none;color:#333;}
    ========================================================================== */
 
 @media only screen and (min-width: 640px) {
-html {padding:50px;background:#333;}
+html {padding:50px;background:#111;}
 body {max-width:320px;margin:0 auto;}
 }
 
