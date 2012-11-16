@@ -9,17 +9,18 @@ var proxy = http.createServer(
 	function(request, response)
 	{
 		var url = request.url,
-			actionMatch = url.match(/([^\/]+)/);
+			actionMatch = url.match(/([^\/?]+)/),
+			events;
 		if (!actionMatch) return http_error(response, 500, 'no action');
 		
 		var action = actionMatch[1];
 		
-		var idMatch = url.match(/[^\/]+\/([^\/]+)/);
+		var idMatch = url.match(/[^\/?]+\/([^\/?]+)/);
 		if (!idMatch) return http_error(response, 500, 'no id');
 		
 		var id = idMatch[1];
 
-		var paramMatch = url.match(/[^\/]+\/[^\/]+\/([^\/]+)/);
+		var paramMatch = url.match(/[^\/?]+\/[^\/?]+\/([^\/?]+)/);
 		param = paramMatch ? paramMatch[1]: null;
 
 		switch(action)
@@ -32,7 +33,6 @@ var proxy = http.createServer(
 			case 'listPlayers':
 			case 'newQuestion':
 			case 'timeEnded':
-			case 'setAnswer':
 			case 'setReadyToPlay':
 			case 'pull':
 				if (!instanceList[id]) instanceList[id] = new WebClient(id);
@@ -43,8 +43,11 @@ var proxy = http.createServer(
 		}
 console.log(id, action, param);
 		response.writeHead(200, {'Content-Type': 'text/plain'});
-		
-		var events = JSON.stringify(instanceList[id].getEvents());
+
+		if (url.match(/\?xml$/))
+			events = to_xml(instanceList[id].getEvents());
+		else
+			events = JSON.stringify(instanceList[id].getEvents());
 console.log(events);
 		response.end(events);
 	}
@@ -74,3 +77,37 @@ proxy.listen(9001);
 
 clearClients();
 
+function to_xml(data)
+{
+console.log(data);
+	var xml = '<Events>';
+	for(var i = 0, l = data.length; i < l; i++)
+	{
+		var ev = data[i];
+		xml += "<Event>";
+		xml += to_xml_val(ev);
+console.log(ev);
+		xml += "</Event>";
+	} 
+	return xml += "</Events>";
+};
+
+function to_xml_val(data)
+{
+	var xml = '';
+console.log("   to_xml_val", data);
+	if ('object' == typeof(data))
+	{
+		for (var key in data)
+			if (data.hasOwnProperty(key))
+			{
+				if (isNaN(key))
+					xml+= "<" + key + ">" + to_xml_val(data[key]) + "</" + key + ">";
+				else
+					xml+= "<ListItem>" + to_xml_val(data[key]) + "</ListItem>";
+			}
+		return xml;
+	}
+	else
+		return data;
+}
