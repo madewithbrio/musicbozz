@@ -75,15 +75,17 @@ class GameRoom extends Topic
 	}
 
 	public function getGameMode() {
-		//if (null === $this->gameMode) {
-			if ($this->questionNumber < 5) {
+		if (null === $this->gameMode) {
+			//if ($this->questionNumber < 5) {
 				$this->gameMode = GameMode::factory('Standard');
+			/**
 			} else if ($this->questionNumber < 10) {
 				$this->gameMode = GameMode::factory('Normal');
 			} else {
 				$this->gameMode = GameMode::factory('Speed');
 			}
-		//}
+			**/
+		}
 		return $this->gameMode;
 	}
 }

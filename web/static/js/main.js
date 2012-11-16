@@ -110,6 +110,7 @@ var musicbozz = (function(){
 		var $playerContainer = $('a[data-player-id="'+data.player.id+'"]');
 		$playerContainer.find('p.total_points').html(data.totalScore);
 		var clazzName = data.questionScore > 0 ? 'positive' : 'negative';
+		if (data.questionScore == 0) clazzName = ""; // hack because 0 
 		$playerContainer.find('p.score').addClass(clazzName).addClass('active').html(data.questionScore);
 	};
 
