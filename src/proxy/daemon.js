@@ -42,13 +42,19 @@ var proxy = http.createServer(
 			default: return http_error(response, 500, 'invalid action');
 		}
 console.log(id, action, param);
-		response.writeHead(200, {'Content-Type': 'text/plain'});
 
 		if (url.match(/\?xml$/))
+		{
+			contentType = 'text/xml';
 			events = to_xml(instanceList[id].getEvents());
+		}
 		else
+		{
+			contentType = 'application/json‎';
 			events = JSON.stringify(instanceList[id].getEvents());
+		}
 console.log(events);
+		response.writeHead(200, {'Content-Type': contentType});
 		response.end(events);
 	}
 );
@@ -80,7 +86,7 @@ clearClients();
 function to_xml(data)
 {
 console.log(data);
-	var xml = '<Events>';
+	var xml = '<?xml version="1.0" encoding="utf-8"?>\n<Events>';
 	for(var i = 0, l = data.length; i < l; i++)
 	{
 		var ev = data[i];
