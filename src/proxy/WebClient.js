@@ -74,7 +74,7 @@ console.log('getEvents return', eventsCopy.length, eventsCopy);
 	interface_public.expired = function() { return now() - timestamp > 120000; };
 	interface_public.getRoomURL = function() { return "http://localhost/game/" + room; };
 	interface_public.roomIsSet = function() { return !!room; };
-	interface_public.disconnect = function() { ws.close(); };
+	interface_public.disconnect = function() { if (ws) ws.close(); };
 	interface_public.setConnected = function() { isConnected = true; };
 
 	return interface_public;

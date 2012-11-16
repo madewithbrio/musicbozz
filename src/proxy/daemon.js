@@ -98,6 +98,7 @@ console.log(data);
 	{
 		var ev = data[i];
 		xml += "<Event>";
+		if (!ev.action) ev.action = '';
 		xml += to_xml_val(ev);
 console.log(ev);
 		xml += "</Event>";
