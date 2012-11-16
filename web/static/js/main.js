@@ -206,10 +206,15 @@ var musicbozz = (function(){
 			}
 		});
 
+		$(".modal .close").bind('click', function(e) {
+			$('.overlay').removeClass('active');
+			$('.modal').removeClass('active');
+		});
+
 		$(document).delegate('a[href="#share"]', 'click', function(e) {
 			//generate room link at this point
 			$('.overlay').addClass('active');
-			$('#share').addClass('active');
+			$('.modal').addClass('active');
 			$('#share #room_link').select();
 		});
 
@@ -219,7 +224,7 @@ var musicbozz = (function(){
 			//$("#player").get(0).pause();
 			sess.call(gameRoom, 'setAnswer', answer).then(function(data){
 				var clazzName = data.res ? 'correct' : 'wrong';
-				$li.children().addClass(clazzName);
+				$li.children().addClass('selected ' + clazzName);
 				$li.parent().addClass('has_answer');
 			}, renderError);
 		});
