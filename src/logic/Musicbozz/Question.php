@@ -34,7 +34,7 @@ class Question {
 		$question->type = $type;
 		$question->number = $number;
 
-		$question->trackPreview = $track->PreviewUrl;
+		$question->trackPreview = str_replace ('http://streamer.nmusic.sapo.pt/', 'http://62.28.238.103/', $track->PreviewUrl);
 		$question->image = $track->LargeAlbumCover;
 
 		switch ($type) {
@@ -56,7 +56,7 @@ class Question {
 		}
 		
 		// it's a good question, if not retry get other
-		if (sizeof($question->solutions) < 2) {
+		if (sizeof($question->solutions) != 4) {
 			if ($retry >= 2) throw new \Exception("dont have solutions");
 		 	return self::factory($type, $number, ++$retry); 
 		}

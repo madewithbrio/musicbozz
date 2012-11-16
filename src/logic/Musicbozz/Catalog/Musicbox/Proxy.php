@@ -200,7 +200,22 @@ class Proxy
 		$request->MBCredentials = self::getMBCredentials();
 		return $this->doRequest('GetTopTracks', $request);		
 	}
+
+	public function GetNewTracks()
+	{
+		$request = new \stdClass;
+		$request->MBCredentials = self::getMBCredentials();
+		return $this->doRequest('GetNewTracks', $request);		
+	}
 	
+	public function GetPopularTracksByArtistId($artistId)
+	{
+		$request = new \stdClass;
+		$request->ArtistId = $artistId;
+		$request->MBCredentials = self::getMBCredentials();
+		return $this->doRequest('GetPopularTracksByArtistId', $request);		
+	}
+
 	public function Search($searchTerm)
 	{
 		$request = new \stdClass;

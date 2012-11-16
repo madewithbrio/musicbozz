@@ -7,6 +7,8 @@ use Musicbozz\Catalog\LastFM\PublicApi as LastFMService;
 
 class Service {
 	private $musicBoxInstance;
+	private static $preselectArtists;
+
 
 	private function getMusicBoxInstance() {
 		if (null === $this->musicBoxInstance) {
@@ -15,11 +17,16 @@ class Service {
 		return $this->musicBoxInstance;
 	}
 
-	public function getRandomTrack($source = 'TopTracks', $slice = null) {
+	public function getRandomTrack($source = 'TopTracks', $slice = null) 
+	{
 		$track = null;
 		switch ($source) {
 			case 'TopTracks':
 				$track = $this->_findTrackInTopTracks($slice);
+				break;
+
+			case 'GetPopularTracksByArtistId':
+				$track = $this->_findPopularTrackByArtistId();
 				break;
 
 			case 'RecommendedTracks':
@@ -29,6 +36,37 @@ class Service {
 		}
 		return $track;
 	}
+
+	private function addArtistToPreselectesByTrackList($list) 
+	{
+		foreach ($list->Track as $track) {
+			if (!in_array($track->ArtistId, self::$preselectArtists))
+			{
+				self::$preselectArtists[] = $track->ArtistId;
+			}
+		}
+	}
+
+	public function getArtistId()
+	{
+		if (null == self::$preselectArtists) {
+			self::$preselectArtists = array();
+
+			// via top tracks
+			$result = $this->getMusicBoxInstance()->GetTopTracks();
+			$this->addArtistToPreselectesByTrackList($result->TrackList);
+
+		//	$result = $this->getMusicBoxInstance()->GetRecommendedTracks();
+		//	$this->addArtistToPreselectesByTrackList($result->TrackList);
+
+			$result = $this->getMusicBoxInstance()->GetNewTracks();
+			$this->addArtistToPreselectesByTrackList($result->TrackList);
+		}
+		return self::$preselectArtists;
+	}
+
+
+
 
 	public function getSimilarArtists($track, $nrResult = 3) {
 		try {
