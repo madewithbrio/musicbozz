@@ -106,7 +106,7 @@ a {text-decoration:none;color:#333;}
 .buttons {padding:10px 0;text-align:center;}
 .buttons li {display:inline-block;margin:0 10px 0 0}
 
-.button {display:block;padding:10px;background:#333;font-size:16px;font-weight:400;text-transform:uppercase;text-align:center;color:#FFF;}
+.button {display:block;padding:10px;background:#333;font-size:16px;font-weight:400;text-transform:uppercase;text-align:center;color:#FFF;border-radius:5px;}
 .button.inactive {background:#CCC!important;color:#AAA!important;}
 
 
@@ -134,7 +134,8 @@ a {text-decoration:none;color:#333;}
 .app {display:none;}
 
 .app > header {height:50px;background:#53ACD6;}
-.app > header .logo {display:block;width:220px;height:50px;margin:0 auto;background:transparent url(../img/logo.png) no-repeat 0 0;background-size:220px auto;}
+.app > header .logo {display:block;width:220px;height:50px;margin:0 auto;background:transparent url(../img/logo.png) no-repeat 0 -6px;background-size:220px auto;}
+.app > header .room {position:absolute;top:30px;left:0;width:100%;font-size:12px;font-weight:900;text-align:center;text-transform:uppercase;color:#FFF;}
 
 .players {padding:0 10px;background:#333;}
 .players li {float:left;width:25%;}
@@ -190,6 +191,12 @@ a {text-decoration:none;color:#333;}
 /* ==========================================================================
    Helper classes
    ========================================================================== */
+
+.ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
 
 /*
  * Image replacement

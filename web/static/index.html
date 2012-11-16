@@ -58,6 +58,7 @@
 
             <header>
                 <a href="/" title="music bozz" class="logo"></a>
+                <p class="room">Sala <span id="room_id">10</span></p>
             </header>
 
             <div class="main">
@@ -98,7 +99,7 @@
             <p class="query">{{query}}</p>
             <ul class="answers">
                 {{#solutions}}
-                <li><a href="#" data-element="answer" class="ellipsis">{{.}}</a></li>
+                <li><a href="#" data-element="answer">{{.}}</a></li>
                 {{/solutions}}
             </ul>
             <audio id="player" preload>
@@ -118,10 +119,10 @@
                 <a href="#" data-player-id="{{id}}">
                     <p class="total_points">{{score}}</p>
                     <div class="thumb">
-                        <img src="http://lorempixel.com/60/60/people" alt="" />
+                        <img src="http://lorempixel.com/60/60/people?1" alt="" />
                         <p class="score">0</p>
                     </div>
-                    <p class="name">{{name}}</p>
+                    <p class="name ellipsis">{{name}}</p>
                 </a>
                 {{/name}}
                 {{^name}}
