@@ -64,8 +64,6 @@ class Question {
 	}
 
 	public function isCorrectAnswer($answer) { 
-		var_dump($answer);
-		var_dump($this->correct);
 		if ($answer === null) return true;
 		return $answer === $this->correct; 
 	}

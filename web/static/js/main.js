@@ -156,7 +156,7 @@ var musicbozz = (function(){
 
 	$(document).ready(function(){
 		// connect ws
-		var room;
+		var room, player = $('#player').get(0);
 
 		loadTemplates();
 		connect();
@@ -168,6 +168,10 @@ var musicbozz = (function(){
 		} else {
 			$('section.start.new_game').addClass('active');
 		}
+
+		$(document).delegate('div.song_scrubber', 'touchstart', function(){
+			player.play();
+		})
 
 		$('input[type="submit"][data-action="join"]').bind('click', function(e){
 			
@@ -224,12 +228,6 @@ var musicbozz = (function(){
 				$li.children().addClass('selected ' + clazzName);
 				$li.parent().addClass('has_answer');
 			}, renderError);
-		});
-
-		var player = $('#player').get(0);
-		$('input[type="submit"][data-action="join"]').bind('touchstart', function(){
-			alert("dafv");
-
 		});
 
 		$(player).bind('timeupdate.player', function(e){

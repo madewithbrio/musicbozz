@@ -50,13 +50,14 @@ class GameRoom extends Topic
 		$position = 1;
 		foreach ($this->answers as $_answer) {
 			if ($_answer[0] == $player->getSessionId()) return;
-			if ($_answer[2]) $position++;
+			if ($_answer[2]) { $position++; }
 		}
 
 		$isCorrect 			= $this->getQuestion()->isCorrectAnswer($answer);
 		$data 				= array($player->getSessionId(), $answer, $isCorrect);
 		$this->answers[] 	= $data;
-		if ($isCorrect || null === $answers) { $position = 5; }
+		if (!$isCorrect || null === $answer) { $position = 5; }
+
 		$data[] 			= $position;
 		return $data;
 	}
