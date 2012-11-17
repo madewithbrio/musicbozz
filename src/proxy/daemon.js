@@ -33,8 +33,15 @@ var proxy = http.createServer(
 			case 'setPlayerName':
 			case 'setAnswer': 
 				if (!param) return http_error(response, 500, 'parameter required');
-				if (action == 'setAnswer') param = parseInt(param, 10);
-
+				if (action == 'setAnswer') 
+				{
+console.log('<<<< setAnswer', param);
+					param = parseInt(param, 10);
+console.log('>>>> setAnswer after', param);
+					if(!param) param = 0;
+console.log('=>=> setAnswer end', param);
+				}
+		
 			case 'listPlayers':
 			case 'newQuestion':
 			case 'timeEnded':
@@ -50,7 +57,7 @@ var proxy = http.createServer(
 
 			default: return http_error(response, 500, 'invalid action');
 		}
-if (action != 'pull') console.log(id, action, param);
+//if (action != 'pull') console.log(id, action, param);
 
 		if (url.match(/\?xml$/))
 		{
@@ -64,16 +71,16 @@ if (action != 'pull') console.log(id, action, param);
 			if (action == 'pull') events = JSON.stringify(instanceList[id].getEvents());
 			else events = '[]';
 		}
-if (action != 'pull') console.log(events);
+//if (action != 'pull') console.log(events);
 		response.writeHead(200, {'Content-Type': contentType});
-console.log("====\n" + events + "\n====");
+//console.log("====\n" + events + "\n====");
 		response.end(events);
 	}
 );
 
 function http_error(response, code, text)
 {
-console.log("---- Error returned: " + text);
+//console.log("---- Error returned: " + text);
     response.writeHead(code, {'Content-Type': 'text/plain'});
     response.end(text);
 };
@@ -83,10 +90,10 @@ function clearClients()
 	for(var id in instanceList)
 		if (instanceList[id].expired())
 		{
-console.log(id, "expired");
+//console.log(id, "expired");
 			instanceList[id].disconnect();
 			delete instanceList[id];
-console.log("instanceList", instanceList);
+//console.log("instanceList", instanceList);
 		}
 			
 	setTimeout(clearClients, 1000);

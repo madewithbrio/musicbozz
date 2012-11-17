@@ -19,13 +19,13 @@ WebClient = function() {
 	ws.onopen = function(event) 
 	{
 		this.client.setConnected();
-console.log('open');
+//console.log('open');
 //	  ws.send('Hello, world!');
 	};
 
 	ws.onmessage = function(event)
 	{
-console.log('message', event.data);
+//console.log('message', event.data);
 		var data = JSON.parse(event.data);
 		var typeId = data[0];
 		if (typeId == 0)
@@ -43,20 +43,20 @@ console.log('message', event.data);
 	ws.onclose = function(event)
 	{
 		isConnected = false;
-console.log('close', event.code, event.reason);
+//console.log('close', event.code, event.reason);
 		ws = null;
 	};
 
 	ws.sendSubscribe = function()
 	{
 		var subscribeMessage = JSON.stringify([5, this.client.getRoomURL()]);
-console.log("sending subscribe", subscribeMessage);
+//console.log("sending subscribe", subscribeMessage);
 		this.send(subscribeMessage);
 	};
 
 	interface_public.send = function(action, param)
 	{
-console.log('try send', action, isConnected, this.roomIsSet());
+//console.log('try send', action, isConnected, this.roomIsSet());
 		if ('subscribe' == action)
 		{
 			room = param;
@@ -71,7 +71,7 @@ console.log('try send', action, isConnected, this.roomIsSet());
 		if (!this.roomIsSet()) return false;
 
 		var data = [2, hash.newId(), this.getRoomURL(), action];
-		if (param) data.push(param);
+		if (typeof param != 'undefined' && param !== null) data.push(param);
 console.log("sending", data);
 		ws.send(JSON.stringify(data));
 		return true;
@@ -79,7 +79,7 @@ console.log("sending", data);
 
 	interface_public.getEvents = function()
 	{
-if (events.length) console.log('getEvents', events.length, events);
+//if (events.length) console.log('getEvents', events.length, events);
 		var eventsCopy = events;
 		events = [];
 		timestamp = now();
