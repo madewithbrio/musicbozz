@@ -174,8 +174,8 @@ form.i_know_the_room input[type="submit"] {top:50px;}
 .question .answers li a:before {position:absolute;top:0;left:0;width:10px;height:100%;content:"";}
 .question .answers li:nth-child(1) a:before {background:#DF5656;}
 .question .answers li:nth-child(2) a:before {background:#99B758;}
-.question .answers li:nth-child(3) a:before {background:#46A1CC;}
-.question .answers li:nth-child(4) a:before {background:#FFB901;}
+.question .answers li:nth-child(3) a:before {background:#FFB901;}
+.question .answers li:nth-child(4) a:before {background:#46A1CC;}
 /*.question .answers li a:after {position:absolute;top:0;right:0;width:35px;height:35px;content:"";}*/
 .question .answers li a.selected {color:#FFF;}
 .question .answers li a.selected:before {display:none;}
