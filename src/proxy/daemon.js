@@ -62,12 +62,14 @@ if (action != 'pull') console.log(id, action, param);
 		}
 if (action != 'pull') console.log(events);
 		response.writeHead(200, {'Content-Type': contentType});
+console.log("====\n" + events + "\n====");
 		response.end(events);
 	}
 );
 
 function http_error(response, code, text)
 {
+console.log("---- Error returned: " + text);
     response.writeHead(code, {'Content-Type': 'text/plain'});
     response.end(text);
 };
@@ -83,7 +85,7 @@ console.log(id, "expired");
 console.log("instanceList", instanceList);
 		}
 			
-	setTimeout(clearClients, 6000);
+	setTimeout(clearClients, 1000);
 };
 
 proxy.listen(9001);
@@ -125,5 +127,5 @@ function to_xml_val(data)
 		return xml;
 	}
 	else
-		return "<![CDATA[" + data + "]]>";
+		return '<![CDATA[' + data + ']]>';
 }
