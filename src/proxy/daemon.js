@@ -33,6 +33,7 @@ var proxy = http.createServer(
 			case 'setPlayerName':
 			case 'setAnswer': 
 				if (!param) return http_error(response, 500, 'parameter required');
+				if (action == 'setAnswer') param = parseInt(param, 10);
 
 			case 'listPlayers':
 			case 'newQuestion':
