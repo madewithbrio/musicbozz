@@ -17,7 +17,7 @@ class Service {
 		return $this->musicBoxInstance;
 	}
 
-	public function getRandomTrack($source = 'TopTracks', $slice = null) 
+	public function getRandomTrack($source = 'TrackFromArtistList', $slice = null) 
 	{
 		$track = null;
 		switch ($source) {
@@ -25,8 +25,8 @@ class Service {
 				$track = $this->_findTrackInTopTracks($slice);
 				break;
 
-			case 'GetPopularTracksByArtistId':
-				$track = $this->_findPopularTrackByArtistId();
+			case 'TrackFromArtistList':
+				$track = $this->_findTrackFromArtistList($slice);
 				break;
 
 			case 'RecommendedTracks':
@@ -47,26 +47,81 @@ class Service {
 		}
 	}
 
-	public function getArtistId()
+	public function getPreSelectedArtistList()
 	{
 		if (null == self::$preselectArtists) {
+			print "load artists catalog\n";
 			self::$preselectArtists = array();
 
 			// via top tracks
-			$result = $this->getMusicBoxInstance()->GetTopTracks();
-			$this->addArtistToPreselectesByTrackList($result->TrackList);
+			try {
+				print "from top tracks\n";
+				$result = $this->getMusicBoxInstance()->GetTopTracks();
+				$this->addArtistToPreselectesByTrackList($result->TrackList);
+			} catch (\Exception $e) {}
 
-		//	$result = $this->getMusicBoxInstance()->GetRecommendedTracks();
-		//	$this->addArtistToPreselectesByTrackList($result->TrackList);
+			try {
+				print "from new tracks\n";
+				$result = $this->getMusicBoxInstance()->GetNewTracks();
+				$this->addArtistToPreselectesByTrackList($result->TrackList);
+			} catch (\Exception $e) {}
 
-			$result = $this->getMusicBoxInstance()->GetNewTracks();
-			$this->addArtistToPreselectesByTrackList($result->TrackList);
+			try {
+				print "from category 12\n";
+				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(12);
+				$this->addArtistToPreselectesByTrackList($result->TrackList);
+			} catch (\Exception $e) {}
+/*
+			try {
+				print "from category 61\n";
+				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(61);
+				$this->addArtistToPreselectesByTrackList($result->TrackList);
+			} catch (\Exception $e) {}
+
+			try {
+				print "from category 28\n";
+				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(28);
+				$this->addArtistToPreselectesByTrackList($result->TrackList);
+			} catch (\Exception $e) {}
+
+			try {
+				print "from category 29\n";
+				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(29);
+				$this->addArtistToPreselectesByTrackList($result->TrackList);
+			} catch (\Exception $e) {}
+
+			try {
+				print "from category 30\n";
+				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(30);
+				$this->addArtistToPreselectesByTrackList($result->TrackList);
+			} catch (\Exception $e) {}
+
+			try {
+				print "from category 31\n";
+				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(31);
+				$this->addArtistToPreselectesByTrackList($result->TrackList);
+			} catch (\Exception $e) {}
+
+			try {
+				print "from category 39\n";
+				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(39);
+				$this->addArtistToPreselectesByTrackList($result->TrackList);
+			} catch (\Exception $e) {}
+**/
 		}
 		return self::$preselectArtists;
 	}
 
 
 
+	public function getRandomTrackFromArtist($artistId)
+	{
+		$tracks = $this->getMusicBoxInstance()->GetPopularTracksByArtistId($artistId);
+		$tracksList = $tracks->TrackList->Track;
+		$max = sizeof($tracksList)-1;
+		if ($max > 4) $max = 4;
+		return $tracksList[rand(0,$max)];
+	}
 
 	public function getSimilarArtists($track, $nrResult = 3) {
 		try {
@@ -120,7 +175,7 @@ class Service {
 	private function _findTrackInRecommendedTracks($slice) {
 		$result = $this->getMusicBoxInstance()->GetRecommendedTracks();
 		$tracks = $result->TrackList->Track;
-		$max = sizeof($tracks);
+		$max = sizeof($tracks)-1;
 		if (null !== $slice && $max >= $slice[1]) {
 			$trackIdx = rand($slice[0], $slice[1]);
 		} else {
@@ -133,7 +188,7 @@ class Service {
 	private function _findTrackInTopTracks($slice){
 		$result = $this->getMusicBoxInstance()->GetTopTracks();
 		$tracks = $result->TrackList->Track;
-		$max = sizeof($tracks);
+		$max = sizeof($tracks)-1;
 		if (null !== $slice && $max >= $slice[1]) {
 			$trackIdx = rand($slice[0], $slice[1]);
 		} else {
@@ -141,5 +196,18 @@ class Service {
 		}
 		
 		return $tracks[$trackIdx];
+	}
+
+	private function _findTrackFromArtistList($slice) {
+		$artistsList = $this->getPreSelectedArtistList();
+		$max = sizeof($artistsList)-1;
+		if (null !== $slice && $max >= $slice[1]) {
+			$idx = rand($slice[0], $slice[1]);
+		} else {
+			$idx = rand(0, $max);
+		}
+
+		$artistId = $artistsList[$idx];
+		return $this->getRandomTrackFromArtist($artistId);
 	}
 }

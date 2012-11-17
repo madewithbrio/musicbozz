@@ -216,6 +216,15 @@ class Proxy
 		return $this->doRequest('GetPopularTracksByArtistId', $request);		
 	}
 
+	public function GetTracksByCategoryId($categoryId)
+	{
+		$request = new \stdClass;
+		$request->CategoryId = $categoryId;
+		$request->MBCredentials = self::getMBCredentials();
+		return $this->doRequest('GetTracksByCategoryId', $request);		
+	}
+
+
 	public function Search($searchTerm)
 	{
 		$request = new \stdClass;

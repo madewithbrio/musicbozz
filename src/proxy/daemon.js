@@ -83,7 +83,7 @@ console.log(id, "expired");
 console.log("instanceList", instanceList);
 		}
 			
-	setTimeout(clearClients, 1000);
+	setTimeout(clearClients, 6000);
 };
 
 proxy.listen(9001);
@@ -118,12 +118,12 @@ function to_xml_val(data)
 			if (data.hasOwnProperty(key))
 			{
 				if (isNaN(key))
-					xml+= "<" + key + "><![CDATA[" + to_xml_val(data[key]) + "]]></" + key + ">";
+					xml+= "<" + key + ">" + to_xml_val(data[key]) + "</" + key + ">";
 				else
 					xml+= "<ListItem>" + to_xml_val(data[key]) + "</ListItem>";
 			}
 		return xml;
 	}
 	else
-		return data;
+		return "<![CDATA[" + data + "]]>";
 }

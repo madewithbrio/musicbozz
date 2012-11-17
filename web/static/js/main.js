@@ -79,7 +79,9 @@ var musicbozz = (function(){
         $('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: res}, getTemplate()));
         if (!master) {
         	$('#start_game').hide();
+        	$('#stand_by').show();
         } else {
+        	$('#stand_by').hide();
         	if (typeof res[1].name !== 'undefined') {
         		$('#start_game .go').removeClass('inactive');	
         	} else {
@@ -89,6 +91,7 @@ var musicbozz = (function(){
 	};
 
 	var renderQuestion = function(data) {
+		$("#stand_by").hide();
 		$('div[data-template="question"]').html(Mustache.render(getTemplate('question'), data));
 		var player = $("#player").get(0);
 		$(player).children().attr('src', data.url);
@@ -185,7 +188,7 @@ var musicbozz = (function(){
 			if ($form.find('input[name="room"]').length) {
 				room 		= $form.find('input[name="room"]').val();
 			}
-			
+
 			if (sess == null) {
 				alert("Sorry! You're connected to the server, whatever that means...");
 				return;
