@@ -34,10 +34,10 @@ var proxy = http.createServer(
 			case 'newQuestion':
 			case 'timeEnded':
 			case 'setReadyToPlay':
-				if (!instanceList[id]) instanceList[id] = new WebClient(id);
+				if (action == 'subscribe') instanceList[id] = new WebClient(id);
+				if (!instanceList[id]) return http_error(response, 500, 'not ready yet! have you subscribed?');
 				var res = instanceList[id].send(action, param);
 				if (!res) return http_error(response, 500, 'not ready yet! have you subscribed?');
-
 				break;
 
 			case 'pull':
