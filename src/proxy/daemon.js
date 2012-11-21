@@ -99,7 +99,7 @@ function clearClients()
 	setTimeout(clearClients, 1000);
 };
 
-proxy.listen(9001);
+proxy.listen(9001, '127.0.0.1');
 
 clearClients();
 
