@@ -6,8 +6,8 @@ var now = function() {return (new Date()).getTime(); };
 WebClient = function() {
 
 	var interface_public = {}, 
-		//ws = new WebSocket.Client('ws://localhost:9000/');
-		ws = new WebSocket.Client('ws://62.28.238.103:9000/'),
+		ws = new WebSocket.Client('ws://localhost:9000/');
+		//ws = new WebSocket.Client('ws://62.28.238.103:9000/'),
 		timestamp = now(),
 		events = [],
 		room = null,
