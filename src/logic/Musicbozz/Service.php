@@ -5,7 +5,6 @@ use \Ratchet\Wamp\WampServerInterface as WampServerInterface;
 use \Ratchet\ConnectionInterface;
 class Service implements WampServerInterface {
 
-
     public function onPublish(ConnectionInterface $player, $gameRoom, $event, array $exclude, array $eligible) {
 //        $gameRoom->broadcast($event);
     }
@@ -161,4 +160,6 @@ class Service implements WampServerInterface {
         }
         return $result;
     }
+
+
 }

@@ -32,6 +32,7 @@ class Player extends WampConnection {
 		return array(
 			'name' 	=> $this->getName(),
 			'score' => $this->getScore(),
+			'master' => $this->isMaster(),
 			'id' 	=> $this->getSessionId()
 			);
 	}

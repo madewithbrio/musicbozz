@@ -10,7 +10,6 @@ class GameRoomManager extends \Ratchet\Wamp\TopicManager {
         if (!array_key_exists($topic, $this->topicLookup)) {
             $this->topicLookup[$topic] = new GameRoom($topic);
         }
-
         return $this->topicLookup[$topic];
     }
 }

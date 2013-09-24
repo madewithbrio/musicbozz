@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NAME=musicbozz
+NAME=musicbuzz-websockets1
 LOGDIR=/var/tmp/$NAME
 
 if [ ! -d $LOGDIR ] ; then

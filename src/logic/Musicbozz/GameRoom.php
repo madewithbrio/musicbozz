@@ -12,13 +12,21 @@ class GameRoom extends Topic
 	private $playersReadyToPlay = 0;
 	private $gameMode;
 
+	public function __construct($topicId) {
+		parent::__construct($topicId);
+		\Sapo\Redis::getInstance()->hdel('rooms', $this->getRoomId());
+	}
+
+	public function __destruct() {
+		\Sapo\Redis::getInstance()->hdel('rooms', $this->getRoomId());
+	}
+
 	/**
 	 * @ override
 	 */
 	public function add(ConnectionInterface $player) {
 		if ($this->count() == 0) {
-			$player->setMaster(true);
-			print "unlock room ";
+			$this->setMaster($player);
 			$this->questionNumber = 0;
 		}
 
@@ -27,7 +35,44 @@ class GameRoom extends Topic
 			$player->close();
 			return;
 		}
+
 		parent::add($player);
+        $this->notificationStatus();
+	}
+
+	public function remove(ConnectionInterface $player) {
+		parent::remove($player);
+		foreach ($this as $player) { // set player master
+			$this->setMaster($player);
+			break;
+		}
+		$this->broadcast(array('action' => 'playerLeave'));
+		$this->notificationStatus();
+	}
+
+	public function setMaster(ConnectionInterface $player) {
+		$player->setMaster(true);
+		$player->event($this->getId(), array('action' => 'setMaster'));
+	}
+
+	protected function getRoomId() {
+		return (int) preg_replace('@http://localhost/game/(\d+)$@', '$1', $this->getId());
+	}
+
+	protected function getStatus() {
+		$players = array();
+		foreach ($this as $player) {
+			$players[] = $player->toWs();
+		}
+		return array(
+			'players' => $players,
+			'question' => $this->question
+			);
+	}
+
+	protected function notificationStatus() {
+		print "notify redis\n";
+		\Sapo\Redis::getInstance()->hset('rooms', $this->getRoomId(), serialize($this->getStatus()));
 	}
 
 
