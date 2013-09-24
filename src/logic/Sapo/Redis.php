@@ -9,7 +9,7 @@ class Redis {
 		if (self::$_client === null) {
 			self::$_client = new \Predis\Client(array(
 				'host'     => '127.0.0.1',
-   				'port'     => 9999,
+   				'port'     => 6379,
 			));
 		}
 		return self::$_client;
