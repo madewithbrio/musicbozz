@@ -30,6 +30,7 @@ class Player extends WampConnection {
 	public function getAvatar() { return $this->avatar; }
 
 	public function setMaster($bool) { $this->master = $master; }
+	public function setAvatar($avatar) { $this->avatar = $avatar; }
 	public function isMaster() { return $this->master; }
 	
 	public function toWs() {
