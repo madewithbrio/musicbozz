@@ -166,7 +166,7 @@ var musicbozz = (function(){
 
 	$(document).ready(function(){
 		// connect ws
-		var room, player = $('#player').get(0);
+		var room, playerName, player = $('#player').get(0);
 
 		loadTemplates();
 
@@ -182,14 +182,16 @@ var musicbozz = (function(){
 			player.play();
 		})
 
-		$('input[type="submit"][data-action="join"]').bind('click', function(e){
-			
+		var $joinButton = $('input[type="submit"][data-action="join"]');
+		$joinButton.attr('disable', true).bind('click', function(e){
+			if (!playerName) return;
+
 			player.play();
 			player.pause();
 
 			var $form 		= $(this).parent(), 
-				action 		= $form.attr('action'),
-				playerName 	= $form.find('input[name="name"]').val();
+				action 		= $form.attr('action');
+				//playerName 	= $form.find('input[name="name"]').val();
 
 			if ($form.find('input[name="room"]').length) {
 				room 		= $form.find('input[name="room"]').val();
@@ -209,20 +211,6 @@ var musicbozz = (function(){
 			        sess = null;
 			        console.log("Connection lost (" + reason + ")");
 			    });
-/**
-			if (sess == null) {
-				alert("Sorry! You're connected to the server, whatever that means...");
-				return;
-			}
-
-			if (action == "#joinRoom" && !!room) { joinGame(room,eventListener); }
-			else { joinGame(undefined, eventListener); }
-
-			if (playerName != "") {
-				sess.call(gameRoom, 'setPlayerName', playerName);
-			}
-			startApp();
-**/
 		});
 
 		$("#start_game a").bind('click', function(e) {
@@ -278,6 +266,38 @@ var musicbozz = (function(){
 		// prevent default all link and submit actions
 		$(document).delegate('a', 'click', function(e){e.preventDefault();});
 		$(document).delegate('form', 'submit', function(e){e.preventDefault();});
+
+		FB.Event.subscribe('auth.authResponseChange', function(response) {
+            // Here we specify what we do with the response anytime this event occurs. 
+            if (response.status === 'connected') {
+              // The response object is returned with a status field that lets the app know the current
+              // login status of the person. In this case, we're handling the situation where they 
+              // have logged in to the app.
+              FB.api('/me', function(response) {
+	              console.log(response.name);
+	              playerName = response.name;
+	              $joinButton.removeAttr('disable');
+	            });
+            } else if (response.status === 'not_authorized') {
+              // In this case, the person is logged into Facebook, but not into the app, so we call
+              // FB.login() to prompt them to do so. 
+              // In real-life usage, you wouldn't want to immediately prompt someone to login 
+              // like this, for two reasons:
+              // (1) JavaScript created popup windows are blocked by most browsers unless they 
+              // result from direct interaction from people using the app (such as a mouse click)
+              // (2) it is a bad experience to be continually prompted to login upon page load.
+              
+              FB.login();
+            } else {
+              // In this case, the person is not logged into Facebook, so we call the login() 
+              // function to prompt them to do so. Note that at this stage there is no indication
+              // of whether they are logged into the app. If they aren't then they'll see the Login
+              // dialog right after they log in to Facebook. 
+              // The same caveats as above apply to the FB.login() call here.
+              FB.login();
+            }
+          });
+        };
 	});
 
 	return {};
