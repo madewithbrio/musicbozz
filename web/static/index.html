@@ -159,20 +159,14 @@
 
         <script>
           window.fbAsyncInit = function() {
-          FB.init({
-            appId      : '667899479901883', // App ID
-            channelUrl : '//vmdev-musicbozz.vmdev.bk.sapo.pt/channel.html', // Channel File
-            status     : true, // check login status
-            cookie     : true, // enable cookies to allow the server to access the session
-            xfbml      : true  // parse XFBML
-          });
-
-          // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
-          // for any authentication related change, such as login, logout or session refresh. This means that
-          // whenever someone who was previously logged out tries to log in again, the correct case below 
-          // will be handled. 
-          
-
+              FB.init({
+                appId      : '667899479901883', // App ID
+                channelUrl : '//vmdev-musicbozz.vmdev.bk.sapo.pt/channel.html', // Channel File
+                status     : true, // check login status
+                cookie     : true, // enable cookies to allow the server to access the session
+                xfbml      : true  // parse XFBML
+              });
+          };
           // Load the SDK asynchronously
           (function(d){
            var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];

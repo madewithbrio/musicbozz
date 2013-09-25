@@ -297,7 +297,7 @@ var musicbozz = (function(){
               FB.login();
             }
           });
-        };
+        
 	});
 
 	return {};
