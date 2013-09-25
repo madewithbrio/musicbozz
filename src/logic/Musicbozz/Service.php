@@ -64,9 +64,9 @@ class Service implements WampServerInterface {
         if (!empty($params)) {
             $config = $params[0];
             $oldName = $player->getName();
-            $player->setName($config->name);
-            $player->setAvatar($config->avatar);
-            
+            $player->setName($config['name']);
+            $player->setAvatar($config['avatar']);
+
             $player->callResult($id, array('msg' => "Name changed"));
 
             $playersList = $this->getPlayers($player, $gameRoom);
