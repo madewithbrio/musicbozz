@@ -65,7 +65,7 @@ var musicbozz = (function(){
 		if (typeof room === "undefined") { room = Math.floor(Math.random()*11); }
 		console.log("join to game room: " + room);
 	//	gameRoom = "http://localhost/game/"+room;
-		sess.subscribe(room,onEvent);
+		sess.subscribe(room.toString(),onEvent);
 		$('.room_id').html(room);
 		location.hash = "#room="+room;
 	};
@@ -202,7 +202,7 @@ var musicbozz = (function(){
 			        sess = session;
 			        console.log("Connected to " + wsuri);
 			        joinGame(room,eventListener);
-			        sess.call(gameRoom, 'setPlayerName', playerName);
+			        sess.call(room, 'setPlayerName', playerName);
 			        startApp();
 			    },
 			    function (code, reason) {
