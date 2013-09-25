@@ -275,6 +275,8 @@ var musicbozz = (function(){
                 cookie     : true, // enable cookies to allow the server to access the session
                 xfbml      : true  // parse XFBML
               });
+
+            FB.login();
           
 			FB.Event.subscribe('auth.authResponseChange', function(response) {
 	            // Here we specify what we do with the response anytime this event occurs. 
