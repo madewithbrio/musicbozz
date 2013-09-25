@@ -123,7 +123,7 @@ var musicbozz = (function(){
 
 	var eventListener = function (t, e) {
 		switch (e.action) {
-			case 'playerNameChange':
+			case 'playerConfigChange':
 			case 'newPlayer':
 				renderPlayersList(e.data);
 				break;
@@ -166,7 +166,7 @@ var musicbozz = (function(){
 
 	$(document).ready(function(){
 		// connect ws
-		var room, playerName, player = $('#player').get(0);
+		var room, playerConfig, player = $('#player').get(0);
 
 		loadTemplates();
 
@@ -184,7 +184,7 @@ var musicbozz = (function(){
 
 		var $joinButton = $('input[type="submit"][data-action="join"]');
 		$joinButton.attr('disable', true).bind('click', function(e){
-			if (!playerName) return;
+			if (!playerConfig) return;
 
 			player.play();
 			player.pause();
@@ -204,7 +204,7 @@ var musicbozz = (function(){
 			        sess = session;
 			        console.log("Connected to " + wsuri);
 			        joinGame(room,eventListener);
-			        sess.call(room, 'setPlayerName', playerName);
+			        sess.call(room, 'setPlayer', playerConfig);
 			        startApp();
 			    },
 			    function (code, reason) {
@@ -283,8 +283,13 @@ var musicbozz = (function(){
 	              // login status of the person. In this case, we're handling the situation where they 
 	              // have logged in to the app.
 	              FB.api('/me', function(response) {
-		              console.log(response.name);
+		              console.log(response);
 		              playerName = response.name;
+		              playerConfig = {
+		              	name: response.name,
+		              	avatar: 'http://graph.facebook.com/'+response.username+'/picture',
+		              	username: response.username
+		              }
 		              $joinButton.removeAttr('disable');
 		            });
 	            } else if (response.status === 'not_authorized') {
