@@ -78,7 +78,7 @@ form input[type="tel"]:focus {
   /*.box-shadow(0 5px 0 0 darken(@main-color,5%));*/
 }
 .button:hover {
-  background-color: #666;
+  background-color: #555;
   /*.box-shadow(0 5px 0 0 #444);*/
 }
 .musicboxquiz-header img {
@@ -93,9 +93,6 @@ form input[type="tel"]:focus {
   padding: 30px;
   margin: 0 auto;
   background: #0099ab url(../img/bg-blue.jpg) top center;
-}
-#homepage {
-  display: none;
 }
 #homepage section {
   margin-bottom: 50px;
