@@ -19,18 +19,17 @@ var musicbozz = (function(facebookSDK){
 			this.type = type;
 			this.player = player;
 			this.players = [];
-			this.master = false;
 			this.question = undefined;
 			this.roomName = roomName || this.player.username;
+			this.master = !roomName;
 		}
 
 		Room.prototype.addPlayer = function() {}
 		Room.prototype.setMaster = function(master) { this.master; }
 		Room.prototype.getPlayer = function() { return this.player; }
 		Room.prototype.getQuestion = function() {}
-		Room.prototype.isAlone = function() {
-			return this.type == 'alone';
-		}
+		Room.prototype.isAlone = function() { return this.type == 'alone'; }
+		Room.prototype.isMaster = function () { return this.master; }
 		Room.prototype.getRoomId = function() {
 			return ((this.type == 'alone') ? 'alone/' : 'room/') + this.roomName;
 		}
@@ -44,7 +43,6 @@ var musicbozz = (function(facebookSDK){
 
 	var view = (function(){
 		var view = {}, partialTemplates = [],
-			$scrubber = $('div.song_scrubber'),
 			$room = $('#room'), 
 			$homepage = $('#homepage');
 
@@ -88,13 +86,24 @@ var musicbozz = (function(facebookSDK){
 			player.load();
 		};
 
+		view.renderPlayerAnswer = function(data) {
+			var $playerContainer = $('a[data-player-id="'+data.player.id+'"]');
+			$playerContainer.find('p.total_points').html(data.totalScore);
+			var clazzName = data.questionScore > 0 ? 'positive' : 'negative';
+			if (data.questionScore == 0) clazzName = ""; // hack because 0 
+			$playerContainer.find('p.score').addClass(clazzName).addClass('active').html(data.questionScore);
+		};
+
+		view.cleanPlayerAnswer = function(data) {
+			var $playerContainer = $('a[data-player-id]');
+			$playerContainer.find('p.score').removeClass('active positive negative');
+		};
+
 		var convertDecimalToMinSec = function(decimal) {
-			var hours = Math.floor(decimal/3600,10),
-				mins  = Math.floor((decimal - hours*60)/60,10),
-	  		    secs  = Math.floor(decimal - mins*60);
+			var mins  = Math.floor((decimal - hours*60)/60,10) || 0,
+	  		    secs  = Math.floor(decimal - mins*60) || 0;
 	  		if (mins < 10) mins = "0" + mins;  
 	  		if (secs < 10) secs = "0" + secs;
-	  		if (hours > 0) mins = hours + ":" + mins;
 	  		return mins+":"+secs;
 		};
 
@@ -125,7 +134,8 @@ var musicbozz = (function(facebookSDK){
 		onLoadHomepage();
 
 		$("#player").bind('timeupdate.player', function(e){
-			var played = 0;
+			var played = 0,
+				$scrubber = $('div.song_scrubber');
 			if ((this.currentTime != undefined)) {
 			    played = parseInt((100 - (player.currentTime / this.duration) * 100), 10) || 0;
 			    $scrubber.find('.remaining_time').css({width: played + '%'});
@@ -182,10 +192,22 @@ var musicbozz = (function(facebookSDK){
 			$player.get(0).play();
 		}
 
+		controller.playerAnswer = function(result) {
+			view.renderPlayerAnswer(result);
+		}
+
+		controller.questionTimeOver = function(result) {
+			$player.get(0).pause();
+			view.cleanPlayerAnswer(result);
+			if(roomInstance.isMaster()) service.getNewQuestion(roomInstance);
+			if (result.isOver) { $('div.question').html(""); }
+		}
+
 		controller.eventHandler = function(t, e) {
 			switch (e.action) {
 				case 'playerConfigChange':
 				case 'newPlayer':
+				case 'playerLeave':
 					service.listPlayers(roomInstance, view.renderPlayers , errorHandling);
 					break;
 			
@@ -200,20 +222,15 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'playerAnswer':
-					renderPlayerAnswer(e.data);
+					controller.playerAnswer(e.data);
 					break;
 
 				case 'allPlayersAllreadyResponde':
-					$("#player").get(0).pause();
-					resetPlayerAnswer(e.data);
+					controller.questionTimeOver(e.data);
 					break;
 
 				case 'setMaster':
 					roomInstance.setMaster(true);
-					break;
-
-				case 'playerLeave':
-					listPlayers();
 					break;
 
 				default:
