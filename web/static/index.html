@@ -141,10 +141,10 @@
         <script type="text/mustache" data-element="template" data-name="player">
             <li>
                 {{#name}}
-                <a href="#" data-player-id="{{id}}" class="player">
+                <a href="{{others.link}}" data-player-id="{{id}}" class="player" target="_blank">
                     <p class="total_points">{{score}}</p>
                     <div class="thumb">
-                        <img src="{{#avatar}}{{avatar}}{{/avatar}}{{^avatar}}img/avatar.png{{/avatar}}" alt="" />
+                        <img src="{{#others.avatar}}{{others.avatar}}{{/others.avatar}}{{^others.avatar}}img/avatar.png{{/others.avatar}}" alt="" />
                         <p class="score">0</p>
                     </div>
                     <p class="name ellipsis">{{name}}</p>
