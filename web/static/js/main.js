@@ -19,7 +19,7 @@ if (!Function.prototype.bind ) {
 
 //"ws://62.28.238.103:9000"
 var musicbozz = (function(){
-	var sess, wsuri = "ws://127.0.0.1:9000", gameRoom, partialTemplates = {}, master = null;
+	var sess, wsuri = "ws://musicbuzz.local/ws/", gameRoom, partialTemplates = {}, master = null;
 
 	var convertDecimalToMinSec = function(decimal) {
 		var hours = Math.floor(decimal/3600,10),
@@ -162,7 +162,6 @@ var musicbozz = (function(){
 		var room, player = $('#player').get(0);
 
 		loadTemplates();
-		connect();
 
 		room = getInviteRoom();
 		if (typeof room !== 'undefined') {
@@ -189,6 +188,21 @@ var musicbozz = (function(){
 				room 		= $form.find('input[name="room"]').val();
 			}
 
+			if (typeof room === "undefined") { room = Math.floor(Math.random()*11); }
+
+			ab.connect(wsuri + room,
+			    function (session) {
+			        sess = session;
+			        console.log("Connected to " + wsuri);
+			        joinGame(room,eventListener);
+			        sess.call(gameRoom, 'setPlayerName', playerName);
+			        startApp();
+			    },
+			    function (code, reason) {
+			        sess = null;
+			        console.log("Connection lost (" + reason + ")");
+			    });
+/**
 			if (sess == null) {
 				alert("Sorry! You're connected to the server, whatever that means...");
 				return;
@@ -201,6 +215,7 @@ var musicbozz = (function(){
 				sess.call(gameRoom, 'setPlayerName', playerName);
 			}
 			startApp();
+**/
 		});
 
 		$("#start_game a").bind('click', function(e) {

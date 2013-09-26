@@ -1,0 +1,10 @@
+#!/bin/sh
+
+exec 2>&1
+
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/games:/usr/sbin:/sbin
+
+sleep 5
+DIR=$( cd "$( dirname "$0" )" && pwd )
+
+exec setuidgid nobody php ../../src/websocket/deamon.php 9002
