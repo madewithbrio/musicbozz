@@ -34,8 +34,8 @@ class Question {
 		$question->type = $type;
 		$question->number = $number;
 
-		$question->trackPreview = str_replace ('streamer.nmusic.sapo.pt', 'musicbuzz.local', $track->PreviewUrl).".mp3";
-		$question->image = str_replace ('streamer.nmusic.sapo.pt', 'musicbuzz.local', $track->LargeAlbumCover);
+		$question->trackPreview = str_replace ('streamer.nmusic.sapo.pt', 'vmdev-musicbozz.vmdev.bk.sapo.pt', $track->PreviewUrl).".mp3";
+		$question->image = str_replace ('streamer.nmusic.sapo.pt', 'vmdev-musicbozz.vmdev.bk.sapo.pt', $track->LargeAlbumCover);
 
 		switch ($type) {
 			case Question_Type::TRACK:

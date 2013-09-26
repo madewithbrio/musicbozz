@@ -13,21 +13,42 @@ var musicbozz = (function(facebookSDK){
 	'use strict';
 	var roomInstance;
 
-	// events
-	$('a[data-action="start"]').bind('click', function(e){
-		e.preventDefault();
-		controller.goRoom(this.getAttribute('data-game-type'));
-	});
+	var Room = (function() {
+		var Room = function(player, type, roomName) {
+			if (typeof type === 'undefined' || !/(alone|private|public)/.test(type)) type = 'alone';
+			this.type = type;
+			this.player = player;
+			this.players = [];
+			this.master = false;
+			this.question = undefined;
+			this.roomName = roomName || this.player.username;
+		}
 
+		Room.prototype.addPlayer = function() {}
+		Room.prototype.setMaster = function(master) { this.master; }
+		Room.prototype.getPlayer = function() { return this.player; }
+		Room.prototype.getQuestion = function() {}
+		Room.prototype.isAlone = function() {
+			return this.type == 'alone';
+		}
+		Room.prototype.getRoomId = function() {
+			return ((this.type == 'alone') ? 'alone/' : 'room/') + this.roomName;
+		}
+		Room.prototype.getLocation = function() {
+			return 'ws://vmdev-musicbozz.vmdev.bk.sapo.pt/ws/'
+				 + this.getRoomId();
+		}
 
-
-	$(document).ready(function(){
-
-	});
+		return Room;
+	})();
 
 	var view = (function(){
-		var view = {}, partialTemplates = [], $room = $('#room'), $homepage = $('#homepage');
-		view.showRoom = function() {
+		var view = {}, partialTemplates = [], 
+			$room = $('#room'), 
+			$homepage = $('#homepage');
+
+		view.showRoom = function(alone) {
+			if (alone) $room.addClass('alone');
 			$room.show();
 			$homepage.hide();
 		}
@@ -35,6 +56,11 @@ var musicbozz = (function(facebookSDK){
 		view.showHomepage = function() {
 			$homepage.show();
 			$room.hide();
+		}
+
+		view.renderGamestart = function() {
+			$('#standBy').hide();
+			$('#gameBoard').show();
 		}
 
 		view.renderPlayers = function(res) {
@@ -52,6 +78,13 @@ var musicbozz = (function(facebookSDK){
 	        	}
 	        }
 	        **/
+		};
+
+		view.renderQuestion = function(data) {
+			$('div[data-template="question"]').html(Mustache.render(getTemplate('question'), data));
+			var player = $("#player").get(0);
+			$(player).children().attr('src', data.url);
+			player.load();
 		};
 
 		var convertDecimalToMinSec = function(decimal) {
@@ -78,111 +111,73 @@ var musicbozz = (function(facebookSDK){
 				partialTemplates[name] = element.innerHTML;
 			});
 		};
+
+		var onLoadHomepage = function() {
+			var room = /room=(.+)/.exec(window.location.hash);
+			if (!room) return undefined;
+			$("#joinPrivateRoom").find('a').attr('data-room-name', room);
+			$("#joinPrivateRoom").show();
+			$("#startPrivateRoom").hide();
+		};
+
 		loadTemplates();
+		onLoadHomepage();
 		return view;		
 	})();
 
-	var Room = (function() {
-		var Room = function(player, type) {
-			if (typeof type === 'undefined' || !/(alone|private|public)/.test(type)) type = 'alone';
-			this.type = type;
-			this.player = player;
-			this.players = [];
-			this.master = false;
-			this.question = undefined;
-		}
-
-		Room.prototype.addPlayer = function() {}
-		Room.prototype.setMaster = function(master) { this.master; }
-		Room.prototype.getPlayer = function() { return this.player; }
-		Room.prototype.getQuestion = function() {}
-		Room.prototype.getRoomId = function() {
-			return ((this.type == 'alone') ? 'alone/' : 'room/')
-				 + ((this.type !== 'public') ? this.player.username : '1');
-		}
-		Room.prototype.getLocation = function() {
-			return 'ws://vmdev-musicbozz.vmdev.bk.sapo.pt/ws/'
-				 + this.getRoomId();
-		}
-
-		return Room;
-	})();
-
 	var controller = (function() {
-		var controller = {};
-		controller.goRoom = function(type) {
+		var controller = {},
+			errorHandling = function(error, desc){ console.error(error, desc) };
+
+		controller.goRoom = function(type, roomName) {
 			facebookSDK.getLoginStatus(function(response) {
 			  	if (response.status === 'connected') {
 			  		service.loadFacebookPersona(function(){
-			  			roomInstance = new Room(service.getPlayer(), type);
-				    	view.showRoom();
+			  			roomInstance = new Room(service.getPlayer(), type, roomName);
+				    	view.showRoom(roomInstance.isAlone());
 				    	service.connect(roomInstance);
 			  		});
 			  	} else if (response.status === 'not_authorized') {
-			    	controller.login(type);
+			    	controller.login(type, roomName);
 			  	} else {
-			    	controller.login(type);
+			    	controller.login(type, roomName);
 			  	}
 			});
 		}
 
-		controller.login = function(type) {
+		controller.login = function(type, roomName) {
 			facebookSDK.Event.subscribe('auth.authResponseChange', function(response) {
 		        if (response.status === 'connected') {
 		          service.loadFacebookPersona(function(){
-		          	controller.goRoom(type);
+		          	controller.goRoom(type, roomName);
 		          });
 		        }
 		  	});
 		  	facebookSDK.login();
 		}
 
-		return controller;
-	})();
-
-	var service = (function() {
-		var service = {}, ws_session, playerConfig;
-		service.getPlayer = function() {
-			return playerConfig;
+		controller.startGame = function() {
+			service.getNewQuestion(roomInstance, function(question) {
+				view.renderGamestart();
+				view.renderQuestion(question);
+			}, errorHandling);
 		}
 
-		service.loadFacebookPersona = function(onResponseClb) {
-			facebookSDK.api('/me', function(response) {
-	          console.log(response);
-	          playerConfig = {
-	          	name: response.first_name,
-	          	avatar: 'http://graph.facebook.com/'+response.username+'/picture',
-	          	username: response.username,
-	          	link: response.link
-	          }
-	          if (typeof onResponseClb === 'function') onResponseClb.apply(null, playerConfig);
-	        });
+		controller.newQuestion = function(question) {
+			view.renderQuestion(question);
 		}
 
-		service.connect = function(gameRoom) {
-			ab.connect(gameRoom.getLocation(), function(session){
-				ws_session = session;
-				console.log("session open");
-				session.subscribe(gameRoom.getRoomId(),ws_events);
-				session.call(gameRoom.getRoomId(), 'setPlayer', gameRoom.getPlayer());
-			}, function(){
-				console.log("session closed");
-			});
-		}
-
-		service.listPlayers = function(gameRoom) {
-			ws_session.call(gameRoom.getRoomId(), 'listPlayers').then(view.renderPlayers, function(error, desc){ console.error(error, desc); });
-		}
-
-		var ws_events = function(t, e) {
+		controller.eventHandler = function(t, e) {
 			switch (e.action) {
 				case 'playerConfigChange':
 				case 'newPlayer':
-					service.listPlayers(roomInstance);
+					service.listPlayers(roomInstance, view.renderPlayers , errorHandling);
 					break;
 			
 				case 'newQuestion':
-					renderQuestion(e.data);
+					//service.getNewQuestion(roomInstance, view.renderQuestion , errorHandling);
+					//renderQuestion(e.data);
+					controller.newQuestion(e.data);
 					break;
 
 				case 'allPlayersReady':
@@ -210,6 +205,64 @@ var musicbozz = (function(facebookSDK){
 					break;
 			}
 		}
+
+		// bind gui components
+		$('a[data-action="start"]').bind('click', function(e){
+			e.preventDefault();
+			controller.goRoom(this.getAttribute('data-game-type'), this.getAttribute('data-room-name'));
+		});
+
+		return controller;
+	})();
+
+	var service = (function() {
+		var service = {}, ws_session, playerConfig;
+		service.getPlayer = function() {
+			return playerConfig;
+		}
+
+		service.loadFacebookPersona = function(onResponseClb) {
+			facebookSDK.api('/me', function(response) {
+	          console.log(response);
+	          playerConfig = {
+	          	name: response.first_name,
+	          	avatar: 'http://graph.facebook.com/'+response.username+'/picture',
+	          	username: response.username,
+	          	link: response.link
+	          }
+	          if (typeof onResponseClb === 'function') onResponseClb.apply(null, playerConfig);
+	        });
+		}
+
+		service.connect = function(gameRoom) {
+			ab.connect(gameRoom.getLocation(), function(session){
+				ws_session = session;
+				console.log("session open");
+				session.subscribe(gameRoom.getRoomId(),controller.eventHandler);
+				session.call(gameRoom.getRoomId(), 'setPlayer', gameRoom.getPlayer());
+				if (gameRoom.isAlone()) {
+					controller.startGame();
+				}
+			}, function(){
+				console.log("session closed");
+			});
+		}
+
+		service.listPlayers = function(gameRoom, onSuccess, onError) {
+			if (typeof onSuccess !== 'function') onSuccess = function(){};
+			if (typeof onError !== 'function') onError = function(){};
+			
+			ws_session.call(gameRoom.getRoomId(), 'listPlayers').then(onSuccess, onError);
+		}
+
+		service.getNewQuestion = function (gameRoom, onSuccess, onError) {
+			if (typeof onSuccess !== 'function') onSuccess = function(){};
+			if (typeof onError !== 'function') onError = function(){};
+			
+			ws_session.call(gameRoom.getRoomId(), 'newQuestion').then(onSuccess, onError);
+		}
+
+		
 		return service;
 	})();
 

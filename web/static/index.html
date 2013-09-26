@@ -19,10 +19,15 @@
         </div>
         <div id="homepage" class="content">
             <section class="play clearfix">
-                <div class="column">
+                <div class="column" id="startPrivateRoom">
                     <h3>Joga com amigos</h3>
                     <p>Começa um jogo e convida mais três amigos do Facebook para jogarem contigo.</p>
                     <a href="" class="button main-action" data-game-type="private" data-action="start">Começar jogo!</a>
+                </div>
+                <div class="column" style="display: none" id="joinPrivateRoom">
+                    <h3>Joga com amigos</h3>
+                    <p>Convidaram-te para um jogo, agora mete os teus amigos a chorar.</p>
+                    <a href="" class="button main-action" data-game-type="private" data-action="start">Entrar jogo!</a>
                 </div>
                 <div class="column">
                     <h3>Mêmo à boss</h3>
@@ -101,11 +106,11 @@
                     <a href="" class="button main-action">Bora lá jogar!</a>
                 </div>
 
-                <div id="stand_by" class="step">
+                <div id="standBy" class="step stand-by">
                     <p>Agora tem calma contigo enquanto o teu amigo não arranca o jogo...</p>
                 </div>
 
-                <div id="game" class="step">
+                <div id="gameBoard" class="step">
                     <audio id="player" preload><source></source></audio>
                     <div class="question" data-template="question"></div>
                 </div>

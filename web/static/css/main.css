@@ -190,6 +190,11 @@ ul.rooms li.room a:hover {
 #room .main {
   padding: 30px;
 }
+
+.alone .share,
+.alone .stand-by {
+  display: none;
+} 
 /*
 * {-webkit-font-smoothing:antialiased;}
 body {position:relative;font-family:'Lato','Raleway',sans-serif;font-size:26px;font-weight:300;color:#333;}
