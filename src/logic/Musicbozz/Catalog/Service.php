@@ -101,7 +101,7 @@ class Service {
 		return self::$preselectArtists;
 	}
 
-	private function isSimilar($text1, text2) {
+	private function isSimilar($text1, $text2) {
 		$text1 = preg_replace('/^(^[\w\d\s]*)/', '$1', $text1);
 		$text2 = preg_replace('/^(^[\w\d\s]*)/', '$1', $text2);
 		similar_text($text1, $text2, $percentage);
