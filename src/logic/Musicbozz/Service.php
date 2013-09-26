@@ -23,7 +23,7 @@ class Service implements WampServerInterface {
                 $this->listPlayers($player, $id, $gameRoom, $params);
                 break;
 
-            case 'newQuestion':
+            case 'getNewQuestion':
                 $this->getNewQuestion($player, $id, $gameRoom, $params);
                 break;
 

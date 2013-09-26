@@ -43,7 +43,8 @@ var musicbozz = (function(facebookSDK){
 	})();
 
 	var view = (function(){
-		var view = {}, partialTemplates = [], 
+		var view = {}, partialTemplates = [],
+			$scrubber = $('div.song_scrubber'),
 			$room = $('#room'), 
 			$homepage = $('#homepage');
 
@@ -122,11 +123,21 @@ var musicbozz = (function(facebookSDK){
 
 		loadTemplates();
 		onLoadHomepage();
+
+		$("#player").bind('timeupdate.player', function(e){
+			var played = 0;
+			if ((this.currentTime != undefined)) {
+			    played = parseInt((100 - (player.currentTime / this.duration) * 100), 10) || 0;
+			    $scrubber.find('.remaining_time').css({width: played + '%'});
+			    $scrubber.find('p.timer').html(convertDecimalToMinSec(this.duration - this.currentTime));
+			}
+		});
+
 		return view;		
 	})();
 
 	var controller = (function() {
-		var controller = {},
+		var controller = {}, $player = $("#player"),
 			errorHandling = function(error, desc){ console.error(error, desc) };
 
 		controller.goRoom = function(type, roomName) {
@@ -167,6 +178,10 @@ var musicbozz = (function(facebookSDK){
 			view.renderQuestion(question);
 		}
 
+		controller.startAudioPlayer = function() {
+			$player.get(0).play();
+		}
+
 		controller.eventHandler = function(t, e) {
 			switch (e.action) {
 				case 'playerConfigChange':
@@ -181,7 +196,7 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'allPlayersReady':
-					$("#player").get(0).play();
+					controller.startAudioPlayer();
 					break;
 
 				case 'playerAnswer':
@@ -210,6 +225,13 @@ var musicbozz = (function(facebookSDK){
 		$('a[data-action="start"]').bind('click', function(e){
 			e.preventDefault();
 			controller.goRoom(this.getAttribute('data-game-type'), this.getAttribute('data-room-name'));
+		});
+
+		$player.bind('canplay.player', function() {
+			service.setReadyToPlay(roomInstance);
+		});
+		$player.bind('ended.player', function() { 
+			service.notifyTimeEnded(roomInstance);
 		});
 
 		return controller;
@@ -259,8 +281,24 @@ var musicbozz = (function(facebookSDK){
 			if (typeof onSuccess !== 'function') onSuccess = function(){};
 			if (typeof onError !== 'function') onError = function(){};
 			
-			ws_session.call(gameRoom.getRoomId(), 'newQuestion').then(onSuccess, onError);
+			ws_session.call(gameRoom.getRoomId(), 'getNewQuestion').then(onSuccess, onError);
 		}
+
+		service.setReadyToPlay = function (gameRoom, onSuccess, onError) {
+			if (typeof onSuccess !== 'function') onSuccess = function(){};
+			if (typeof onError !== 'function') onError = function(){};
+			
+			ws_session.call(gameRoom.getRoomId(), 'setReadyToPlay').then(onSuccess, onError);
+		}
+
+		service.notifyTimeEnded = function (gameRoom, onSuccess, onError) {
+			if (typeof onSuccess !== 'function') onSuccess = function(){};
+			if (typeof onError !== 'function') onError = function(){};
+			
+			ws_session.call(gameRoom.getRoomId(), 'timeEnded').then(onSuccess, onError);
+		}
+
+		
 
 		
 		return service;
