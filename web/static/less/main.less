@@ -1,195 +1,82 @@
 /*** IMPORTS ***/
-/*---------------------------------------------------
-    LESS Elements 0.9
-  ---------------------------------------------------
-    A set of useful LESS mixins
-    More info at: http://lesselements.com
-  ---------------------------------------------------*/
+@import "elements.less";
+
+@main-color:#BF573E;
+
 * {
-  -ms-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
+	.box-sizing(border-box);
+	-webkit-font-smoothing:antialiased;
 }
-body {
-  font-family: 'Open Sans', sans-serif;
-  color: #FFF;
-}
-a {
-  text-decoration: none;
-  color: #FFF;
-}
-p {
-  line-height: 1.6em;
-  margin-bottom: 1.6em;
-}
-ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-h2,
-h3 {
-  margin: 0;
-  text-transform: uppercase;
-  font-style: italic;
-  font-weight: 900;
-  font-size: 40px;
-}
-h3 {
-  font-size: 26px;
-}
-form input {
-  width: 100%;
-  height: 40px;
-  padding: 5px;
-  font-family: 'Lato', 'Raleway', sans-serif;
-  border: 1px solid rgba(0, 0, 0, 0);
-  -webkit-appearance: none;
-}
+body {font-family:'Open Sans',sans-serif;color:#FFF;}
+a {text-decoration:none;color:#FFF;}
+p {line-height:1.6em;margin-bottom:1.6em;}
+ul {padding:0;margin:0;list-style:none;}
+h2,h3 {margin:0;text-transform:uppercase;font-style:italic;font-weight:900;font-size:40px;}
+h3 {font-size:26px;}
+
+form {}
+form input {width:100%;height:40px;padding:5px;font-family:'Lato','Raleway',sans-serif;border:1px solid rgba(0,0,0,0);-webkit-appearance:none;}
 form input[type="text"]:focus,
-form input[type="tel"]:focus {
-  border-color: #333;
-  outline: none;
+form input[type="tel"]:focus {border-color:#333;outline:none;}
+form input[type="submit"] {}
+
+.button {display:block;max-width:300px;padding:20px;margin:20px auto;text-transform:uppercase;font-style:italic;font-weight:900;font-size:20px;color:#FFF;background-color:#444;text-align:center;.rounded(40px);border:2px solid #FFF;//.transition(0.1s,linear);
+	//.box-shadow(0 5px 0 0 #333);
+	&.main-action {background-color:@main-color;//.box-shadow(0 5px 0 0 darken(@main-color,15%));
+		&:hover {background-color:lighten(saturate(@main-color,20%),10%);/*.box-shadow(0 5px 0 0 darken(@main-color,5%));*/}
+	}
+	&:hover {background-color:#555;/*.box-shadow(0 5px 0 0 #444);*/}
+	
 }
-.button {
-  display: block;
-  max-width: 300px;
-  padding: 20px;
-  margin: 20px auto;
-  text-transform: uppercase;
-  font-style: italic;
-  font-weight: 900;
-  font-size: 20px;
-  color: #FFF;
-  background-color: #444;
-  text-align: center;
-  -webkit-border-radius: 40px;
-  -moz-border-radius: 40px;
-  border-radius: 40px;
-  border: 2px solid #FFF;
+
+.musicboxquiz-header {
+	img {display:block;width:100%;max-width:960px;height:auto;margin:0 auto;}
 }
-.button.main-action {
-  background-color: #bf573e;
+
+.content {max-width:720px;padding:30px;margin:0 auto;background:#0099AB url(../img/bg-blue.jpg) top center;}
+
+#homepage {
+	section {margin-bottom:50px;
+		&.how-to {
+			img {display:block;width:100%;max-width:520px;margin:20px auto;}
+			.video-wrapper {position:relative;padding-bottom:56.25%;padding-top:25px;height:0;//max-width:520px;margin:0 auto;
+				.twerker {display:block;z-index:999999;
+					img {position:absolute;top:0;left:0;width:100%;height:auto;max-width:100%;margin:0 auto;z-index:999999;}
+				}
+				iframe {position:absolute;top:0;left:0;width:100%;height:100%;}
+			}
+		}
+		&.play {
+			.column {float:left;width:40%;margin:0 5%;text-align:center;}
+		}
+	}
 }
-.button.main-action:hover {
-  background-color: #e16b4f;
-  /*.box-shadow(0 5px 0 0 darken(@main-color,5%));*/
+
+ul.rooms {margin:10px 0;
+	p {margin:0;line-height:normal;}
+	li.room {float:left;width:50%;
+		a {display:block;padding:5px 5px 5px 10px;background-color:rgba(255,255,255,0.15);
+			.room-name {float:left;line-height:50px;text-transform:uppercase;font-weight:900;}
+			ul.players {float:right;
+				li.player {float:left;width:25%;
+					.avatar {width:50px;height:50px;margin:0 0 0 4px;background-color:rgba(255,255,255,0.4);
+						img {width:100%;}
+					}
+					.player-name {display:none;}
+				}
+			}
+			&:hover {background-color:rgba(0,0,0,0.2);}
+		}
+	}
 }
-.button:hover {
-  background-color: #555;
-  /*.box-shadow(0 5px 0 0 #444);*/
+
+#room {padding:0;
+	header {padding:30px;background:#444 url(../img/bg-black.jpg) top center;}
+	.main {padding:30px;}
 }
-.musicboxquiz-header img {
-  display: block;
-  width: 100%;
-  max-width: 960px;
-  height: auto;
-  margin: 0 auto;
-}
-.content {
-  max-width: 720px;
-  padding: 30px;
-  margin: 0 auto;
-  background: #0099ab url(../img/bg-blue.jpg) top center;
-}
-#homepage section {
-  margin-bottom: 50px;
-}
-#homepage section.how-to img {
-  display: block;
-  width: 100%;
-  max-width: 520px;
-  margin: 20px auto;
-}
-#homepage section.how-to .video-wrapper {
-  position: relative;
-  padding-bottom: 56.25%;
-  padding-top: 25px;
-  height: 0;
-}
-#homepage section.how-to .video-wrapper .twerker {
-  display: block;
-  z-index: 999999;
-}
-#homepage section.how-to .video-wrapper .twerker img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  margin: 0 auto;
-  z-index: 999999;
-}
-#homepage section.how-to .video-wrapper iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-#homepage section.play .column {
-  float: left;
-  width: 40%;
-  margin: 0 5%;
-  text-align: center;
-}
-ul.rooms {
-  margin: 10px 0;
-}
-ul.rooms p {
-  margin: 0;
-  line-height: normal;
-}
-ul.rooms li.room {
-  float: left;
-  width: 50%;
-}
-ul.rooms li.room a {
-  display: block;
-  padding: 5px 5px 5px 10px;
-  background-color: rgba(255, 255, 255, 0.15);
-}
-ul.rooms li.room a .room-name {
-  float: left;
-  line-height: 50px;
-  text-transform: uppercase;
-  font-weight: 900;
-}
-ul.rooms li.room a ul.players {
-  float: right;
-}
-ul.rooms li.room a ul.players li.player {
-  float: left;
-  width: 25%;
-}
-ul.rooms li.room a ul.players li.player .avatar {
-  width: 50px;
-  height: 50px;
-  margin: 0 0 0 4px;
-  background-color: rgba(255, 255, 255, 0.4);
-}
-ul.rooms li.room a ul.players li.player .avatar img {
-  width: 100%;
-}
-ul.rooms li.room a ul.players li.player .player-name {
-  display: none;
-}
-ul.rooms li.room a:hover {
-  background-color: rgba(0, 0, 0, 0.2);
-}
-#room {
-  padding: 0;
-}
-#room header {
-  padding: 30px;
-  background: #444444 url(../img/bg-black.jpg) top center;
-}
-#room .main {
-  padding: 30px;
-}
+
+
+
 /*
 * {-webkit-font-smoothing:antialiased;}
 body {position:relative;font-family:'Lato','Raleway',sans-serif;font-size:26px;font-weight:300;color:#333;}
@@ -209,6 +96,8 @@ a {text-decoration:none;color:#333;}
 
 .no-touch .sms {display:none;}
 */
+
+
 /*************/
 /*** START ***/
 /*************/
@@ -233,6 +122,8 @@ form.i_know_the_room input[type="submit"] {top:50px;}
 .start .fuck_the_invitation {padding:10px 0;margin:10px 0 0 0;background:#53ACD6;}
 .start .fuck_the_invitation form input[type="submit"] {background-color:#333;}
 */
+
+
 /***********/
 /*** APP ***/
 /***********/
@@ -293,75 +184,73 @@ form.i_know_the_room input[type="submit"] {top:50px;}
 .modal input[type="text"] {width:94%;height:34px;padding:2px 5px;margin:10px 0;font-family:'Lato','Raleway',sans-serif;border:1px solid #333;-webkit-appearance:none;}
 
 */
+
 .ellipsis {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
+
 .clearfix:before,
 .clearfix:after {
-  content: " ";
-  /* 1 */
-
-  display: table;
-  /* 2 */
-
+    content: " "; /* 1 */
+    display: table; /* 2 */
 }
+
 .clearfix:after {
-  clear: both;
+    clear: both;
 }
+
 /*
  * For IE 6/7 only
  * Include this rule to trigger hasLayout and contain floats.
  */
+
 .clearfix {
-  *zoom: 1;
+    *zoom: 1;
 }
+
+
+
+
+
 @media screen and (min-width: 650px) {
-  
+
 }
+
 /* >= XL */
-@media screen and (min-width: 1680px) {
-  
+@media screen and (min-width:1680px) {
+
 }
+
+
 /* >= L */
 @media screen and (min-width: 960px) {
-  
+
 }
+
 /* < L */
 @media screen and (max-width: 960px) {
-  
+
 }
+
 /* MEDIUM SCREENS */
 @media screen and (min-width: 650px) and (max-width: 959px) {
-  
+
 }
+
 /* SMALL SCREENS */
 @media screen and (max-width: 649px) {
-  #content {
-    max-width: 720px;
-    padding: 30px;
-    margin: 0 auto;
-    background: #0099ab url(../img/bg.jpg) center center;
-  }
-  #content section {
-    margin-bottom: 50px;
-  }
-  #content section.play .column {
-    float: none;
-    width: 100%;
-    margin: 0;
-    margin-bottom: 30px;
-  }
+#content {max-width:720px;padding:30px;margin:0 auto;background:#0099AB url(../img/bg.jpg) center center;
+	section {margin-bottom:50px;
+		&.play {
+			.column {float:none;width:100%;margin:0;margin-bottom:30px;}
+		}
+	}
 }
-.clearfix:before,
-.clearfix:after {
-  content: "";
-  display: table;
 }
-.clearfix:after {
-  clear: both;
-}
-.clearfix {
-  zoom: 1;
-}
+
+
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }  
+.clearfix { zoom: 1; }

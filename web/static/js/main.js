@@ -19,7 +19,7 @@ if (!Function.prototype.bind ) {
 
 //"ws://62.28.238.103:9000"
 var musicbozz = (function(){
-	var sess, wsuri = "ws://musicbuzz.local/ws/", gameRoom, partialTemplates = {}, master = null;
+	var sess, wsuri = "ws://vmdev-musicbozz.vmdev.bk.sapo.pt/ws/", gameRoom, partialTemplates = {}, master = null;
 
 	var convertDecimalToMinSec = function(decimal) {
 		var hours = Math.floor(decimal/3600,10),
@@ -64,8 +64,8 @@ var musicbozz = (function(){
 	var joinGame = function(room, onEvent) {
 		if (typeof room === "undefined") { room = Math.floor(Math.random()*11); }
 		console.log("join to game room: " + room);
-		gameRoom = "http://localhost/game/"+room;
-		sess.subscribe(gameRoom,onEvent);
+	//	gameRoom = "http://localhost/game/"+room;
+		sess.subscribe(room.toString(),onEvent);
 		$('.room_id').html(room);
 		location.hash = "#room="+room;
 	};
@@ -75,7 +75,6 @@ var musicbozz = (function(){
 	};
 
 	var renderPlayersList = function(res) {
-		if (null == master) { master = typeof res[1].name == 'undefined'; }
         $('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: res}, getTemplate()));
         if (!master) {
         	$('#start_game').hide();
@@ -124,7 +123,7 @@ var musicbozz = (function(){
 
 	var eventListener = function (t, e) {
 		switch (e.action) {
-			case 'playerNameChange':
+			case 'playerConfigChange':
 			case 'newPlayer':
 				renderPlayersList(e.data);
 				break;
@@ -146,6 +145,14 @@ var musicbozz = (function(){
 				resetPlayerAnswer(e.data);
 				break;
 
+			case 'setMaster':
+				master = true;
+				break;
+
+			case 'playerLeave':
+				listPlayers();
+				break;
+
 			default:
 				break;
 		}
@@ -159,7 +166,7 @@ var musicbozz = (function(){
 
 	$(document).ready(function(){
 		// connect ws
-		var room, player = $('#player').get(0);
+		var room, playerConfig, player = $('#player').get(0);
 
 		loadTemplates();
 
@@ -175,14 +182,16 @@ var musicbozz = (function(){
 			player.play();
 		})
 
-		$('input[type="submit"][data-action="join"]').bind('click', function(e){
-			
+		var $joinButton = $('input[type="submit"][data-action="join"]');
+		$joinButton.attr('disable', true).bind('click', function(e){
+			if (!playerConfig) return;
+
 			player.play();
 			player.pause();
 
 			var $form 		= $(this).parent(), 
-				action 		= $form.attr('action'),
-				playerName 	= $form.find('input[name="name"]').val();
+				action 		= $form.attr('action');
+				//playerName 	= $form.find('input[name="name"]').val();
 
 			if ($form.find('input[name="room"]').length) {
 				room 		= $form.find('input[name="room"]').val();
@@ -195,27 +204,13 @@ var musicbozz = (function(){
 			        sess = session;
 			        console.log("Connected to " + wsuri);
 			        joinGame(room,eventListener);
-			        sess.call(gameRoom, 'setPlayerName', playerName);
+			        sess.call(room, 'setPlayer', playerConfig);
 			        startApp();
 			    },
 			    function (code, reason) {
 			        sess = null;
 			        console.log("Connection lost (" + reason + ")");
 			    });
-/**
-			if (sess == null) {
-				alert("Sorry! You're connected to the server, whatever that means...");
-				return;
-			}
-
-			if (action == "#joinRoom" && !!room) { joinGame(room,eventListener); }
-			else { joinGame(undefined, eventListener); }
-
-			if (playerName != "") {
-				sess.call(gameRoom, 'setPlayerName', playerName);
-			}
-			startApp();
-**/
 		});
 
 		$("#start_game a").bind('click', function(e) {
@@ -271,6 +266,55 @@ var musicbozz = (function(){
 		// prevent default all link and submit actions
 		$(document).delegate('a', 'click', function(e){e.preventDefault();});
 		$(document).delegate('form', 'submit', function(e){e.preventDefault();});
+
+		window.fbAsyncInit = function() {
+              FB.init({
+                appId      : '667899479901883', // App ID
+                channelUrl : '//vmdev-musicbozz.vmdev.bk.sapo.pt/channel.html', // Channel File
+                status     : true, // check login status
+                cookie     : true, // enable cookies to allow the server to access the session
+                xfbml      : true  // parse XFBML
+              });
+
+            FB.login();
+          
+			FB.Event.subscribe('auth.authResponseChange', function(response) {
+	            // Here we specify what we do with the response anytime this event occurs. 
+	            if (response.status === 'connected') {
+	              // The response object is returned with a status field that lets the app know the current
+	              // login status of the person. In this case, we're handling the situation where they 
+	              // have logged in to the app.
+	              FB.api('/me', function(response) {
+		              console.log(response);
+		              playerName = response.name;
+		              playerConfig = {
+		              	name: response.name,
+		              	avatar: 'http://graph.facebook.com/'+response.username+'/picture',
+		              	username: response.username
+		              }
+		              $joinButton.removeAttr('disable');
+		            });
+	            } else if (response.status === 'not_authorized') {
+	              // In this case, the person is logged into Facebook, but not into the app, so we call
+	              // FB.login() to prompt them to do so. 
+	              // In real-life usage, you wouldn't want to immediately prompt someone to login 
+	              // like this, for two reasons:
+	              // (1) JavaScript created popup windows are blocked by most browsers unless they 
+	              // result from direct interaction from people using the app (such as a mouse click)
+	              // (2) it is a bad experience to be continually prompted to login upon page load.
+
+	              FB.login();
+	            } else {
+	              // In this case, the person is not logged into Facebook, so we call the login() 
+	              // function to prompt them to do so. Note that at this stage there is no indication
+	              // of whether they are logged into the app. If they aren't then they'll see the Login
+	              // dialog right after they log in to Facebook. 
+	              // The same caveats as above apply to the FB.login() call here.
+	              FB.login();
+	            }
+          	});
+		};
+        
 	});
 
 	return {};

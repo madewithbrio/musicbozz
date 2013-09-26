@@ -5,7 +5,6 @@ use \Ratchet\Wamp\WampServerInterface as WampServerInterface;
 use \Ratchet\ConnectionInterface;
 class Service implements WampServerInterface {
 
-
     public function onPublish(ConnectionInterface $player, $gameRoom, $event, array $exclude, array $eligible) {
 //        $gameRoom->broadcast($event);
     }
@@ -16,8 +15,8 @@ class Service implements WampServerInterface {
         var_dump($params);
 
         switch($action) {
-            case 'setPlayerName':
-                $this->setPlayerName($player, $id, $gameRoom, $params);
+            case 'setPlayer':
+                $this->setPlayer($player, $id, $gameRoom, $params);
                 break;
 
             case 'listPlayers':
@@ -61,15 +60,17 @@ class Service implements WampServerInterface {
     public function onClose(ConnectionInterface $player) {}
     public function onError(ConnectionInterface $player, \Exception $e) {}
 
-    private function setPlayerName(ConnectionInterface $player, $id, $gameRoom, array $params) {
+    private function setPlayer(ConnectionInterface $player, $id, $gameRoom, array $params) {
         if (!empty($params)) {
-            $newName = $params[0];
+            $config = $params[0];
             $oldName = $player->getName();
-            $player->setName($newName);
+            $player->setName($config['name']);
+            $player->setAvatar($config['avatar']);
+
             $player->callResult($id, array('msg' => "Name changed"));
 
             $playersList = $this->getPlayers($player, $gameRoom);
-            $gameRoom->broadcast(array('action' => 'playerNameChange', 
+            $gameRoom->broadcast(array('action' => 'playerConfigChange', 
                                        'data'   => $playersList));
         }
     }
@@ -161,4 +162,6 @@ class Service implements WampServerInterface {
         }
         return $result;
     }
+
+
 }

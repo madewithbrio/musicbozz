@@ -6,103 +6,114 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>music bozz</title>
+        <title>music box quiz</title>
         <meta name="description" content="">
-
-        <!-- Mobile viewport optimization h5bp.com/ad -->
-        <meta name="HandheldFriendly" content="True">
-        <meta name="MobileOptimized" content="320">
-        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
-        <link href='http://fonts.googleapis.com/css?family=Raleway:400,900,700,500,300,600,800,200,100' rel='stylesheet' type='text/css'>
-        <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900' rel='stylesheet' type='text/css'>
-
+        <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/font-awesome.css">
-        <!--[if lt IE 8]>
-        <link rel="stylesheet" href="css/font-awesome-ie7.css">
-        <![endif]-->
-        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
     </head>
     <body>
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
+        <div class="musicboxquiz-header">
+            <img src="img/header.png" alt="" />
+        </div>
+        <div id="homepage" class="content">
+            <section class="play clearfix">
+                <div class="column">
+                    <h3>Joga com amigos</h3>
+                    <p>Começa um jogo e convida mais três amigos do Facebook para jogarem contigo.</p>
+                    <a href="" class="button main-action">Começar jogo!</a>
+                </div>
+                <div class="column">
+                    <h3>Mêmo à boss</h3>
+                    <p>Se jogar com os amigos já não te dá pica então estás pronto para desafia o top.<!--Os 10 melhores ganham contas <i>music box</i> durante um ano.--></p>
+                    <a href="" class="button">Jogar sozinho!</a>
+                </div>
+            </section>
+            <section class="how-to">
+                <h2>Lembras-te do Buzz?</h2>
+                <p>Aquele jogo que tinha a voz do Jorge Gabriel! Não? Ok, pouco importa!<br />Se achas que sabes tudo sobre música, então convida mais três amigos para uma batalha online de conhecimento musical. Nós passamos 30 segundos de uma música e tu tens de adivinhar o nome ou o artista.</p>
+                <div class="musicboxquiz-for-dummies">
+                    <img src="img/how-to.png" alt="" />
+                </div>
+                <div class="video-wrapper">
+                    <iframe src="http://videos.sapo.pt/playhtml?file=http://rd3.videos.sapo.pt/JVuFIZKKf8AtJ5pAAjvP/mov/1" frameborder="0" scrolling="no" width="400" height="350"></iframe>
+                    <a href="#" class="twerker">
+                        <img src="img/twerker.jpg" alt="" />
+                    </a>
+                </div>
+            </section>
+            <section class="open-rooms">
+                <h2>Junta-te a outros</h2>
+                <ul class="rooms clearfix">
+                    <li class="room">
+                        <a href="#" class="clearfix">
+                            <p class="room-name">Sala 999</p>
+                            <ul class="players clearfix">
+                                <li class="player">
+                                    <div class="avatar">
+                                        <img src="http://lorempixel.com/100/100/?1" alt="" />
+                                    </div>
+                                    <p class="player-name">Nome do jogador</p>
+                                </li>
+                                <li class="player">
+                                    <div class="avatar">
+                                        <img src="http://lorempixel.com/100/100/?2" alt="" />
+                                    </div>
+                                    <p class="player-name">Nome do jogador</p>
+                                </li>
+                                <li class="player">
+                                    <div class="avatar">
+                                        <img src="http://lorempixel.com/100/100/?3" alt="" />
+                                    </div>
+                                    <p class="player-name">Nome do jogador</p>
+                                </li>
+                                <li class="player">
+                                    <div class="avatar">
+                                        
+                                    </div>
+                                    <p class="player-name">Nome do jogador</p>
+                                </li>
+                            </ul>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+            <section class="prizes">
+                <h2>Prémios</h2>
+                <p>Bacon ipsum dolor sit amet flank shoulder sausage doner, cow ribeye beef tail meatball fatback jowl salami prosciutto pork belly. Short ribs bresaola sirloin cow pig chuck flank, bacon meatloaf corned beef boudin biltong drumstick shank sausage. Biltong venison chuck pancetta tongue t-bone short loin bresaola tail corned beef jowl sausage strip steak ribeye spare ribs. Ground round tongue filet mignon frankfurter.</p>
+                <p>Rump hamburger chicken short loin biltong filet mignon cow swine boudin venison capicola spare ribs andouille pork loin brisket. Meatloaf shoulder ball tip prosciutto, t-bone short loin rump brisket pancetta. Beef ribs andouille bresaola cow biltong, chicken ham hock doner. Pork loin capicola swine leberkas jerky bacon chicken pastrami. Ground round frankfurter pig, beef ribs salami tail drumstick pork chop turducken rump. Corned beef tongue beef ribs, strip steak tenderloin doner kevin. Beef ball tip swine, jowl flank tongue meatloaf capicola shankle.</p>
+            </section>
+        </div>
 
-        <section class="start new_game">
-            <a href="/" title="music bozz" class="start_logo"></a>
-            <p>Escreve o teu nome e cala-te, se é que achas que sabes alguma coisinha de música.</p>
-            <form action="#newRoom" method="post" class="for_christs_sake_lets_just_get_on_with_it">
-                <input type="text" name="name" placeholder="o teu nome" value="" required />
-                <input type="submit" value="Entrar" data-action="join" />
-            </form>
-            <p>Depois podes convidar uns amigos para lhes dares uma sova.</p>
-            <div class="fuck_the_invitation">
-                <p>Já sabes a sala em que queres entrar? Então vá!!</p>
-                <form action="#joinRoom" method="post" class="i_know_the_room">
-                    <input type="text" name="name" placeholder="o teu nome" value="" required />
-                    <input type="tel" name="room" placeholder="nº da sala" value="" required />
-                    <input type="submit" value="Entrar" data-action="join"/>
-                </form>
-            </div>
-        </section>
-
-        <section class="start by_invitation">
-            <a href="/" title="music bozz" class="start_logo"></a>
-            <p class="room_id"></p>
-            <p>Recebeste um convite, certo? Então escreve o teu nome e cala-te, se é que achas que sabes alguma coisinha de música.</p>
-            <form action="#joinRoom" method="post" class="for_christs_sake_lets_just_get_on_with_it">
-                <input type="text" name="name" placeholder="o teu nome" value="" required />
-                <input type="submit" value="Entrar" data-action="join"/>
-            </form>
-            <div class="fuck_the_invitation">
-                <p>Ou então caga nisso e cria o teu próprio jogo com outros amigos. Deves estar com medinho de perder contra o boss que te convidou para isto.</p>
-                <form action="#newRoom" method="post" class="for_christs_sake_lets_just_get_on_with_it">
-                    <input type="text" name="name" placeholder="o teu nome" value="" required />
-                    <input type="submit" value="Entrar" data-action="join"/>
-                </form>
-            </div>
-        </section>
-
-        <section class="app">
-
+        <div id="room" class="content">
             <header>
-                <a href="/" title="music bozz" class="logo"></a>
-                <p class="room">Sala <span class="room_id">10</span></p>
+                <h2 class="room">Sala <span class="room_id">10</span></h2>
+                <ul class="players clearfix" data-template="players"></ul>
             </header>
 
             <div class="main">
-                <ul class="players clearfix" data-template="players"></ul>
-
-                <div id="start_game" class="start_game">
-                    <p>Arranja uns amigos para lhes dares uma sova.</p>
-                    <ul class="buttons clearfix">
-                        <li class="sms"><a href="sms:" class="button">Enviar SMS</a></li>
-                        <li><a href="#share" class="button">Partilhar link</a></li>
-                    </ul>
-                    <a href="" class="button go inactive">Bora lá jogar!</a>
+                <div class="step share">
+                    <p>Partilha este link com os teus amigos.</p>
+                    <form>
+                        <input id="room_link" type="text" name="link" value="http://ron.honho.sl.pt" />
+                    </form>
+                    <a href="" class="button main-action">Bora lá jogar!</a>
                 </div>
 
-                <div id="stand_by" class="stand_by">
+                <div id="stand_by" class="step">
                     <p>Agora tem calma contigo enquanto o teu amigo não arranca o jogo...</p>
                 </div>
 
-                <div class="question" data-template="question"></div>
+                <div id="game" class="step">
+                    <audio id="player" preload><source></source></audio>
+                    <div class="question" data-template="question"></div>
+                </div>
+
             </div>
 
-            <footer>
-                <div class="overlay"></div>
-                <div id="share" class="modal">
-                    <a href="#close" class="close"></a>
-                    <p>Partilha este link com os teus amigos, se é que tens alguns.</p>
-                    <input id="room_link" type="text" name="link" value="http://ron.honho.sl.pt" />
-                </div>
-                <audio id="player" preload><source></source></audio>
-                <div class="loader"></div>
-            </footer>
-        </section>
+        </div>
+
 
         <script type="text/mustache" data-element="template" data-name="question">
             
@@ -133,7 +144,7 @@
                 <a href="#" data-player-id="{{id}}" class="player">
                     <p class="total_points">{{score}}</p>
                     <div class="thumb">
-                        <img src="img/avatar.png" alt="" />
+                        <img src="{{#avatar}}{{avatar}}{{/avatar}}{{^avatar}}img/avatar.png{{/avatar}}" alt="" />
                         <p class="score">0</p>
                     </div>
                     <p class="name ellipsis">{{name}}</p>
@@ -150,6 +161,8 @@
             </li>
         </script>
 
+
+
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script src="http://autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
@@ -157,12 +170,17 @@
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
+        <!--script>
+          
+          // Load the SDK asynchronously
+          (function(d){
+           var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement('script'); js.id = id; js.async = true;
+           js.src = "//connect.facebook.net/en_US/all.js";
+           ref.parentNode.insertBefore(js, ref);
+          }(document));
+
+        </script-->
     </body>
 </html>
