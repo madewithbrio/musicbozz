@@ -100,7 +100,7 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		var convertDecimalToMinSec = function(decimal) {
-			var mins  = Math.floor((decimal - hours*60)/60,10) || 0,
+			var mins  = Math.floor((decimal)/60,10) || 0,
 	  		    secs  = Math.floor(decimal - mins*60) || 0;
 	  		if (mins < 10) mins = "0" + mins;  
 	  		if (secs < 10) secs = "0" + secs;
