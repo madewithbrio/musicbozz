@@ -22,12 +22,12 @@
                 <div class="column">
                     <h3>Joga com amigos</h3>
                     <p>Começa um jogo e convida mais três amigos do Facebook para jogarem contigo.</p>
-                    <a href="" class="button main-action">Começar jogo!</a>
+                    <a href="" class="button main-action" data-action="start">Começar jogo!</a>
                 </div>
                 <div class="column">
                     <h3>Mêmo à boss</h3>
                     <p>Se jogar com os amigos já não te dá pica então estás pronto para desafia o top.<!--Os 10 melhores ganham contas <i>music box</i> durante um ano.--></p>
-                    <a href="" class="button">Jogar sozinho!</a>
+                    <a href="" class="button" data-action="start">Jogar sozinho!</a>
                 </div>
             </section>
             <section class="how-to">
@@ -86,7 +86,7 @@
             </section>
         </div>
 
-        <div id="room" class="content">
+        <div id="room" class="content" style="display: none">
             <header>
                 <h2 class="room">Sala <span class="room_id">10</span></h2>
                 <ul class="players clearfix" data-template="players"></ul>
@@ -168,19 +168,7 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
         <script src="js/mustache.js"></script>
         <script src="js/plugins.js"></script>
-        <script src="js/main.js"></script>
-
-        <!--script>
-          
-          // Load the SDK asynchronously
-          (function(d){
-           var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-           if (d.getElementById(id)) {return;}
-           js = d.createElement('script'); js.id = id; js.async = true;
-           js.src = "//connect.facebook.net/en_US/all.js";
-           ref.parentNode.insertBefore(js, ref);
-          }(document));
-
-        </script-->
+        <script src="http://connect.facebook.net/en_US/all.js"></script>
+        <script src="js/musicbozz.js"></script>
     </body>
 </html>

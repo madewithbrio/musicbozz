@@ -56,7 +56,7 @@ class GameRoom extends Topic
 	}
 
 	protected function getRoomId() {
-		return (int) preg_replace('@http://localhost/game/(\d+)$@', '$1', $this->getId());
+		return preg_replace('@http://localhost/game/(\.+)$@', '$1', $this->getId());
 	}
 
 	protected function getStatus() {
@@ -68,6 +68,10 @@ class GameRoom extends Topic
 			'players' => $players,
 			'question' => $this->question
 			);
+	}
+
+	protected function isPublic() {
+		return (preg_match('/^room\/(\d+)$/', $this->getRoomId()));
 	}
 
 	protected function notificationStatus() {
