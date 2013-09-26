@@ -65,7 +65,7 @@ class Service implements WampServerInterface {
             $config = $params[0];
             $oldName = $player->getName();
             $player->setName($config['name']);
-            $player->setAvatar($config['avatar']);
+            $player->setOthers($config);
 
             $player->callResult($id, array('msg' => "Name changed"));
 

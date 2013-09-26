@@ -50,60 +50,49 @@ class Service {
 	public function getPreSelectedArtistList()
 	{
 		if (null == self::$preselectArtists) {
-			print "load artists catalog\n";
 			self::$preselectArtists = array();
 
 			// via top tracks
 			try {
-				print "from top tracks\n";
 				$result = $this->getMusicBoxInstance()->GetTopTracks();
 				$this->addArtistToPreselectesByTrackList($result->TrackList);
 			} catch (\Exception $e) {}
 
 			try {
-				print "from new tracks\n";
 				$result = $this->getMusicBoxInstance()->GetNewTracks();
 				$this->addArtistToPreselectesByTrackList($result->TrackList);
 			} catch (\Exception $e) {}
 
 			try {
-				print "from category 12\n";
 				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(12);
 				$this->addArtistToPreselectesByTrackList($result->TrackList);
 			} catch (\Exception $e) {}
 /*
 			try {
-				print "from category 61\n";
 				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(61);
 				$this->addArtistToPreselectesByTrackList($result->TrackList);
 			} catch (\Exception $e) {}
 
 			try {
-				print "from category 28\n";
-				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(28);
 				$this->addArtistToPreselectesByTrackList($result->TrackList);
 			} catch (\Exception $e) {}
 
 			try {
-				print "from category 29\n";
 				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(29);
 				$this->addArtistToPreselectesByTrackList($result->TrackList);
 			} catch (\Exception $e) {}
 
 			try {
-				print "from category 30\n";
 				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(30);
 				$this->addArtistToPreselectesByTrackList($result->TrackList);
 			} catch (\Exception $e) {}
 
 			try {
-				print "from category 31\n";
 				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(31);
 				$this->addArtistToPreselectesByTrackList($result->TrackList);
 			} catch (\Exception $e) {}
 
 			try {
-				print "from category 39\n";
 				$result = $this->getMusicBoxInstance()->GetTracksByCategoryId(39);
 				$this->addArtistToPreselectesByTrackList($result->TrackList);
 			} catch (\Exception $e) {}

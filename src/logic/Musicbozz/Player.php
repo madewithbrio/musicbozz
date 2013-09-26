@@ -7,14 +7,14 @@ use \Ratchet\Wamp\WampConnection;
 class Player extends WampConnection {
 	private $name;
 	private $username;
-	private $avatar;
+	private $others;
 	private $score;
 	private $master;
 
-	public function __construct (Conn $conn, $name = "player", $avatar = null, $score = 0) {
+	public function __construct (Conn $conn, $name = "player", $others = array(), $score = 0) {
 		parent::__construct($conn);
 		$this->name = $name;
-		$this->avatar = $avatar;
+		$this->others = $others;
 		$this->score = $score;
 	}
 
@@ -27,10 +27,10 @@ class Player extends WampConnection {
 
 	public function getName() { return $this->name; }
 	public function getScore() { return $this->score; }
-	public function getAvatar() { return $this->avatar; }
+	public function getOthers() { return $this->others; }
 
 	public function setMaster($bool) { $this->master = $master; }
-	public function setAvatar($avatar) { $this->avatar = $avatar; }
+	public function setOthers($others) { $this->others = $others; }
 	public function isMaster() { return $this->master; }
 	
 	public function toWs() {
@@ -38,7 +38,7 @@ class Player extends WampConnection {
 			'name' 	=> $this->getName(),
 			'score' => $this->getScore(),
 			'master' => $this->isMaster(),
-			'avatar' => $this->getAvatar(),
+			'others' => $this->getOthers(),
 			'id' 	=> $this->getSessionId()
 			);
 	}
