@@ -170,7 +170,7 @@ var musicbozz = (function(facebookSDK){
 		controller.startGame = function() {
 			service.getNewQuestion(roomInstance, function(question) {
 				view.renderGamestart();
-				view.renderQuestion(question);
+				//view.renderQuestion(question);
 			}, errorHandling);
 		}
 

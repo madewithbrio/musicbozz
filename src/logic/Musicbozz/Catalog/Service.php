@@ -101,7 +101,12 @@ class Service {
 		return self::$preselectArtists;
 	}
 
-
+	private function isSimilar($text1, text2) {
+		$text1 = preg_replace('/^(^[\w\d\s]*)/', '$1', $text1);
+		$text2 = preg_replace('/^(^[\w\d\s]*)/', '$1', $text2);
+		similar_text($text1, $text2, $percentage);
+		return ($percentage > 50);
+	}
 
 	public function getRandomTrackFromArtist($artistId)
 	{
@@ -129,7 +134,7 @@ class Service {
 		do {
 			$idx = rand(0, $maxRand);
 			$artistName = $artists[$idx];
-			if (!empty($artistName) && !in_array($artistName, $response)) {
+			if (!empty($artistName) && !in_array($artistName, $response) && !$this->isSimilar($artistName, $track->ArtistName)) {
 				$response[] = $artistName;
 			}
 		} while(sizeof($response) < $nrResult && ++$i < $maxRand);
@@ -153,7 +158,7 @@ class Service {
 		do {
 			$idx = rand(0, $maxRand);
 			$trackName = $tracks[$idx];
-			if (!empty($trackName) && !in_array($trackName, $response)) {
+			if (!empty($trackName) && !in_array($trackName, $response) && !$this->isSimilar($trackName, $track->TrackName)) {
 				$response[] = $trackName;
 			}
 		} while(sizeof($response) < $nrResult && ++$i < $maxRand);
