@@ -176,7 +176,8 @@ class GameRoom extends Topic
 	}
 
 	protected function onAllAlreadyResponde() {
-		$this->getLoop()->addTimer(2000, $this->getNewQuestion());
+		#$this->getLoop()->addTimer(2000, $this->getNewQuestion());
+		$this->broadcast(array('action' => 'allPlayersAllreadyResponde'));
 	}
 
 	/** @Public Interface for WS **/

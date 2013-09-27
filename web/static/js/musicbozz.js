@@ -95,7 +95,7 @@ var musicbozz = (function(facebookSDK){
 			$playerContainer.find('p.total-points').addClass(clazzName).addClass('active').html(data.questionScore);
 		};
 
-		view.cleanPlayerAnswer = function(data) {
+		view.cleanPlayesrAnswerNotifications = function() {
 			var $playerContainer = $('a[data-player-id]');
 			$playerContainer.find('p.total-points').removeClass('active positive negative');
 		};
@@ -155,7 +155,7 @@ var musicbozz = (function(facebookSDK){
 	})();
 
 	var controller = (function() {
-		var controller = {}, $player = $("#player"), hasAnswer = false,
+		var controller = {}, $player = $("#player"), hasAnswer = false, timeoutQuestion,
 			errorHandling = function(error, desc){ 
 				console.error(error, desc) 
 			};
@@ -207,11 +207,12 @@ var musicbozz = (function(facebookSDK){
 			view.renderPlayersAnswerResult(result);
 		}
 
-		controller.questionTimeOver = function(result) {
+		controller.questionOver = function() {
 			$player.get(0).pause();
-			view.cleanPlayerAnswer(result);
+			clearTimeout(timeoutQuestion);
+			view.cleanPlayesrAnswerNotifications();
 			if(roomInstance.isMaster()) service.getNewQuestion(roomInstance);
-			if (result.isOver) { $('div.question').html(""); }
+		//	if (result.isOver) { $('div.question').html(""); }
 		}
 
 		controller.setAnswer = function(el) {
@@ -219,6 +220,7 @@ var musicbozz = (function(facebookSDK){
 				answer = $li.parent().find('li').index($li);
 			if (hasAnswer) return;
 			hasAnswer = true; 
+			$player.get(0).pause();
 			$('a[data-element="answer"]').unbind('click.answer');
 
 			service.setAnswer(roomInstance, answer, hash, view.renderPlayerAnswer.bind({liElement: $li}));
@@ -235,7 +237,8 @@ var musicbozz = (function(facebookSDK){
 				case 'newQuestion':
 					//service.getNewQuestion(roomInstance, view.renderQuestion , errorHandling);
 					//renderQuestion(e.data);
-					controller.newQuestion(e.data);
+					setTimeout( controller.newQuestion(e.data), 1000);
+					timeoutQuestion = setTimeout( controller.questionOver(), 45);
 					break;
 
 				case 'allPlayersReady':
@@ -247,7 +250,7 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'allPlayersAllreadyResponde':
-					controller.questionTimeOver(e.data);
+					controller.questionOver();
 					break;
 
 				case 'setMaster':
