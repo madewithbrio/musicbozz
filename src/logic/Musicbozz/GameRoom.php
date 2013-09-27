@@ -205,9 +205,7 @@ class GameRoom extends Topic
 		 		$this->broadcast(array('action' => 'newQuestion', 'data' => $this->getQuestion()->toWs()));
 
 		 		// failback if someone disconnect
-		 		$this->getQuestion()->setTimer($this->getLoop()->addTimer(32, function() use($this){
-		 			$this->getLogger()->info("32 secounds clb");
-		 		})); // automatic send new question after 32 secounds (network delay?)
+		 		$this->getQuestion()->setTimer($this->getLoop()->addTimer(32, $this->getNewQuestion())); // automatic send new question after 32 secounds (network delay?)
 		 	} catch (\Exception $e) {
 		 		if (!empty($id) && !empty($player)) {
 		 			$player->callError($id, $this->getRoomId(), $e->getMessage());
