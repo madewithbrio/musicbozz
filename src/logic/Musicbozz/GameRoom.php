@@ -176,7 +176,7 @@ class GameRoom extends Topic
 	}
 
 	protected function onAllAlreadyResponde() {
-		$this->getLoop()->addTimer(2, $this->getNewQuestion());
+		$this->getLoop()->addTimer(2000, $this->getNewQuestion());
 	}
 
 	/** @Public Interface for WS **/
@@ -205,7 +205,7 @@ class GameRoom extends Topic
 		 		$this->broadcast(array('action' => 'newQuestion', 'data' => $this->getQuestion()->toWs()));
 
 		 		// failback if someone disconnect
-		 		$this->getQuestion()->setTimer($this->getLoop()->addTimer(32, $this->getNewQuestion())); // automatic send new question after 32 secounds (network delay?)
+		 		#$this->getQuestion()->setTimer($this->getLoop()->addTimer(32000, $this->getNewQuestion())); // automatic send new question after 32 secounds (network delay?)
 		 	} catch (\Exception $e) {
 		 		if (!empty($id) && !empty($player)) {
 		 			$player->callError($id, $this->getRoomId(), $e->getMessage());
@@ -250,6 +250,9 @@ class GameRoom extends Topic
 	            $this->broadcast($event);
 			}
 
+			$player->callResult($id, array('action' => 'answerResult', 
+										 'res' => $result[2], 
+										 'position' => $params['answer']));
 			if ($this->isAllPlayersAlreadyResponde()) {
 				if ($this->isOver()) {
 					$this->onGameOver();
@@ -258,9 +261,6 @@ class GameRoom extends Topic
 				}
 			}
 
-			$player->callResult($id, array('action' => 'answerResult', 
-										 'res' => $result[2], 
-										 'position' => $params['answer']));
 		}
 		catch (\Exception $e) {
 			$player->callError($id, $this->getRoomId(), $e->getMessage());
