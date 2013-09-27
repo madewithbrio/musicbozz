@@ -12,6 +12,7 @@ class GameRoom extends Topic
 	private $answers;
 	private $playersReadyToPlay = 0;
 	private $gameMode;
+	private $loop;
 
 	public function __construct($topicId) {
 		parent::__construct($topicId);
@@ -21,6 +22,13 @@ class GameRoom extends Topic
 	public function __destruct() {
 		\Sapo\Redis::getInstance()->hdel('rooms', $this->getRoomId());
 	}
+    
+    private function getLoop() {
+        if ($this->loop === null) {
+            $this->loop =  \React\EventLoop\Factory::create();
+        }
+        return $this->loop;
+    }
 
 	/**
 	 * @ override
@@ -38,6 +46,7 @@ class GameRoom extends Topic
 		}
 
 		parent::add($player);
+		$this->broadcast(array('action' => 'newPlayer', 'data' => $this->getPlayers()));
         $this->notificationStatus();
 	}
 
@@ -47,13 +56,25 @@ class GameRoom extends Topic
 			$this->setMaster($player);
 			break;
 		}
-		$this->broadcast(array('action' => 'playerLeave'));
+		if ($this->count() == 0) {
+			$this->questionNumber = 0;
+		}
+		$this->broadcast(array('action' => 'playerLeave', 'data' => $this->getPlayers()));
 		$this->notificationStatus();
 	}
 
-	public function setMaster(ConnectionInterface $player) {
+	private function getPlayers () {
+		$result = array_fill(0,4,array()); $i = 0;
+        foreach ($this as $player) {
+            $result[$i++] = $player->toWs();
+        }
+        return $result;
+	}
+
+
+	protected function setMaster(ConnectionInterface $player) {
 		$player->setMaster(true);
-		$player->event($this->getId(), array('action' => 'setMaster'));
+		$player->event($this->getId(), $array('action' => 'setMaster'));
 	}
 
 	protected function getRoomId() {
@@ -67,6 +88,8 @@ class GameRoom extends Topic
 		}
 		return array(
 			'players' => $players,
+			'isOpen'  => $this->isOpen(),
+			'isOver'  => $this->isOver(),
 			'question' => $this->question
 			);
 	}
@@ -75,38 +98,45 @@ class GameRoom extends Topic
 		return (preg_match('/^room\/(\d+)$/', $this->getRoomId()));
 	}
 
+	protected function isAllPlayersReady() {
+		return $this->playersReadyToPlay == $this->count();
+	}
+
+	protected function isAllPlayersAlreadyResponde() {
+		return sizeof($this->answers) == $this->count();
+	}
+
+	protected function isOver() {
+		return ($this->questionNumber > 20);
+	}
+
+	protected function isOpen() {
+		return ($this->questionNumber === 0 &&  $this->count() < 4);
+	}
+
 	protected function notificationStatus() {
 		print "notify redis\n";
 		\Sapo\Redis::getInstance()->hset('rooms', $this->getRoomId(), serialize($this->getStatus()));
 	}
 
-
-	public function getQuestion() {
+	protected function getQuestion() {
 		if (null === $this->question) {
 			$this->question = Question::factory(Question_Type::getRandom(), ++$this->questionNumber);
 		}
 		return $this->question;
 	}
 
-	public function getNewQuestion(){
-		$this->question = null;
-		$this->answers = array();
-		$this->playersReadyToPlay = 0;
-
-		return $this->getQuestion();
-	}
-
-	public function addAnswer(ConnectionInterface $player, $answer, $hash) {
+	protected function addAnswer($playerSessionId, $answer, $hash) {
 		if ($hash !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
 		
 		$position = 1;
 		foreach ($this->answers as $_answer) {
-			if ($_answer[0] == $player->getSessionId()) throw new Exception("Already answer", 1);
+			if ($_answer[0] == $playerSessionId) throw new Exception("Already answer", 1);
 			if ($_answer[2]) { $position++; }
 		}
 
 		$isCorrect 			= $this->getQuestion()->isCorrectAnswer($answer);
-		$data 				= array($player->getSessionId(), $answer, $isCorrect);
+		$data 				= array($playerSessionId, $answer, $isCorrect);
 		$this->answers[] 	= $data;
 		if (!$isCorrect || null === $answer) { $position = 5; }
 
@@ -114,24 +144,7 @@ class GameRoom extends Topic
 		return $data;
 	}
 
-	public function incrementPlayersReady($hash) {
-		if ($hash !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
-		++$this->playersReadyToPlay;
-	}
-
-	public function isAllPlayersReady() {
-		return $this->playersReadyToPlay == $this->count();
-	}
-
-	public function isAllPlayersAllreadyResponde() {
-		return sizeof($this->answers) == $this->count();
-	}
-
-	public function isOver() {
-		return ($this->questionNumber > 20);
-	}
-
-	public function getGameMode() {
+	protected function getGameMode() {
 		if (null === $this->gameMode) {
 			//if ($this->questionNumber < 5) {
 				$this->gameMode = GameMode::factory('Standard');
@@ -145,4 +158,114 @@ class GameRoom extends Topic
 		}
 		return $this->gameMode;
 	}
+
+	/** @Triggers **/
+	protected function onGameOver() {
+
+	}
+
+	protected function onAllAlreadyResponde() {
+
+	}
+
+	/** @Public Interface for WS **/
+	public function getNewQuestion(ConnectionInterface $player, $id){
+		if ($this->isOver()) {
+			$this->broadcast(array('action' => 'gameOver'));
+		} else {
+			// reset question 
+			$this->question = null;
+			$this->answers = array();
+			$this->playersReadyToPlay = 0;
+		 	// load and increment this will close room if open
+		 	try {
+		 		$this->broadcast(array('action' => 'newQuestion', 'data' => $this->getQuestion()->toWs()));
+		 	} catch (\Exception $e) {
+		 		if (!empty($id) && !empty($player)) {
+		 			$player->callError($id, $this->getRoomId(), $e->getMessage());
+		 			return;
+		 		}
+		 	}
+		}
+		if (!empty($id) && !empty($player)) {
+ 			$player->callResult($id, array());
+ 		}
+	}
+
+	public function setAnswer(ConnectionInterface $player, $id, $params) {
+		try {
+			$result = $this->addAnswer($player->getSessionId(), $params['answer'], $params['hash']);
+			$gameMode = $this->getGameMode();
+
+			if (!empty($result)) {
+		        if ($result[2]) { // correct
+		            $score = $gameMode->getScoreForCorrectAnswer($result[3]);
+		        } else { // bad
+		            $score = $gameMode->getScoreForBadAnswer();
+		        }
+		        $player->addScore($score);
+			}
+
+			if ($gameMode->isBroadcastPlayerHaveAnswer()) {
+				$event = array();
+	            $event['action'] = "playersAnswerResult";
+	            $event['data'] = array();
+	            $event['data']['player'] = $player->toWs();
+	            if ($gameMode->isBroadcastPlayerAnswer()) {
+	                $event['data']['answer'] = $result[1];
+	            }
+	            if ($gameMode->isBroadcastPlayerQuestionScore()) {
+	                $event['data']['questionScore'] = $score;
+	            }
+	            if ($gameMode->isBroadcastPlayerTotalScore()) {
+	                $event['data']['totalScore'] = $player->getScore();
+	            }
+	            $this->broadcast($event);
+			}
+
+			if ($this->isAllPlayersAlreadyResponde()) {
+				if ($this->isOver()) {
+					$this->onGameOver();
+				} else {
+					$this->onAllAlreadyResponde();
+				}
+			}
+
+			$player->callResult($id, array('action' => 'answerResult', 'res' => $result[2], 'position' => $params['answer']);
+		}
+		catch (\Exception $e) {
+			$player->callError($id, $this->getRoomId(), $e->getMessage());
+		}
+	}
+
+	public function listPlayers(ConnectionInterface $player, $id) {
+        $player->callResult($id, $this->getPlayers());	
+	}
+
+	public function setReadyToPlay(ConnectionInterface $player, $id, array $params) {
+        try {
+        	if ($params['hash'] !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
+            ++$this->playersReadyToPlay;
+            if ($this->isAllPlayersReady()) {
+                $gameRoom->broadcast(array('action' => 'allPlayersReady'));
+            }
+        } catch (Exception $e) {
+             $player->callError($id, $gameRoom, $e->getMessage());
+        }
+    }
+
+    public function setPlayerConfig(ConnectionInterface $player, $id, $config) {
+        if (!empty($config)) {
+            $oldName = $player->getName();
+            $player->setName($config['name']);
+            $player->setOthers($config);
+
+            $player->callResult($id, array('msg' => "Name changed"));
+
+            $playersList = $this->listPlayers();
+            $gameRoom->broadcast(array('action' => 'playerConfigChange', 
+                                       'data'   => $playersList));
+        }
+    }
+
 }
