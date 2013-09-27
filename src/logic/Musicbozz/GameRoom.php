@@ -249,10 +249,10 @@ class GameRoom extends Topic
         	if ($params['hash'] !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
             ++$this->playersReadyToPlay;
             if ($this->isAllPlayersReady()) {
-                $gameRoom->broadcast(array('action' => 'allPlayersReady'));
+                $this->broadcast(array('action' => 'allPlayersReady'));
             }
         } catch (Exception $e) {
-             $player->callError($id, $gameRoom, $e->getMessage());
+             $player->callError($id, $this->getRoomId(), $e->getMessage());
         }
     }
 
