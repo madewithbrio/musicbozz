@@ -195,6 +195,7 @@ var musicbozz = (function(facebookSDK){
 		}
 
 		controller.newQuestion = function(question) {
+			hasAnswer = false;
 			view.renderQuestion(question);
 		}
 
