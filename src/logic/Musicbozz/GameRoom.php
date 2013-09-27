@@ -179,11 +179,14 @@ class GameRoom extends Topic
 	}
 
 	/** @Public Interface for WS **/
-	public function getNewQuestion(ConnectionInterface $player, $id){
+	public function getNewQuestion($player, $id){
 		$this->getLogger()->info("new question");
 		if ($this->isOver()) {
 			$this->broadcast(array('action' => 'gameOver'));
 		} else {
+			// clear timer
+			$this->getLoop()->cancelTimer($this->getQuestion()->getTimer());
+
 			// reset question 
 			$this->question = null;
 			$this->answers = array();
@@ -191,6 +194,9 @@ class GameRoom extends Topic
 		 	// load and increment this will close room if open
 		 	try {
 		 		$this->broadcast(array('action' => 'newQuestion', 'data' => $this->getQuestion()->toWs()));
+
+		 		// failback if someone disconnect
+		 		$this->getQuestion()->setTimer($this->getLoop()->addTimer(32, $this->getNewQuestion())); // automatic send new question after 32 secounds (network delay?)
 		 	} catch (\Exception $e) {
 		 		if (!empty($id) && !empty($player)) {
 		 			$player->callError($id, $this->getRoomId(), $e->getMessage());

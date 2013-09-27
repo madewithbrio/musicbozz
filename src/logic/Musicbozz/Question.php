@@ -13,6 +13,7 @@ class Question {
 	public $solutions;
 	public $correct;
 	public $hash;
+	public $timer;
 
 	public function __construct() {}
 
@@ -79,6 +80,9 @@ class Question {
 			'query' 	=> Question_Type::getQuery($this->type)
 			);
 	}
+
+	public function getTimer() { return $this->timer; }
+	public function setTimer($timer) { $this->timer = $timer; }
 }
 
 class Question_Type {
