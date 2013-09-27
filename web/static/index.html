@@ -147,10 +147,9 @@
             <li>
                 {{#name}}
                 <a href="{{others.link}}" data-player-id="{{id}}" class="player" target="_blank">
-                    <p class="total-points">{{score}}</p>
+                    <p class="total-points" data-element="points">{{score}}</p>
                     <div class="thumb">
                         <img src="{{#others.avatar}}{{others.avatar}}{{/others.avatar}}{{^others.avatar}}img/avatar.png{{/others.avatar}}" alt="" />
-                        <p class="score">0</p>
                     </div>
                     <p class="name ellipsis">{{name}}</p>
                 </a>

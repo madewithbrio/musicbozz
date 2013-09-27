@@ -88,11 +88,12 @@ var musicbozz = (function(facebookSDK){
 
 		view.renderPlayersAnswerResult = function(data) {
 			var $playerContainer = $('a[data-player-id="'+data.player.id+'"]'),
+				$pointsContainer = $playerContainer.find('[data-element="points"]'),
 				clazzName = data.questionScore > 0 ? 'positive' : 'negative';
 
-			$playerContainer.find('p.total_points').html(data.totalScore);
 			if (data.questionScore == 0) clazzName = ""; // hack because 0 
-			$playerContainer.find('p.total-points').addClass(clazzName).addClass('active').html(data.questionScore);
+			$pointsContainer.html(data.totalScore);
+			$pointsContainer.addClass(clazzName).addClass('active'); //.html(data.questionScore);
 		};
 
 		view.cleanPlayesrAnswerNotifications = function() {
@@ -200,7 +201,7 @@ var musicbozz = (function(facebookSDK){
 		}
 
 		controller.startAudioPlayer = function() {
-			$player.get(0).play();
+			setTimeout( function() { $player.get(0).play(); }, 250);
 		}
 
 		controller.playersAnswerResult = function(result) {
@@ -237,8 +238,8 @@ var musicbozz = (function(facebookSDK){
 				case 'newQuestion':
 					//service.getNewQuestion(roomInstance, view.renderQuestion , errorHandling);
 					//renderQuestion(e.data);
-					setTimeout( controller.newQuestion(e.data), 1000);
-					timeoutQuestion = setTimeout( controller.questionOver(), 45);
+					controller.newQuestion(e.data);
+					timeoutQuestion = setTimeout( controller.questionOver, 45000);
 					break;
 
 				case 'allPlayersReady':
@@ -350,7 +351,7 @@ var musicbozz = (function(facebookSDK){
 			if (typeof onSuccess !== 'function') onSuccess = function(){};
 			if (typeof onError !== 'function') onError = function(){};
 			
-			ws_session.call(gameRoom.getRoomId(), 'timeEnded', {hash: hash}).then(onSuccess, onError);
+			ws_session.call(gameRoom.getRoomId(), 'timeEnded', {answer: null, hash: hash}).then(onSuccess, onError);
 		}
 
 		service.setAnswer = function (gameRoom, answer, hash, onSuccess, onError) {
