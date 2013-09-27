@@ -185,7 +185,7 @@ class GameRoom extends Topic
 			$this->broadcast(array('action' => 'gameOver'));
 		} else {
 			// clear timer
-			if (!empty($this->question) && !empty($this->question->getTimer())) {
+			if ($this->question !== null && $this->question->getTimer() !== null) {
 				$this->getLoop()->cancelTimer($this->getQuestion()->getTimer());
 			}
 
