@@ -33,7 +33,7 @@ class GameRoom extends Topic
 
     private function getLogger() {
     	if (null === $this->logger) {
-    		$this->logger = Logger::getLogger(sprintf('GameRoom[%s]', $this->getRoomId()));
+    		$this->logger = \Logger::getLogger(sprintf('GameRoom[%s]', $this->getRoomId()));
     	}
     	return $this->logger;
     }
