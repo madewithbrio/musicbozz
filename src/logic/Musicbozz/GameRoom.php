@@ -231,7 +231,9 @@ class GameRoom extends Topic
 				}
 			}
 
-			$player->callResult($id, array('action' => 'answerResult', 'res' => $result[2], 'position' => $params['answer']);
+			$player->callResult($id, array('action' => 'answerResult', 
+										 'res' => $result[2], 
+										 'position' => $params['answer']));
 		}
 		catch (\Exception $e) {
 			$player->callError($id, $this->getRoomId(), $e->getMessage());
