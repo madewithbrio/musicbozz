@@ -81,10 +81,16 @@ class Service implements WampServerInterface {
     }
 
     private function getNewQuestion(ConnectionInterface $player, $id, $gameRoom, array $params) {
-        $question = $gameRoom->getNewQuestion();
-        $event=array();
-        $event['action'] = 'newQuestion';
-        $event['data'] = $question->toWs();
+        if ($gameRoom->isOver()) {
+            $event=array();
+            $event['action'] = 'gameOver';
+            $event['players'] = $this->getPlayers($player, $gameRoom);
+        } else {
+            $question = $gameRoom->getNewQuestion();
+            $event=array();
+            $event['action'] = 'newQuestion';
+            $event['data'] = $question->toWs();
+        }
         $gameRoom->broadcast($event);
         $player->callResult($id, array());
     }
@@ -149,7 +155,7 @@ class Service implements WampServerInterface {
             $event = array();
             $event['action'] = "allPlayersAllreadyResponde";
             $event['data'] = array();
-            $event['data']['over'] = $gameRoom->isLastQuestion();
+            $event['data']['over'] = $gameRoom->isOver();
             $gameRoom->broadcast($event);
         }
     }

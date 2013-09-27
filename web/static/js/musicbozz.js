@@ -250,7 +250,10 @@ var musicbozz = (function(facebookSDK){
 				case 'setMaster':
 					roomInstance.setMaster(true);
 					break;
-
+				case 'gameOver':
+					console.log("game over");
+					break;
+					
 				default:
 					break;
 			}
@@ -346,7 +349,7 @@ var musicbozz = (function(facebookSDK){
 			if (typeof onSuccess !== 'function') onSuccess = function(){};
 			if (typeof onError !== 'function') onError = function(){};
 
-			ws_session.call(gameRoom, 'setAnswer', answer).then(onSuccess, onError);
+			ws_session.call(gameRoom.getRoomId(), 'setAnswer', answer).then(onSuccess, onError);
 		}
 
 		
