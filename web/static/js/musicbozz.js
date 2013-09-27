@@ -157,7 +157,7 @@ var musicbozz = (function(facebookSDK){
 	})();
 
 	var controller = (function() {
-		var controller = {}, $player = $("#player"),
+		var controller = {}, $player = $("#player"), hasAnswer = false,
 			errorHandling = function(error, desc){ console.error(error, desc) };
 
 		controller.goRoom = function(type, roomName) {
@@ -214,11 +214,13 @@ var musicbozz = (function(facebookSDK){
 		}
 
 		controller.setAnswer = function(el) {
-			var $li = $(el).parent(),
+			var $li = $(el).parent(), hash = $('div[data-template="question"] .query').attr('data-hash'),
 				answer = $li.parent().find('li').index($li);
+			if (hasAnswer) return;
+			hasAnswer = true; 
 			$('a[data-element="answer"]').unbind('click.answer');
 
-			service.setAnswer(roomInstance, answer, view.renderPlayerAnswer.bind({liElement: $li}));
+			service.setAnswer(roomInstance, answer, hash, view.renderPlayerAnswer.bind({liElement: $li}));
 		}
 
 		controller.eventHandler = function(t, e) {
@@ -345,11 +347,11 @@ var musicbozz = (function(facebookSDK){
 			ws_session.call(gameRoom.getRoomId(), 'timeEnded').then(onSuccess, onError);
 		}
 
-		service.setAnswer = function (gameRoom, answer, onSuccess, onError) {
+		service.setAnswer = function (gameRoom, answer, hash, onSuccess, onError) {
 			if (typeof onSuccess !== 'function') onSuccess = function(){};
 			if (typeof onError !== 'function') onError = function(){};
 
-			ws_session.call(gameRoom.getRoomId(), 'setAnswer', answer).then(onSuccess, onError);
+			ws_session.call(gameRoom.getRoomId(), 'setAnswer', {answer: answer, hash: hash}).then(onSuccess, onError);
 		}
 
 		

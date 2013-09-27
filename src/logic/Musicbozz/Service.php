@@ -10,6 +10,7 @@ class Service implements WampServerInterface {
     }
 
     public function onCall(ConnectionInterface $player, $id, $gameRoom, array $params) {
+        var_dump($params);
         $action = array_shift($params);
         switch($action) {
             case 'setPlayer':
