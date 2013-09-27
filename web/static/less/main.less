@@ -29,13 +29,12 @@ form input[type="submit"] {}
 	
 }
 
-.musicboxquiz-header {
-	img {display:block;width:100%;max-width:960px;height:auto;margin:0 auto;}
-}
-
 .content {max-width:720px;padding:30px;margin:0 auto;background:#0099AB url(../img/bg-blue.jpg) top center;}
 
 #homepage {
+	header {
+		img {display:block;width:100%;max-width:960px;height:auto;margin:0 auto;}
+	}
 	section {margin-bottom:50px;
 		&.how-to {
 			img {display:block;width:100%;max-width:520px;margin:20px auto;}
@@ -50,31 +49,48 @@ form input[type="submit"] {}
 			.column {float:left;width:40%;margin:0 5%;text-align:center;}
 		}
 	}
-}
-
-ul.rooms {margin:10px 0;
-	p {margin:0;line-height:normal;}
-	li.room {float:left;width:50%;
-		a {display:block;padding:5px 5px 5px 10px;background-color:rgba(255,255,255,0.15);
-			.room-name {float:left;line-height:50px;text-transform:uppercase;font-weight:900;}
-			ul.players {float:right;
-				li.player {float:left;width:25%;
-					.avatar {width:50px;height:50px;margin:0 0 0 4px;background-color:rgba(255,255,255,0.4);
-						img {width:100%;}
+	ul.rooms {margin:10px 0;
+		p {margin:0;line-height:normal;}
+		li.room {float:left;width:50%;
+			a {display:block;padding:5px 5px 5px 10px;background-color:rgba(255,255,255,0.15);
+				.room-name {float:left;line-height:50px;text-transform:uppercase;font-weight:900;}
+				ul.players {float:right;
+					li.player {float:left;width:25%;
+						.avatar {width:50px;height:50px;margin:0 0 0 4px;background-color:rgba(255,255,255,0.4);
+							img {width:100%;}
+						}
+						.player-name {display:none;}
 					}
-					.player-name {display:none;}
 				}
+				&:hover {background-color:rgba(0,0,0,0.2);}
 			}
-			&:hover {background-color:rgba(0,0,0,0.2);}
 		}
 	}
 }
 
 #room {padding:0;
-	header {padding:30px;background:#444 url(../img/bg-black.jpg) top center;}
-	.main {padding:30px;}
+	header {max-width:720px;padding:0 0 0 360px;margin:0 auto;background:url(../img/header.png) no-repeat 0 0;background-size:contain;color:#666;
+		.room {float:left;font-size:20px;line-height:120px;}
+		.players {float:right;
+			li {float:left;width:25%;
+				.player {display:block;margin-left:5px;text-align:center;color:#666;
+					p {margin:0;line-height:normal;}
+					.total-points {font-size:20px;font-weight:900;}
+					.thumb {position:relative;width:60px;height:60px;margin:0 auto;background:rgba(0,0,0,0.1) url(../img/bg_thumb.png) no-repeat 0 0;background-size:60px auto;
+						img {width:100%;}
+						.score {position:absolute;top:0;left:0;width:100%;font-size:26px;font-weight:900;line-height:60px;color:#FFF;display:none;
+							&.positive {background:rgba(163,179,0,0.7);
+								&:before {content:"+";}
+							}
+							&.negative {background:rgba(226,74,74,0.7);}
+						}
+					}
+					.name {font-size:10px;font-weight:900;text-transform:uppercase;line-height:20px;}
+				}
+			}
+		}
+	}
 }
-
 
 
 /*

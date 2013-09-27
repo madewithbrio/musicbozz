@@ -81,18 +81,18 @@ form input[type="tel"]:focus {
   background-color: #555;
   /*.box-shadow(0 5px 0 0 #444);*/
 }
-.musicboxquiz-header img {
-  display: block;
-  width: 100%;
-  max-width: 960px;
-  height: auto;
-  margin: 0 auto;
-}
 .content {
   max-width: 720px;
   padding: 30px;
   margin: 0 auto;
   background: #0099ab url(../img/bg-blue.jpg) top center;
+}
+#homepage header img {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  margin: 0 auto;
 }
 #homepage section {
   margin-bottom: 50px;
@@ -136,65 +136,124 @@ form input[type="tel"]:focus {
   margin: 0 5%;
   text-align: center;
 }
-ul.rooms {
+#homepage ul.rooms {
   margin: 10px 0;
 }
-ul.rooms p {
+#homepage ul.rooms p {
   margin: 0;
   line-height: normal;
 }
-ul.rooms li.room {
+#homepage ul.rooms li.room {
   float: left;
   width: 50%;
 }
-ul.rooms li.room a {
+#homepage ul.rooms li.room a {
   display: block;
   padding: 5px 5px 5px 10px;
   background-color: rgba(255, 255, 255, 0.15);
 }
-ul.rooms li.room a .room-name {
+#homepage ul.rooms li.room a .room-name {
   float: left;
   line-height: 50px;
   text-transform: uppercase;
   font-weight: 900;
 }
-ul.rooms li.room a ul.players {
+#homepage ul.rooms li.room a ul.players {
   float: right;
 }
-ul.rooms li.room a ul.players li.player {
+#homepage ul.rooms li.room a ul.players li.player {
   float: left;
   width: 25%;
 }
-ul.rooms li.room a ul.players li.player .avatar {
+#homepage ul.rooms li.room a ul.players li.player .avatar {
   width: 50px;
   height: 50px;
   margin: 0 0 0 4px;
   background-color: rgba(255, 255, 255, 0.4);
 }
-ul.rooms li.room a ul.players li.player .avatar img {
+#homepage ul.rooms li.room a ul.players li.player .avatar img {
   width: 100%;
 }
-ul.rooms li.room a ul.players li.player .player-name {
+#homepage ul.rooms li.room a ul.players li.player .player-name {
   display: none;
 }
-ul.rooms li.room a:hover {
+#homepage ul.rooms li.room a:hover {
   background-color: rgba(0, 0, 0, 0.2);
 }
 #room {
   padding: 0;
 }
 #room header {
-  padding: 30px;
-  background: #444444 url(../img/bg-black.jpg) top center;
+  max-width: 720px;
+  padding: 0 0 0 360px;
+  margin: 0 auto;
+  background: url(../img/header.png) no-repeat 0 0;
+  background-size: contain;
+  color: #666;
 }
-#room .main {
-  padding: 30px;
+#room header .room {
+  float: left;
+  font-size: 20px;
+  line-height: 120px;
 }
-
-.alone .share,
-.alone .stand-by {
+#room header .players {
+  float: right;
+}
+#room header .players li {
+  float: left;
+  width: 25%;
+}
+#room header .players li .player {
+  display: block;
+  margin-left: 5px;
+  text-align: center;
+  color: #666;
+}
+#room header .players li .player p {
+  margin: 0;
+  line-height: normal;
+}
+#room header .players li .player .total-points {
+  font-size: 20px;
+  font-weight: 900;
+}
+#room header .players li .player .thumb {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.1) url(../img/bg_thumb.png) no-repeat 0 0;
+  background-size: 60px auto;
+}
+#room header .players li .player .thumb img {
+  width: 100%;
+}
+#room header .players li .player .thumb .score {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 60px;
+  color: #FFF;
   display: none;
-} 
+}
+#room header .players li .player .thumb .score.positive {
+  background: rgba(163, 179, 0, 0.7);
+}
+#room header .players li .player .thumb .score.positive:before {
+  content: "+";
+}
+#room header .players li .player .thumb .score.negative {
+  background: rgba(226, 74, 74, 0.7);
+}
+#room header .players li .player .name {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 20px;
+}
 /*
 * {-webkit-font-smoothing:antialiased;}
 body {position:relative;font-family:'Lato','Raleway',sans-serif;font-size:26px;font-weight:300;color:#333;}
