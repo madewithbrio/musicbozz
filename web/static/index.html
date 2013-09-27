@@ -123,14 +123,13 @@
 
 
         <script type="text/mustache" data-element="template" data-name="question">
-            
             <div class="song-scrubber">
                 <div class="bar remaining-time"></div>
                 <h4 class="timer">30</h4>
             </div>
 
             <p class="question-number">{{number}} de 20</p>
-            <p class="query">{{query}}</p>
+            <p class="query" data-hash="{{hash}}">{{query}}</p>
             <ul class="answers">
                 {{#solutions}}
                 <li><a href="#" data-element="answer">{{.}}</a></li>

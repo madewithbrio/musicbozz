@@ -12,6 +12,7 @@ class Question {
 	public $number;
 	public $solutions;
 	public $correct;
+	public $hash;
 
 	public function __construct() {}
 
@@ -36,6 +37,7 @@ class Question {
 
 		$question->trackPreview = str_replace ('streamer.nmusic.sapo.pt', 'vmdev-musicbozz.vmdev.bk.sapo.pt', $track->PreviewUrl).".mp3";
 		$question->image = str_replace ('streamer.nmusic.sapo.pt', 'vmdev-musicbozz.vmdev.bk.sapo.pt', $track->LargeAlbumCover);
+		$question->hash = md5($question->trackPreview . $question->type . $question->number);
 
 		switch ($type) {
 			case Question_Type::TRACK:
@@ -70,6 +72,7 @@ class Question {
 
 	public function toWs() {
 		return array(
+			'hash' 		=> $this->hash,
 			'number' 	=> $this->number,
 			'url' 		=> $this->trackPreview,
 			'solutions' => $this->solutions,

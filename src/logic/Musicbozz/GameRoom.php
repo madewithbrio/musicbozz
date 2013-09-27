@@ -3,6 +3,7 @@
 namespace Musicbozz;
 use \Ratchet\ConnectionInterface;
 use \Ratchet\Wamp\Topic;
+use \Exception;
 
 class GameRoom extends Topic
 {
@@ -95,10 +96,12 @@ class GameRoom extends Topic
 		return $this->getQuestion();
 	}
 
-	public function addAnswer(ConnectionInterface $player, $answer) {
+	public function addAnswer(ConnectionInterface $player, $answer, $hash) {
+		if ($hash !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
+		
 		$position = 1;
 		foreach ($this->answers as $_answer) {
-			if ($_answer[0] == $player->getSessionId()) return;
+			if ($_answer[0] == $player->getSessionId()) throw new Exception("Already answer", 1);
 			if ($_answer[2]) { $position++; }
 		}
 
