@@ -114,7 +114,8 @@ class GameRoom extends Topic
 		return $data;
 	}
 
-	public function incPlayersReady() {
+	public function incrementPlayersReady($hash) {
+		if ($hash !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
 		++$this->playersReadyToPlay;
 	}
 

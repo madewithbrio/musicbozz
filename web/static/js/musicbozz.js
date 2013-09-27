@@ -278,10 +278,12 @@ var musicbozz = (function(facebookSDK){
 		});
 
 		$player.bind('canplay.player', function() {
-			service.setReadyToPlay(roomInstance);
+			var hash = $('div[data-template="question"] .query').attr('data-hash');
+			service.setReadyToPlay(roomInstance, hash);
 		});
 		$player.bind('ended.player', function() { 
-			service.notifyTimeEnded(roomInstance);
+			var hash = $('div[data-template="question"] .query').attr('data-hash');
+			service.notifyTimeEnded(roomInstance, hash);
 		});
 
 		return controller;
@@ -334,18 +336,18 @@ var musicbozz = (function(facebookSDK){
 			ws_session.call(gameRoom.getRoomId(), 'getNewQuestion').then(onSuccess, onError);
 		}
 
-		service.setReadyToPlay = function (gameRoom, onSuccess, onError) {
+		service.setReadyToPlay = function (gameRoom, hash, onSuccess, onError) {
 			if (typeof onSuccess !== 'function') onSuccess = function(){};
 			if (typeof onError !== 'function') onError = function(){};
 			
-			ws_session.call(gameRoom.getRoomId(), 'setReadyToPlay').then(onSuccess, onError);
+			ws_session.call(gameRoom.getRoomId(), 'setReadyToPlay', {hash: hash}).then(onSuccess, onError);
 		}
 
-		service.notifyTimeEnded = function (gameRoom, onSuccess, onError) {
+		service.notifyTimeEnded = function (gameRoom, hash, onSuccess, onError) {
 			if (typeof onSuccess !== 'function') onSuccess = function(){};
 			if (typeof onError !== 'function') onError = function(){};
 			
-			ws_session.call(gameRoom.getRoomId(), 'timeEnded').then(onSuccess, onError);
+			ws_session.call(gameRoom.getRoomId(), 'timeEnded', {hash: hash}).then(onSuccess, onError);
 		}
 
 		service.setAnswer = function (gameRoom, answer, hash, onSuccess, onError) {

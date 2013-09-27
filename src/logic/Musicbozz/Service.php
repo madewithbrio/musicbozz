@@ -35,7 +35,7 @@ class Service implements WampServerInterface {
                 break;
 
             case 'setReadyToPlay':
-                $this->setReadyToPlay($player, $id, $gameRoom);
+                $this->setReadyToPlay($player, $id, $gameRoom, $params);
                 break;
 
             default:
@@ -97,7 +97,7 @@ class Service implements WampServerInterface {
     }
 
     private function timeEnded(ConnectionInterface $player, $id, $gameRoom, array $params) {
-        $result = $gameRoom->addAnswer($player, null);
+        $result = $gameRoom->addAnswer($player, null, $params[0]['hash']);
         $this->processAnswer($player, $gameRoom, $result);
 
         if ($gameRoom->isAllPlayersAllreadyResponde()) {
@@ -118,12 +118,16 @@ class Service implements WampServerInterface {
         }
     }
 
-    private function setReadyToPlay(ConnectionInterface $player, $id, $gameRoom) {
-        $gameRoom->incPlayersReady();
-        if ($gameRoom->isAllPlayersReady()) {
-            $event=array();
-            $event['action'] = 'allPlayersReady';
-            $gameRoom->broadcast($event);  
+    private function setReadyToPlay(ConnectionInterface $player, $id, $gameRoom, array $params) {
+        try {
+            $gameRoom->incrementPlayersReady($params[0]['hash']);
+            if ($gameRoom->isAllPlayersReady()) {
+                $event=array();
+                $event['action'] = 'allPlayersReady';
+                $gameRoom->broadcast($event);  
+            }
+        } catch (Exception $e) {
+             $player->callError($id, $gameRoom, $e->getMessage());
         }
     }
 
