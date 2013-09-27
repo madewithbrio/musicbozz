@@ -13,6 +13,7 @@ class GameRoom extends Topic
 	private $playersReadyToPlay = 0;
 	private $gameMode;
 	private $loop;
+	private $logger;
 
 	public function __construct($topicId) {
 		parent::__construct($topicId);
@@ -28,6 +29,13 @@ class GameRoom extends Topic
             $this->loop =  \React\EventLoop\Factory::create();
         }
         return $this->loop;
+    }
+
+    private function getLogger() {
+    	if (null === $this->logger) {
+    		$this->logger = Logger::getLogger(sprintf('GameRoom[%s]', $this->getRoomId()));
+    	}
+    	return $this->logger;
     }
 
 	/**
@@ -46,6 +54,7 @@ class GameRoom extends Topic
 		}
 
 		parent::add($player);
+		$this->getLogger()->info("player have join");
 		$this->broadcast(array('action' => 'newPlayer', 'data' => $this->getPlayers()));
         $this->notificationStatus();
 	}
@@ -59,6 +68,7 @@ class GameRoom extends Topic
 		if ($this->count() == 0) {
 			$this->questionNumber = 0;
 		}
+		$this->getLogger()->info("player have leave");
 		$this->broadcast(array('action' => 'playerLeave', 'data' => $this->getPlayers()));
 		$this->notificationStatus();
 	}
@@ -165,11 +175,12 @@ class GameRoom extends Topic
 	}
 
 	protected function onAllAlreadyResponde() {
-
+		$this->getLoop()->addTimer(2, $this->getNewQuestion());
 	}
 
 	/** @Public Interface for WS **/
 	public function getNewQuestion(ConnectionInterface $player, $id){
+		$this->getLogger()->info("new question");
 		if ($this->isOver()) {
 			$this->broadcast(array('action' => 'gameOver'));
 		} else {
@@ -193,6 +204,7 @@ class GameRoom extends Topic
 	}
 
 	public function setAnswer(ConnectionInterface $player, $id, $params) {
+		$this->getLogger()->info("set answer");
 		try {
 			$result = $this->addAnswer($player->getSessionId(), $params['answer'], $params['hash']);
 			$gameMode = $this->getGameMode();
@@ -245,6 +257,7 @@ class GameRoom extends Topic
 	}
 
 	public function setReadyToPlay(ConnectionInterface $player, $id, array $params) {
+		$this->getLogger()->info("player set ready");
         try {
         	if ($params['hash'] !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
             ++$this->playersReadyToPlay;
@@ -257,6 +270,7 @@ class GameRoom extends Topic
     }
 
     public function setPlayerConfig(ConnectionInterface $player, $id, $config) {
+    	$this->getLogger()->info("player set configuration");
         if (!empty($config)) {
             $oldName = $player->getName();
             $player->setName($config['name']);

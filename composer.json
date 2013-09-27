@@ -1,6 +1,7 @@
 {
     "require": {
         "cboden/Ratchet": "0.2.*",
-        "predis/predis": "*"
+        "predis/predis": "*",
+        "apache/log4php": "dev-develop"
     }
 }
