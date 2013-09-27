@@ -74,7 +74,7 @@ class GameRoom extends Topic
 
 	protected function setMaster(ConnectionInterface $player) {
 		$player->setMaster(true);
-		$player->event($this->getId(), $array('action' => 'setMaster'));
+		$player->event($this->getId(), array('action' => 'setMaster'));
 	}
 
 	protected function getRoomId() {
