@@ -9,9 +9,9 @@
 }
 body {font-family:'Open Sans',sans-serif;color:#FFF;}
 a {text-decoration:none;color:#FFF;}
-p {line-height:1.6em;margin-bottom:1.6em;}
+p {margin:0;}
 ul {padding:0;margin:0;list-style:none;}
-h2,h3 {margin:0;text-transform:uppercase;font-style:italic;font-weight:900;font-size:40px;}
+h2,h3,h4 {margin:0;text-transform:uppercase;font-style:italic;font-weight:900;font-size:40px;}
 h3 {font-size:26px;}
 
 form {}
@@ -74,7 +74,7 @@ form input[type="submit"] {}
 		.players {float:right;
 			li {float:left;width:25%;
 				.player {display:block;margin-left:5px;text-align:center;color:#666;
-					p {margin:0;line-height:normal;}
+					//p {margin:0;line-height:normal;}
 					.total-points {font-size:20px;font-weight:900;}
 					.thumb {position:relative;width:60px;height:60px;margin:0 auto;background:rgba(0,0,0,0.1) url(../img/bg_thumb.png) no-repeat 0 0;background-size:60px auto;
 						img {width:100%;}
@@ -89,6 +89,37 @@ form input[type="submit"] {}
 				}
 			}
 		}
+	}
+	.song-scrubber {position:relative;height:44px;margin-bottom:10px;border:2px solid #FFF;
+		.bar,
+		.timer {position:absolute;top:0;left:0;width:100%;height:40px;}
+		.timer {left:50%;width:50px;margin-left:-25px;}
+		.remaining-time {background:@main-color;}
+		.timer {line-height:40px;text-align:center;color:#333;}
+	}
+	.question {padding:10px;
+		.question_number {font-size:12px;}
+		.query {font-size:22px;font-weight:700;text-transform:uppercase;}
+		.answers {padding:5px 0;
+			li {margin:0 0 10px 0;background:#FFF;
+				a {display:block;position:relative;padding:5px 10px 5px 15px;font-size:18px;border:2px solid #FFF;color:#555;
+					//&:not(.selected) {opacity:0.3;}
+					&:before {position:absolute;top:0;left:0;width:10px;height:100%;content:"";}
+					&.selected {color:#FFF;
+						&:before {display:none;}
+					}
+					&.correct {background:#5F9D2D;border-color:#5F9D2D;}
+					&.wrong {background:#CA2E2E;border-color:#CA2E2E;}
+				}
+				&:nth-child(1) a:before {background:#DF5656;}
+				&:nth-child(2) a:before {background:#99B758;}
+				&:nth-child(3) a:before {background:#FFB901;}
+				&:nth-child(4) a:before {background:#46A1CC;}
+			}
+		}
+	}
+	&.alone {
+		#share {display:none;}
 	}
 }
 
@@ -185,13 +216,6 @@ form.i_know_the_room input[type="submit"] {top:50px;}
 .question .answers li a.correct {background:#5F9D2D;border-color:#5F9D2D;}
 .question .answers li a.wrong {background:#CA2E2E;border-color:#CA2E2E;}
 
-
-.song_scrubber {position:relative;height:30px;margin:10px;}
-.song_scrubber .bar,
-.song_scrubber .timer {position:absolute;top:0;left:0;width:100%;height:30px;}
-.song_scrubber .total_time {background:rgba(0,0,0,0.1);}
-.song_scrubber .remaining_time {background:#53ACD6;}
-.song_scrubber .timer {line-height:30px;text-align:center;color:#333;}
 
 
 .overlay {position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;}

@@ -21,8 +21,7 @@ a {
   color: #FFF;
 }
 p {
-  line-height: 1.6em;
-  margin-bottom: 1.6em;
+  margin: 0;
 }
 ul {
   padding: 0;
@@ -30,7 +29,8 @@ ul {
   list-style: none;
 }
 h2,
-h3 {
+h3,
+h4 {
   margin: 0;
   text-transform: uppercase;
   font-style: italic;
@@ -209,10 +209,6 @@ form input[type="tel"]:focus {
   text-align: center;
   color: #666;
 }
-#room header .players li .player p {
-  margin: 0;
-  line-height: normal;
-}
 #room header .players li .player .total-points {
   font-size: 20px;
   font-weight: 900;
@@ -253,6 +249,96 @@ form input[type="tel"]:focus {
   font-weight: 900;
   text-transform: uppercase;
   line-height: 20px;
+}
+#room .song-scrubber {
+  position: relative;
+  height: 44px;
+  margin-bottom: 10px;
+  border: 2px solid #FFF;
+}
+#room .song-scrubber .bar,
+#room .song-scrubber .timer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+}
+#room .song-scrubber .timer {
+  left: 50%;
+  width: 50px;
+  margin-left: -25px;
+}
+#room .song-scrubber .remaining-time {
+  background: #bf573e;
+}
+#room .song-scrubber .timer {
+  line-height: 40px;
+  text-align: center;
+  color: #333;
+}
+#room .question {
+  padding: 10px;
+}
+#room .question .question_number {
+  font-size: 12px;
+}
+#room .question .query {
+  font-size: 22px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+#room .question .answers {
+  padding: 5px 0;
+}
+#room .question .answers li {
+  margin: 0 0 10px 0;
+  background: #FFF;
+}
+#room .question .answers li a {
+  display: block;
+  position: relative;
+  padding: 5px 10px 5px 15px;
+  font-size: 18px;
+  border: 2px solid #FFF;
+  color: #555;
+}
+#room .question .answers li a:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 100%;
+  content: "";
+}
+#room .question .answers li a.selected {
+  color: #FFF;
+}
+#room .question .answers li a.selected:before {
+  display: none;
+}
+#room .question .answers li a.correct {
+  background: #5F9D2D;
+  border-color: #5F9D2D;
+}
+#room .question .answers li a.wrong {
+  background: #CA2E2E;
+  border-color: #CA2E2E;
+}
+#room .question .answers li:nth-child(1) a:before {
+  background: #DF5656;
+}
+#room .question .answers li:nth-child(2) a:before {
+  background: #99B758;
+}
+#room .question .answers li:nth-child(3) a:before {
+  background: #FFB901;
+}
+#room .question .answers li:nth-child(4) a:before {
+  background: #46A1CC;
+}
+#room.alone #share {
+  display: none;
 }
 /*
 * {-webkit-font-smoothing:antialiased;}
@@ -342,13 +428,6 @@ form.i_know_the_room input[type="submit"] {top:50px;}
 .question .answers li a.correct {background:#5F9D2D;border-color:#5F9D2D;}
 .question .answers li a.wrong {background:#CA2E2E;border-color:#CA2E2E;}
 
-
-.song_scrubber {position:relative;height:30px;margin:10px;}
-.song_scrubber .bar,
-.song_scrubber .timer {position:absolute;top:0;left:0;width:100%;height:30px;}
-.song_scrubber .total_time {background:rgba(0,0,0,0.1);}
-.song_scrubber .remaining_time {background:#53ACD6;}
-.song_scrubber .timer {line-height:30px;text-align:center;color:#333;}
 
 
 .overlay {position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;}
