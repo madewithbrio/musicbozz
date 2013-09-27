@@ -86,10 +86,11 @@ var musicbozz = (function(facebookSDK){
 			player.load();
 		};
 
-		view.renderPlayerAnswer = function(data) {
-			var $playerContainer = $('a[data-player-id="'+data.player.id+'"]');
+		view.renderPlayersAnswerResult = function(data) {
+			var $playerContainer = $('a[data-player-id="'+data.player.id+'"]'),
+				clazzName = data.questionScore > 0 ? 'positive' : 'negative';
+
 			$playerContainer.find('p.total_points').html(data.totalScore);
-			var clazzName = data.questionScore > 0 ? 'positive' : 'negative';
 			if (data.questionScore == 0) clazzName = ""; // hack because 0 
 			$playerContainer.find('p.score').addClass(clazzName).addClass('active').html(data.questionScore);
 		};
@@ -98,6 +99,15 @@ var musicbozz = (function(facebookSDK){
 			var $playerContainer = $('a[data-player-id]');
 			$playerContainer.find('p.score').removeClass('active positive negative');
 		};
+
+		view.renderPlayerAnswer = function(data) {
+			var clazzName;
+			if (null == data.res) return;
+			
+			clazzName =  data.res ? 'correct' : 'wrong';
+			this.liElement.children().addClass('selected ' + clazzName);
+			this.liElement.parent().addClass('has_answer');
+		}
 
 		var convertDecimalToMinSec = function(decimal) {
 			var mins  = Math.floor((decimal)/60,10) || 0,
@@ -192,8 +202,8 @@ var musicbozz = (function(facebookSDK){
 			$player.get(0).play();
 		}
 
-		controller.playerAnswer = function(result) {
-			view.renderPlayerAnswer(result);
+		controller.playersAnswerResult = function(result) {
+			view.renderPlayersAnswerResult(result);
 		}
 
 		controller.questionTimeOver = function(result) {
@@ -201,6 +211,14 @@ var musicbozz = (function(facebookSDK){
 			view.cleanPlayerAnswer(result);
 			if(roomInstance.isMaster()) service.getNewQuestion(roomInstance);
 			if (result.isOver) { $('div.question').html(""); }
+		}
+
+		controller.setAnswer = function(el) {
+			var $li = $(el).parent(),
+				answer = $li.parent().find('li').index($li);
+			$('a[data-element="answer"]').unbind('click.answer');
+
+			service.setAnswer(roomInstance, answer, view.renderPlayerAnswer.bind({liElement: $li}));
 		}
 
 		controller.eventHandler = function(t, e) {
@@ -221,8 +239,8 @@ var musicbozz = (function(facebookSDK){
 					controller.startAudioPlayer();
 					break;
 
-				case 'playerAnswer':
-					controller.playerAnswer(e.data);
+				case 'playersAnswerResult':
+					controller.playersAnswerResult(e.data);
 					break;
 
 				case 'allPlayersAllreadyResponde':
@@ -239,9 +257,18 @@ var musicbozz = (function(facebookSDK){
 		}
 
 		// bind gui components
+		// prevent default all link and submit actions
+		$(document).delegate('a', 'click', function(e){e.preventDefault();});
+		$(document).delegate('form', 'submit', function(e){e.preventDefault();});
+
 		$('a[data-action="start"]').bind('click', function(e){
 			e.preventDefault();
 			controller.goRoom(this.getAttribute('data-game-type'), this.getAttribute('data-room-name'));
+		});
+
+		$(document).delegate('a[data-element="answer"]', 'click.answer', function(e){
+			e.preventDefault();
+			controller.setAnswer(this);
 		});
 
 		$player.bind('canplay.player', function() {
@@ -315,7 +342,12 @@ var musicbozz = (function(facebookSDK){
 			ws_session.call(gameRoom.getRoomId(), 'timeEnded').then(onSuccess, onError);
 		}
 
-		
+		service.setAnswer = function (gameRoom, answer, onSuccess, onError) {
+			if (typeof onSuccess !== 'function') onSuccess = function(){};
+			if (typeof onError !== 'function') onError = function(){};
+
+			ws_session.call(gameRoom, 'setAnswer', answer).then(onSuccess, onError);
+		}
 
 		
 		return service;

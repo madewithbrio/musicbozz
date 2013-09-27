@@ -130,7 +130,7 @@ class Service implements WampServerInterface {
         if ($gameMode->isBroadcastPlayerHaveAnswer()) {
 
             $event = array();
-            $event['action'] = "playerAnswer";
+            $event['action'] = "playersAnswerResult";
             $event['data'] = array();
             $event['data']['player'] = $player->toWs();
             if ($gameMode->isBroadcastPlayerAnswer()) {
