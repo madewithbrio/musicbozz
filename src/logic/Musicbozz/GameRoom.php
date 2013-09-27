@@ -48,7 +48,8 @@ class GameRoom extends Topic
 		}
 
 		// room closed
-		if ($this->questionNumber != 0 || $this->count() >= 4) {
+		if (!$this->isOpen()) {
+			$this->getLogger()->info("room closed");
 			$player->close();
 			return;
 		}
@@ -181,6 +182,12 @@ class GameRoom extends Topic
 	/** @Public Interface for WS **/
 	public function getNewQuestion($player, $id){
 		$this->getLogger()->info("new question");
+		if ($this->count == 0) {
+			$this->getLogger()->info("room empty");
+			$this->notificationStatus();
+			return;
+		}
+
 		if ($this->isOver()) {
 			$this->broadcast(array('action' => 'gameOver'));
 		} else {
