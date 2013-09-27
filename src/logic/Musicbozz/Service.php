@@ -10,7 +10,6 @@ class Service implements WampServerInterface {
     }
 
     public function onCall(ConnectionInterface $player, $id, $gameRoom, array $params) {
-        var_dump($params);
         $action = array_shift($params);
         switch($action) {
             case 'setPlayer':
@@ -105,12 +104,16 @@ class Service implements WampServerInterface {
     }
 
     private function setAnswer(ConnectionInterface $player, $id, $gameRoom, array $params) {
-        $result = $gameRoom->addAnswer($player, $params[0]);
-        $this->processAnswer($player, $gameRoom, $result);
+        try {
+            $result = $gameRoom->addAnswer($player, $params[0]['answer'], $params[0]['hash']);
+            $this->processAnswer($player, $gameRoom, $result);
 
-        if ($gameRoom->isAllPlayersAllreadyResponde()) {
+            if ($gameRoom->isAllPlayersAllreadyResponde()) {
+            }
+            $player->callResult($id, array('action' => 'answerResult', 'res' => $result[2], 'position' => $params[0]));
+        } catch (Exception $e) {
+             $player->callError($id, $gameRoom, $e->getMessage());
         }
-        $player->callResult($id, array('action' => 'answerResult', 'res' => $result[2], 'position' => $params[0]));
     }
 
     private function setReadyToPlay(ConnectionInterface $player, $id, $gameRoom) {
