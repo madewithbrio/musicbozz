@@ -156,7 +156,9 @@ var musicbozz = (function(facebookSDK){
 
 	var controller = (function() {
 		var controller = {}, $player = $("#player"), hasAnswer = false,
-			errorHandling = function(error, desc){ console.error(error, desc) };
+			errorHandling = function(error, desc){ 
+				console.error(error, desc) 
+			};
 
 		controller.goRoom = function(type, roomName) {
 			facebookSDK.getLoginStatus(function(response) {
