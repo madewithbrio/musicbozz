@@ -3,6 +3,7 @@
 namespace Musicbozz;
 use \Ratchet\ConnectionInterface;
 use \Ratchet\Wamp\Topic;
+use \Exception;
 
 class GameRoom extends Topic
 {

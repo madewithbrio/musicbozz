@@ -3,6 +3,8 @@
 namespace Musicbozz;
 use \Ratchet\Wamp\WampServerInterface as WampServerInterface;
 use \Ratchet\ConnectionInterface;
+use \Exception;
+
 class Service implements WampServerInterface {
 
     public function onPublish(ConnectionInterface $player, $gameRoom, $event, array $exclude, array $eligible) {
