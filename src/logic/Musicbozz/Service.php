@@ -11,9 +11,6 @@ class Service implements WampServerInterface {
 
     public function onCall(ConnectionInterface $player, $id, $gameRoom, array $params) {
         $action = array_shift($params);
-        print " ----> ".$action." <---\n";
-        var_dump($params);
-
         switch($action) {
             case 'setPlayer':
                 $this->setPlayer($player, $id, $gameRoom, $params);
@@ -92,7 +89,9 @@ class Service implements WampServerInterface {
             $event['data'] = $question->toWs();
         }
         $gameRoom->broadcast($event);
-        $player->callResult($id, array());
+        if (!empty($id)) {
+            $player->callResult($id, array());
+        }
     }
 
     private function timeEnded(ConnectionInterface $player, $id, $gameRoom, array $params) {
@@ -152,10 +151,13 @@ class Service implements WampServerInterface {
         }
 
         if ($gameRoom->isAllPlayersAllreadyResponde()) {
+            return $this->getNewQuestion($player, null, $gameRoom, array());
+            /**
             $event = array();
             $event['action'] = "allPlayersAllreadyResponde";
             $event['data'] = array();
             $event['data']['over'] = $gameRoom->isOver();
+            **/
             $gameRoom->broadcast($event);
         }
     }
