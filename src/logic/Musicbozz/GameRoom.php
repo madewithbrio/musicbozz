@@ -265,7 +265,7 @@ class GameRoom extends Topic
             $player->callResult($id, array('msg' => "Name changed"));
 
             $playersList = $this->getPlayers();
-            $gameRoom->broadcast(array('action' => 'playerConfigChange', 
+            $this->broadcast(array('action' => 'playerConfigChange', 
                                        'data'   => $playersList));
         }
     }
