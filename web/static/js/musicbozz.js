@@ -92,12 +92,12 @@ var musicbozz = (function(facebookSDK){
 
 			$playerContainer.find('p.total_points').html(data.totalScore);
 			if (data.questionScore == 0) clazzName = ""; // hack because 0 
-			$playerContainer.find('p.score').addClass(clazzName).addClass('active').html(data.questionScore);
+			$playerContainer.find('p.total-points').addClass(clazzName).addClass('active').html(data.questionScore);
 		};
 
 		view.cleanPlayerAnswer = function(data) {
 			var $playerContainer = $('a[data-player-id]');
-			$playerContainer.find('p.score').removeClass('active positive negative');
+			$playerContainer.find('p.total-points').removeClass('active positive negative');
 		};
 
 		view.renderPlayerAnswer = function(data) {
@@ -109,12 +109,10 @@ var musicbozz = (function(facebookSDK){
 			this.liElement.parent().addClass('has_answer');
 		}
 
-		var convertDecimalToMinSec = function(decimal) {
-			var mins  = Math.floor((decimal)/60,10) || 0,
-	  		    secs  = Math.floor(decimal - mins*60) || 0;
-	  		if (mins < 10) mins = "0" + mins;  
+		var convertDecimalToSec = function(decimal) {
+			var secs  = Math.floor(decimal) || 0;
 	  		if (secs < 10) secs = "0" + secs;
-	  		return mins+":"+secs;
+	  		return secs;
 		};
 
 		var getTemplate = function(name) {
@@ -145,11 +143,11 @@ var musicbozz = (function(facebookSDK){
 
 		$("#player").bind('timeupdate.player', function(e){
 			var played = 0,
-				$scrubber = $('div.song_scrubber');
+				$scrubber = $('#scrubber');
 			if ((this.currentTime != undefined)) {
 			    played = parseInt((100 - (player.currentTime / this.duration) * 100), 10) || 0;
-			    $scrubber.find('.remaining_time').css({width: played + '%'});
-			    $scrubber.find('p.timer').html(convertDecimalToMinSec(this.duration - this.currentTime));
+			    $scrubber.find('.remaining-time').css({width: played + '%'});
+			    $scrubber.find('.timer').html(convertDecimalToSec(this.duration - this.currentTime));
 			}
 		});
 
