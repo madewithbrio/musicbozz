@@ -1,3 +1,4 @@
+$('video,audio').mediaelementplayer();
 
 window.fbAsyncInit = function() {
       FB.init({
