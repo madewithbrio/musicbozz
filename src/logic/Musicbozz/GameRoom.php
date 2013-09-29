@@ -186,11 +186,6 @@ class GameRoom extends Topic
 		if ($this->isOver()) {
 			$this->broadcast(array('action' => 'gameOver'));
 		} else {
-			// clear timer
-			if ($this->question !== null && $this->question->getTimer() !== null) {
-				$this->getQuestion()->getTimer()->stop();
-			}
-
 			// reset question 
 			$this->question = null;
 			$this->answers = array();
@@ -198,10 +193,6 @@ class GameRoom extends Topic
 		 	// load and increment this will close room if open
 		 	try {
 		 		$this->broadcast(array('action' => 'newQuestion', 'data' => $this->getQuestion()->toWs()));
-
-		 		// failback if someone disconnect
-		 		$this->getQuestion()->setTimer(new \EvTimer(30, 0 $this->getNewQuestion())); // automatic send new question after 32 secounds (network delay?)
-				$this->getQuestion()->getTimer()->start();
 		 	} catch (\Exception $e) {
 		 		if (!empty($id) && !empty($player)) {
 		 			$player->callError($id, $this->getRoomId(), $e->getMessage());
