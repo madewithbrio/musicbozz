@@ -25,7 +25,7 @@ class GameRoom extends Topic
 	}
     
 
-    	private function getLogger() {
+	private function getLogger() {
 	    	if (null === $this->logger) {
 	    		$this->logger = \Logger::getLogger(sprintf('GameRoom[%s]', $this->getRoomId()));
 	    	}
@@ -114,6 +114,7 @@ class GameRoom extends Topic
 	protected function isOver() {
 		return ($this->questionNumber > 20);
 	}
+
 
 	protected function isOpen() {
 		return ($this->questionNumber === 0 &&  $this->count() < 4);

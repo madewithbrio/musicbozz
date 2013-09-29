@@ -291,6 +291,11 @@ var musicbozz = (function(facebookSDK){
 			e.preventDefault();
 			controller.goRoom(this.getAttribute('data-game-type'), this.getAttribute('data-room-name'));
 		});
+		
+		$('a[data-type="startGame"]').bind('click', function(e) {
+			e.preventDefault();
+			controller.startGame();
+		});
 
 		$(document).delegate('a[data-element="answer"]', 'click.answer', function(e){
 			e.preventDefault();
