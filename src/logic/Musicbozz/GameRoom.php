@@ -27,6 +27,7 @@ class GameRoom extends Topic
     private function getLoop() {
         if ($this->loop === null) {
             $this->loop =  \React\EventLoop\Factory::create();
+	    $this->loop->run();
         }
         return $this->loop;
     }
@@ -206,7 +207,7 @@ class GameRoom extends Topic
 		 		$this->broadcast(array('action' => 'newQuestion', 'data' => $this->getQuestion()->toWs()));
 
 		 		// failback if someone disconnect
-		 		#$this->getQuestion()->setTimer($this->getLoop()->addTimer(32000, $this->getNewQuestion())); // automatic send new question after 32 secounds (network delay?)
+		 		$this->getQuestion()->setTimer($this->getLoop()->addTimer(32, $this->getNewQuestion())); // automatic send new question after 32 secounds (network delay?)
 		 	} catch (\Exception $e) {
 		 		if (!empty($id) && !empty($player)) {
 		 			$player->callError($id, $this->getRoomId(), $e->getMessage());
