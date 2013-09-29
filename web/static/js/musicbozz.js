@@ -12,16 +12,21 @@ window.fbAsyncInit = function() {
 var musicbozz = (function(facebookSDK){
 	'use strict';
 	var roomInstance, 
+	    convertDecimalToSec = function(decimal) {
+		var secs  = Math.floor(decimal) || 0;
+  		if (secs < 10) secs = "0" + secs;
+  		return secs;
+	    },
 	    player = new MediaElementPlayer('#player', {
 		type: 'audio/mp3',
 		success: function(media, node, player) {
 			media.addEventListener('timeupdate', function(e){
 				//console.log(this);
 				var played = 0, $scrubber = $('#scrubber');
-				if ((e.currentTime != undefined)) {
-				    played = parseInt((100 - (e.currentTime / e.duration) * 100), 10) || 0;
+				if ((media.currentTime != undefined)) {
+				    played = parseInt((100 - (media.currentTime / media.duration) * 100), 10) || 0;
 				    $scrubber.find('.remaining-time').css({width: played + '%'});
-				    $scrubber.find('.timer').html(convertDecimalToSec(e.duration - e.currentTime));
+				    $scrubber.find('.timer').html(convertDecimalToSec(media.duration - media.currentTime));
 				}
 			});
 			media.addEventListener('canplay', function() {
@@ -132,12 +137,6 @@ var musicbozz = (function(facebookSDK){
 			this.liElement.children().addClass('selected ' + clazzName);
 			this.liElement.parent().addClass('has_answer');
 		}
-
-		var convertDecimalToSec = function(decimal) {
-			var secs  = Math.floor(decimal) || 0;
-	  		if (secs < 10) secs = "0" + secs;
-	  		return secs;
-		};
 
 		var getTemplate = function(name) {
 			if (typeof name === "string" && typeof partialTemplates[name] === "string") { return partialTemplates[name] }
