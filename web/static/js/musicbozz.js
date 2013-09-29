@@ -1,4 +1,3 @@
-$('video,audio').mediaelementplayer();
 
 window.fbAsyncInit = function() {
       FB.init({
@@ -82,7 +81,13 @@ var musicbozz = (function(facebookSDK){
 
 		view.renderQuestion = function(data) {
 			$('div[data-template="question"]').html(Mustache.render(getTemplate('question'), data));
+
 			var player = $("#player").get(0);
+			try {
+				$(player).mediaelementplayer();
+			} catch (e) {
+				console.error(e);
+			}
 			$(player).children().attr('src', data.url);
 			player.load();
 		};
