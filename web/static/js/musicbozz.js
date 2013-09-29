@@ -11,7 +11,7 @@ window.fbAsyncInit = function() {
 
 var musicbozz = (function(facebookSDK){
 	'use strict';
-	var roomInstance;
+	var roomInstance, player = new MediaElementPlayer('#player', {});
 
 	var Room = (function() {
 		var Room = function(player, type, roomName) {
@@ -42,7 +42,8 @@ var musicbozz = (function(facebookSDK){
 	})();
 
 	var view = (function(){
-		var view = {}, partialTemplates = [],
+		var 	view = {}, 
+			partialTemplates = [],			
 			$room = $('#room'), 
 			$homepage = $('#homepage');
 
@@ -63,7 +64,7 @@ var musicbozz = (function(facebookSDK){
 		}
 
 		view.renderPlayers = function(res) {
-	        $('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: res}, getTemplate()));
+	        	$('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: res}, getTemplate()));
 	        /**
 	        if (!master) {
 	        	$('#start_game').hide();
@@ -81,14 +82,7 @@ var musicbozz = (function(facebookSDK){
 
 		view.renderQuestion = function(data) {
 			$('div[data-template="question"]').html(Mustache.render(getTemplate('question'), data));
-			var player = $("#player").get(0);
-			$(player).children().attr('src', data.url);
-
-			try {
-				$(player).mediaelementplayer();
-			} catch (e) {
-				console.error(e);
-			}
+			player.setSrc(data.url);
 			player.load();
 		};
 
@@ -148,9 +142,8 @@ var musicbozz = (function(facebookSDK){
 		loadTemplates();
 		onLoadHomepage();
 
-		$("#player").bind('timeupdate.player', function(e){
-			var played = 0,
-				$scrubber = $('#scrubber');
+		$(player).bind('timeupdate.player', function(e){
+			var played = 0, $scrubber = $('#scrubber');
 			if ((this.currentTime != undefined)) {
 			    played = parseInt((100 - (player.currentTime / this.duration) * 100), 10) || 0;
 			    $scrubber.find('.remaining-time').css({width: played + '%'});
@@ -162,7 +155,7 @@ var musicbozz = (function(facebookSDK){
 	})();
 
 	var controller = (function() {
-		var controller = {}, $player = $("#player"), hasAnswer = false, timeoutQuestion,
+		var controller = {}, hasAnswer = false, timeoutQuestion,
 			errorHandling = function(error, desc){ 
 				console.error(error, desc) 
 			};
@@ -207,7 +200,7 @@ var musicbozz = (function(facebookSDK){
 		}
 
 		controller.startAudioPlayer = function() {
-			setTimeout( function() { $player.get(0).play(); }, 250);
+			setTimeout( function() { player.play(); }, 250);
 		}
 
 		controller.playersAnswerResult = function(result) {
@@ -215,7 +208,7 @@ var musicbozz = (function(facebookSDK){
 		}
 
 		controller.questionOver = function() {
-			$player.get(0).pause();
+			player.pause();
 			clearTimeout(timeoutQuestion);
 			view.cleanPlayesrAnswerNotifications();
 			if(roomInstance.isMaster()) service.getNewQuestion(roomInstance);
@@ -227,7 +220,7 @@ var musicbozz = (function(facebookSDK){
 				answer = $li.parent().find('li').index($li);
 			if (hasAnswer) return;
 			hasAnswer = true; 
-			$player.get(0).pause();
+			player.pause();
 			$('a[data-element="answer"]').unbind('click.answer');
 
 			service.setAnswer(roomInstance, answer, hash, view.renderPlayerAnswer.bind({liElement: $li}));
@@ -287,11 +280,11 @@ var musicbozz = (function(facebookSDK){
 			controller.setAnswer(this);
 		});
 
-		$player.bind('canplay.player', function() {
+		$(player).bind('canplay.player', function() {
 			var hash = $('div[data-template="question"] .query').attr('data-hash');
 			service.setReadyToPlay(roomInstance, hash);
 		});
-		$player.bind('ended.player', function() { 
+		$(player).bind('ended.player', function() { 
 			var hash = $('div[data-template="question"] .query').attr('data-hash');
 			service.notifyTimeEnded(roomInstance, hash);
 		});
