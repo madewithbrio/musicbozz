@@ -11,7 +11,30 @@ window.fbAsyncInit = function() {
 
 var musicbozz = (function(facebookSDK){
 	'use strict';
-	var roomInstance, player = new MediaElementPlayer('#player', {});
+	var roomInstance, 
+	    player = new MediaElementPlayer('#player', {
+		type: 'audio/mp3',
+		success: function(media, node, player) {
+			media.addEventListener('timeupdate', function(e){
+				//console.log(this);
+				var played = 0, $scrubber = $('#scrubber');
+				if ((e.currentTime != undefined)) {
+				    played = parseInt((100 - (e.currentTime / e.duration) * 100), 10) || 0;
+				    $scrubber.find('.remaining-time').css({width: played + '%'});
+				    $scrubber.find('.timer').html(convertDecimalToSec(e.duration - e.currentTime));
+				}
+			});
+			media.addEventListener('canplay', function() {
+				var hash = $('div[data-template="question"] .query').attr('data-hash');
+				service.setReadyToPlay(roomInstance, hash);
+			});
+			media.addEventListener('ended', function() { 
+				var hash = $('div[data-template="question"] .query').attr('data-hash');
+				service.notifyTimeEnded(roomInstance, hash);
+			});
+
+		}
+	});
 
 	var Room = (function() {
 		var Room = function(player, type, roomName) {
@@ -142,15 +165,6 @@ var musicbozz = (function(facebookSDK){
 		loadTemplates();
 		onLoadHomepage();
 
-		$(player).bind('timeupdate.player', function(e){
-			var played = 0, $scrubber = $('#scrubber');
-			if ((this.currentTime != undefined)) {
-			    played = parseInt((100 - (player.currentTime / this.duration) * 100), 10) || 0;
-			    $scrubber.find('.remaining-time').css({width: played + '%'});
-			    $scrubber.find('.timer').html(convertDecimalToSec(this.duration - this.currentTime));
-			}
-		});
-
 		return view;		
 	})();
 
@@ -200,7 +214,11 @@ var musicbozz = (function(facebookSDK){
 		}
 
 		controller.startAudioPlayer = function() {
-			setTimeout( function() { player.play(); }, 250);
+			console.log("start");
+			setTimeout( function() { 
+				console.log(player);
+				player.play(); 
+			}, 250);
 		}
 
 		controller.playersAnswerResult = function(result) {
@@ -280,15 +298,6 @@ var musicbozz = (function(facebookSDK){
 			controller.setAnswer(this);
 		});
 
-		$(player).bind('canplay.player', function() {
-			var hash = $('div[data-template="question"] .query').attr('data-hash');
-			service.setReadyToPlay(roomInstance, hash);
-		});
-		$(player).bind('ended.player', function() { 
-			var hash = $('div[data-template="question"] .query').attr('data-hash');
-			service.notifyTimeEnded(roomInstance, hash);
-		});
-
 		return controller;
 	})();
 
@@ -365,6 +374,9 @@ var musicbozz = (function(facebookSDK){
 	})();
 
 	return {
+		getPlayer: function() {
+			return player;
+		},
 		getRoom: function() {
 			return roomInstance;
 		},
