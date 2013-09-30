@@ -229,6 +229,7 @@ var musicbozz = (function(facebookSDK){
 
 		controller.newQuestion = function(question) {
 			hasAnswer = false;
+			view.loadingSong();
 			view.renderQuestion(question);
 		};
 
@@ -246,9 +247,11 @@ var musicbozz = (function(facebookSDK){
 		controller.questionOver = function(data) {
 			player.pause();
 			clearTimeout(timeoutQuestion);
+
 			view.cleanPlayesrAnswerNotifications();
+			view.loadingSong();
+
 			controller.setPlayers(data);
-			console.log(roomInstance);
 			if(roomInstance.isMaster()) service.getNewQuestion(roomInstance);
 		//	if (result.isOver) { $('div.question').html(""); }
 		};
@@ -276,6 +279,7 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		controller.gameover = function() {
+			player.pause();
 			view.showGameover();
 			service.outRoom(roomInstance);
 		};
@@ -308,8 +312,6 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'allPlayersAllreadyResponde':
-					player.pause();
-					view.loadingSong();
 					setTimeout(function() { controller.questionOver(e.data); }, 1000);
 					break;
 
@@ -318,7 +320,6 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'gameOver':
-					player.pause();
 					setTimeout(function() { controller.gameover(); }, 2000);
 					break;
 					
