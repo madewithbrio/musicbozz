@@ -105,7 +105,7 @@
                     <form>
                         <input id="room_link" type="text" name="link" value="http://ron.honho.sl.pt" />
                     </form>
-                    <a href="" class="button main-action">Bora lá jogar!</a>
+                    <a href="" class="button main-action" data-type="startGame">Bora lá jogar!</a>
                 </div>
 
                 <div id="standBy" class="step stand-by">
@@ -113,7 +113,7 @@
                 </div>
 
                 <div id="gameBoard" class="step">
-                    <audio id="player" preload><source></source></audio>
+                    <audio id="player" preload><source></source type="audio/mp3"></audio>
                     <div class="question" data-template="question"></div>
                 </div>
 
@@ -171,6 +171,8 @@
         <script src="js/mustache.js"></script>
         <script src="js/plugins.js"></script>
         <script src="http://connect.facebook.net/en_US/all.js"></script>
+        <script src="js/mediaelement.min.js"></script>
+        <script src="js/mediaelementplayer.min.js"></script>
         <script src="js/musicbozz.js"></script>
     </body>
 </html>

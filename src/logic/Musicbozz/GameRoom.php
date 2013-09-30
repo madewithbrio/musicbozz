@@ -24,19 +24,13 @@ class GameRoom extends Topic
 		\Sapo\Redis::getInstance()->hdel('rooms', $this->getRoomId());
 	}
     
-    private function getLoop() {
-        if ($this->loop === null) {
-            $this->loop =  \React\EventLoop\Factory::create();
-        }
-        return $this->loop;
-    }
 
-    private function getLogger() {
-    	if (null === $this->logger) {
-    		$this->logger = \Logger::getLogger(sprintf('GameRoom[%s]', $this->getRoomId()));
+	private function getLogger() {
+	    	if (null === $this->logger) {
+	    		$this->logger = \Logger::getLogger(sprintf('GameRoom[%s]', $this->getRoomId()));
+	    	}
+	    	return $this->logger;
     	}
-    	return $this->logger;
-    }
 
 	/**
 	 * @ override
@@ -57,7 +51,7 @@ class GameRoom extends Topic
 		parent::add($player);
 		$this->getLogger()->info("player have join");
 		$this->broadcast(array('action' => 'newPlayer', 'data' => $this->getPlayers()));
-        $this->notificationStatus();
+		$this->notificationStatus();
 	}
 
 	public function remove(ConnectionInterface $player) {
@@ -76,10 +70,10 @@ class GameRoom extends Topic
 
 	private function getPlayers () {
 		$result = array_fill(0,4,array()); $i = 0;
-        foreach ($this as $player) {
-            $result[$i++] = $player->toWs();
-        }
-        return $result;
+		foreach ($this as $player) {
+		    $result[$i++] = $player->toWs();
+		}
+		return $result;
 	}
 
 
@@ -120,6 +114,7 @@ class GameRoom extends Topic
 	protected function isOver() {
 		return ($this->questionNumber > 20);
 	}
+
 
 	protected function isOpen() {
 		return ($this->questionNumber === 0 &&  $this->count() < 4);
@@ -192,11 +187,6 @@ class GameRoom extends Topic
 		if ($this->isOver()) {
 			$this->broadcast(array('action' => 'gameOver'));
 		} else {
-			// clear timer
-			if ($this->question !== null && $this->question->getTimer() !== null) {
-				$this->getLoop()->cancelTimer($this->getQuestion()->getTimer());
-			}
-
 			// reset question 
 			$this->question = null;
 			$this->answers = array();
@@ -204,9 +194,6 @@ class GameRoom extends Topic
 		 	// load and increment this will close room if open
 		 	try {
 		 		$this->broadcast(array('action' => 'newQuestion', 'data' => $this->getQuestion()->toWs()));
-
-		 		// failback if someone disconnect
-		 		#$this->getQuestion()->setTimer($this->getLoop()->addTimer(32000, $this->getNewQuestion())); // automatic send new question after 32 secounds (network delay?)
 		 	} catch (\Exception $e) {
 		 		if (!empty($id) && !empty($player)) {
 		 			$player->callError($id, $this->getRoomId(), $e->getMessage());
