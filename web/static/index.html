@@ -144,7 +144,7 @@
         </script>
 
         <script type="text/mustache" data-element="template" data-name="player">
-            <li>
+            <li {{#master}}class="master"{{/master}}>
                 {{#name}}
                 <a href="{{others.link}}" data-player-id="{{id}}" class="player" target="_blank">
                     <p class="total-points" data-element="points">{{score}}</p>

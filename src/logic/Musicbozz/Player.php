@@ -35,7 +35,6 @@ class Player extends WampConnection {
 	public function isMaster() { return $this->master; }
 	
 	public function toWs() {
-var_dump($this->isMaster());
 		return array(
 			'name' 	=> $this->getName(),
 			'score' => $this->getScore(),

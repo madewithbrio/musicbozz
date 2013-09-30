@@ -90,7 +90,9 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		view.renderPlayers = function(res) {
+			var i;
 	        $('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: res}, getTemplate()));
+	        
 	        if (master) $body.addClass('master');
 	        /**
 	        if (!master) {
@@ -249,12 +251,20 @@ var musicbozz = (function(facebookSDK){
 			service.setAnswer(roomInstance, answer, hash, view.renderPlayerAnswer.bind({liElement: $li}));
 		};
 
+		controller.setPlayers = function(res) {
+			for (i = res.length; i >= 0; i--) {
+	        	if  ((res[i].username == service.getPlayer().username) &&
+	        		(res[i].master)) master = true;
+	        }
+	    	view.renderPlayers(res);
+		}
+		
 		controller.eventHandler = function(t, e) {
 			switch (e.action) {
 				case 'playerConfigChange':
 				case 'newPlayer':
 				case 'playerLeave':
-					service.listPlayers(roomInstance, view.renderPlayers , errorHandling);
+					service.listPlayers(roomInstance, controller.setPlayers  , errorHandling);
 					break;
 			
 				case 'newQuestion':
