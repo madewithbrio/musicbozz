@@ -95,7 +95,9 @@ form input[type="tel"]:focus {
 }
 /* STATES */
 #homepage,
-#room {
+#room,
+#share,
+#stand-by {
   display: none;
 }
 body[data-container="homepage"] #homepage {
@@ -110,14 +112,24 @@ body[data-container="homepage"].invite #homepage .enter-multi-private {
 body[data-container="room"] #room {
   display: block;
 }
-body[data-container="room"].alone header .room {
+body[data-container="room"].alone #room header .room {
   display: none;
 }
-body[data-container="room"].alone header .players li:not(.master) {
+body[data-container="room"].alone #room header .players li {
+  float: none;
+  width: 100%;
+}
+body[data-container="room"].alone #room header .players li:not(.master) {
   display: none;
+}
+body[data-container="room"].standing-by #stand-by {
+  display: block;
 }
 body[data-container="room"].playing #share {
   display: none;
+}
+body[data-container="room"].master #share {
+  display: block;
 }
 #homepage header img {
   display: block;
@@ -222,7 +234,7 @@ body[data-container="room"].playing #share {
   max-width: 720px;
   padding: 0 0 0 360px;
   margin: 0 auto;
-  background: url(../img/header.png) no-repeat 0 0;
+  background: #ffffff url(../img/header.png) no-repeat 0 0;
   background-size: contain;
   color: #666;
 }
@@ -294,6 +306,7 @@ body[data-container="room"].playing #share {
   margin-bottom: 10px;
   background: #FFF;
   border: 2px solid #FFF;
+  overflow: hidden;
   -webkit-border-radius: 22px;
   -moz-border-radius: 22px;
   border-radius: 22px;
@@ -369,27 +382,24 @@ body[data-container="room"].playing #share {
   display: none;
 }
 #room .question .answers li a.correct {
-  background: #5F9D2D;
-  border-color: #5F9D2D;
+  background: #99b758;
+  border-color: #99b758;
 }
 #room .question .answers li a.wrong {
-  background: #CA2E2E;
-  border-color: #CA2E2E;
+  background: #df5656;
+  border-color: #df5656;
 }
 #room .question .answers li:nth-child(1) a:before {
-  background: #DF5656;
+  background: #df5656;
 }
 #room .question .answers li:nth-child(2) a:before {
-  background: #99B758;
+  background: #99b758;
 }
 #room .question .answers li:nth-child(3) a:before {
-  background: #FFB901;
+  background: #ffb901;
 }
 #room .question .answers li:nth-child(4) a:before {
-  background: #46A1CC;
-}
-#room.alone #share {
-  display: none;
+  background: #46a1cc;
 }
 /*
 * {-webkit-font-smoothing:antialiased;}
