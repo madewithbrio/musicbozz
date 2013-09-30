@@ -235,10 +235,11 @@ var musicbozz = (function(facebookSDK){
 			view.renderPlayersAnswerResult(result);
 		};
 
-		controller.questionOver = function() {
+		controller.questionOver = function(data) {
 			player.pause();
 			clearTimeout(timeoutQuestion);
 			view.cleanPlayesrAnswerNotifications();
+			controller.setPlayers(data);
 			if(roomInstance.isMaster()) service.getNewQuestion(roomInstance);
 		//	if (result.isOver) { $('div.question').html(""); }
 		};
@@ -295,7 +296,7 @@ var musicbozz = (function(facebookSDK){
 
 				case 'allPlayersAllreadyResponde':
 					player.pause();
-					setTimeout(function() { controller.questionOver(); }, 1000);
+					setTimeout(function() { controller.questionOver(res); }, 1000);
 					break;
 
 				case 'setMaster':

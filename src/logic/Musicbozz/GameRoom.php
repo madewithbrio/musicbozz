@@ -181,7 +181,8 @@ class GameRoom extends Topic
 
 	protected function onAllAlreadyResponde() {
 		#$this->getLoop()->addTimer(2000, $this->getNewQuestion());
-		$this->broadcast(array('action' => 'allPlayersAllreadyResponde'));
+		$playersList = $this->getPlayers();
+		$this->broadcast(array('action' => 'allPlayersAllreadyResponde','data'   => $playersList));
 	}
 
 	/** @Public Interface for WS **/
