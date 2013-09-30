@@ -55,7 +55,7 @@ form input[type="tel"]:focus {
 }
 .button {
   display: block;
-  max-width: 300px;
+  max-width: 260px;
   padding: 20px;
   margin: 20px auto;
   text-transform: uppercase;
@@ -86,6 +86,10 @@ form input[type="tel"]:focus {
   padding: 30px;
   margin: 0 auto;
   background: #0099ab url(../img/bg-blue.jpg) top center;
+  display: none;
+}
+.active {
+  display: block;
 }
 #homepage header img {
   display: block;
@@ -254,7 +258,11 @@ form input[type="tel"]:focus {
   position: relative;
   height: 44px;
   margin-bottom: 10px;
+  background: #FFF;
   border: 2px solid #FFF;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 30px;
 }
 #room .song-scrubber .bar,
 #room .song-scrubber .timer {
@@ -263,6 +271,13 @@ form input[type="tel"]:focus {
   left: 0;
   width: 100%;
   height: 40px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 30px;
+  -webkit-transition: all 0.2s linear;
+  -moz-transition: all 0.2s linear;
+  -o-transition: all 0.2s linear;
+  transition: all 0.2s linear;
 }
 #room .song-scrubber .timer {
   left: 50%;
@@ -273,9 +288,14 @@ form input[type="tel"]:focus {
   background: #bf573e;
 }
 #room .song-scrubber .timer {
+  font-size: 30px;
   line-height: 40px;
   text-align: center;
   color: #333;
+  color: rgba(0, 0, 0, 0.3);
+}
+#room .mejs-container {
+  display: none;
 }
 #room .question {
   padding: 10px;
@@ -336,6 +356,9 @@ form input[type="tel"]:focus {
 }
 #room .question .answers li:nth-child(4) a:before {
   background: #46A1CC;
+}
+#room.alone header .room {
+  display: none;
 }
 #room.alone #share {
   display: none;
@@ -481,16 +504,13 @@ form.i_know_the_room input[type="submit"] {top:50px;}
 }
 /* SMALL SCREENS */
 @media screen and (max-width: 649px) {
-  #content {
-    max-width: 720px;
-    padding: 30px;
-    margin: 0 auto;
-    background: #0099ab url(../img/bg.jpg) center center;
+  .content {
+    padding: 10px;
   }
-  #content section {
+  #homepage section {
     margin-bottom: 50px;
   }
-  #content section.play .column {
+  #homepage section.play .column {
     float: none;
     width: 100%;
     margin: 0;

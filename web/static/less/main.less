@@ -20,7 +20,7 @@ form input[type="text"]:focus,
 form input[type="tel"]:focus {border-color:#333;outline:none;}
 form input[type="submit"] {}
 
-.button {display:block;max-width:300px;padding:20px;margin:20px auto;text-transform:uppercase;font-style:italic;font-weight:900;font-size:20px;color:#FFF;background-color:#444;text-align:center;.rounded(40px);border:2px solid #FFF;//.transition(0.1s,linear);
+.button {display:block;max-width:260px;padding:20px;margin:20px auto;text-transform:uppercase;font-style:italic;font-weight:900;font-size:20px;color:#FFF;background-color:#444;text-align:center;.rounded(40px);border:2px solid #FFF;//.transition(0.1s,linear);
 	//.box-shadow(0 5px 0 0 #333);
 	&.main-action {background-color:@main-color;//.box-shadow(0 5px 0 0 darken(@main-color,15%));
 		&:hover {background-color:lighten(saturate(@main-color,20%),10%);/*.box-shadow(0 5px 0 0 darken(@main-color,5%));*/}
@@ -29,7 +29,8 @@ form input[type="submit"] {}
 	
 }
 
-.content {max-width:720px;padding:30px;margin:0 auto;background:#0099AB url(../img/bg-blue.jpg) top center;}
+.content {max-width:720px;padding:30px;margin:0 auto;background:#0099AB url(../img/bg-blue.jpg) top center;display:none;}
+.active {display:block;}
 
 #homepage {
 	header {
@@ -90,13 +91,14 @@ form input[type="submit"] {}
 			}
 		}
 	}
-	.song-scrubber {position:relative;height:44px;margin-bottom:10px;border:2px solid #FFF;
+	.song-scrubber {position:relative;height:44px;margin-bottom:10px;background:#FFF;border:2px solid #FFF;.rounded(30px);
 		.bar,
-		.timer {position:absolute;top:0;left:0;width:100%;height:40px;}
+		.timer {position:absolute;top:0;left:0;width:100%;height:40px;.rounded(30px);.transition(0.2s,linear);}
 		.timer {left:50%;width:50px;margin-left:-25px;}
 		.remaining-time {background:@main-color;}
-		.timer {line-height:40px;text-align:center;color:#333;}
+		.timer {font-size:30px;line-height:40px;text-align:center;color:#333;color:rgba(0,0,0,0.3);}
 	}
+	.mejs-container {display:none;}
 	.question {padding:10px;
 		.question_number {font-size:12px;}
 		.query {font-size:22px;font-weight:700;text-transform:uppercase;}
@@ -119,6 +121,12 @@ form input[type="submit"] {}
 		}
 	}
 	&.alone {
+		header {
+			.room {display:none;}
+			.players {
+				li {}
+			}
+		}
 		#share {display:none;}
 	}
 }
@@ -281,7 +289,8 @@ form.i_know_the_room input[type="submit"] {top:50px;}
 
 /* SMALL SCREENS */
 @media screen and (max-width: 649px) {
-#content {max-width:720px;padding:30px;margin:0 auto;background:#0099AB url(../img/bg.jpg) center center;
+.content {padding:10px;}
+#homepage {
 	section {margin-bottom:50px;
 		&.play {
 			.column {float:none;width:100%;margin:0;margin-bottom:30px;}
