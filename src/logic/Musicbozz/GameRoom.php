@@ -198,8 +198,8 @@ class GameRoom extends Topic
 		if ($this->isOver()) {
 			$this->broadcast(array('action' => 'gameOver'));
 		} else {
-			$this->broadcast(array('action' => 'loadingSong'));
-			
+			//$this->broadcast(array('action' => 'loadingSong'));
+
 			// reset question 
 			$this->question = null;
 			$this->answers = array();

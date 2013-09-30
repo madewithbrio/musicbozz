@@ -287,11 +287,11 @@ var musicbozz = (function(facebookSDK){
 				case 'playerLeave':
 					service.listPlayers(roomInstance, controller.setPlayers  , errorHandling);
 					break;
-
+			/**
 				case 'loadingSong':
-					view.loadingSong();
+					
 					break;
-			
+			**/
 				case 'newQuestion':
 					//service.getNewQuestion(roomInstance, view.renderQuestion , errorHandling);
 					//renderQuestion(e.data);
@@ -309,6 +309,7 @@ var musicbozz = (function(facebookSDK){
 
 				case 'allPlayersAllreadyResponde':
 					player.pause();
+					view.loadingSong();
 					setTimeout(function() { controller.questionOver(e.data); }, 1000);
 					break;
 
