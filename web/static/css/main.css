@@ -89,7 +89,6 @@ form input[type="tel"]:focus {
   padding: 30px;
   margin: 0 auto;
   background: #0099ab url(../img/bg-blue.jpg) top center;
-  display: none;
 }
 .active {
   display: block;
