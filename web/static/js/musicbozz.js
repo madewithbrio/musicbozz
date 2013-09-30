@@ -147,6 +147,10 @@ var musicbozz = (function(facebookSDK){
 			$body.addClass('loading-song');
 		}
 
+		view.startSong = function() {
+			$body.removeClass('loading-song');
+		}
+
 		var getTemplate = function(name) {
 			if (typeof name === "string" && typeof partialTemplates[name] === "string") { return partialTemplates[name]; }
 			else if (typeof name === "string") throw "template not defined";
@@ -229,7 +233,7 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		controller.startAudioPlayer = function() {
-			$body.removeClass('loading-song');
+			view.startSong();
 			setTimeout( function() { 
 				player.play(); 
 			}, 250);
