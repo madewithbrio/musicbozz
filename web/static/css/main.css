@@ -270,6 +270,9 @@ body[data-container="room"].playing #share {
   color: #FFF;
   display: none;
 }
+#room header .players li .player .thumb .score.active {
+  display: block;
+}
 #room header .players li .player .thumb .score.positive {
   background: rgba(163, 179, 0, 0.7);
 }
