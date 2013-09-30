@@ -177,7 +177,7 @@ class GameRoom extends Topic
 	/** @Triggers **/
 	protected function onGameOver() {
 		$playersList = $this->getPlayers();
-		$this->broadcast(array('action' => 'gameOver','data'   => $playersList)));
+		$this->broadcast(array('action' => 'gameOver','data'   => $playersList));
 		$this->notificationStatus();
 	}
 
