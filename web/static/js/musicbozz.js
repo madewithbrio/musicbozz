@@ -162,7 +162,7 @@ var musicbozz = (function(facebookSDK){
 			if (!room){
 				$body.addClass('start');
 			} else {
-				$("#joinPrivateRoom").find('a').attr('data-room-name', room);
+				$("#joinPrivateRoom").find('a').attr('data-room-name', room[1]);
 				$body.addClass('invite');
 			}
 			view.showHomepage();
