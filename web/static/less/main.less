@@ -37,9 +37,15 @@ form input[type="submit"] {}
 /* STATES */
 body[data-container="homepage"] {
 	#homepage {display:block;}
-	.invite {
-		.start-multi-private {display:block;}
-		.enter-multi-private {display:block;}
+	&.start {
+		#homepage {
+			.start-multi-private {display:block;}
+		}
+	}
+	&.invite {
+		#homepage {
+			.enter-multi-private {display:block;}
+		}
 	}
 }
 body[data-container="room"] {

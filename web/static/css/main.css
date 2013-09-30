@@ -97,10 +97,10 @@ form input[type="tel"]:focus {
 body[data-container="homepage"] #homepage {
   display: block;
 }
-body[data-container="homepage"] .invite .start-multi-private {
+body[data-container="homepage"].start #homepage .start-multi-private {
   display: block;
 }
-body[data-container="homepage"] .invite .enter-multi-private {
+body[data-container="homepage"].invite #homepage .enter-multi-private {
   display: block;
 }
 body[data-container="room"] #room {
