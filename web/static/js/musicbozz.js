@@ -296,7 +296,7 @@ var musicbozz = (function(facebookSDK){
 
 				case 'allPlayersAllreadyResponde':
 					player.pause();
-					setTimeout(function() { controller.questionOver(res); }, 1000);
+					setTimeout(function() { controller.questionOver(e.data); }, 1000);
 					break;
 
 				case 'setMaster':
