@@ -36,6 +36,7 @@ class GameRoom extends Topic
 	 * @ override
 	 */
 	public function add(ConnectionInterface $player) {
+		$this->getLogger()->info("number of players in root: " . $this->count());
 		if ($this->count() == 1) {
 			$this->setMaster($player);
 			$this->questionNumber = 0;
