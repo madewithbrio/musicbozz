@@ -110,6 +110,15 @@ body[data-container="homepage"].invite #homepage .enter-multi-private {
 body[data-container="room"] #room {
   display: block;
 }
+body[data-container="room"].alone header .room {
+  display: none;
+}
+body[data-container="room"].alone header .players li:not(.master) {
+  display: none;
+}
+body[data-container="room"].playing #share {
+  display: none;
+}
 #homepage header img {
   display: block;
   width: 100%;
@@ -282,9 +291,9 @@ body[data-container="room"] #room {
   margin-bottom: 10px;
   background: #FFF;
   border: 2px solid #FFF;
-  -webkit-border-radius: 30px;
-  -moz-border-radius: 30px;
-  border-radius: 30px;
+  -webkit-border-radius: 22px;
+  -moz-border-radius: 22px;
+  border-radius: 22px;
 }
 #room .song-scrubber .bar,
 #room .song-scrubber .timer {
@@ -293,9 +302,9 @@ body[data-container="room"] #room {
   left: 0;
   width: 100%;
   height: 40px;
-  -webkit-border-radius: 30px;
-  -moz-border-radius: 30px;
-  border-radius: 30px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
   -webkit-transition: all 0.2s linear;
   -moz-transition: all 0.2s linear;
   -o-transition: all 0.2s linear;
@@ -375,9 +384,6 @@ body[data-container="room"] #room {
 }
 #room .question .answers li:nth-child(4) a:before {
   background: #46A1CC;
-}
-#room.alone header .room {
-  display: none;
 }
 #room.alone #share {
   display: none;
