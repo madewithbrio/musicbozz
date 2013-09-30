@@ -312,7 +312,7 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'allPlayersAllreadyResponde':
-					setTimeout(function() { controller.questionOver(e.data); }, 1000);
+					setTimeout(function() { controller.questionOver(e.data); }, 2000);
 					break;
 
 				case 'setMaster':
