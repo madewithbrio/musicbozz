@@ -28,6 +28,8 @@ abstract class ServiceImplementation {
 	abstract public function saveItem();
 	abstract public function deleteItem();
 
+	public function getPath() { return $_SERVER["PATH_INFO"]; }
+
 	private function toXML($data, $root = 'root') {
 		header('application/xml; charset=UTF-8');
 		$xml = Array2XML::createXML($root, $data);

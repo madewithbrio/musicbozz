@@ -176,7 +176,9 @@ class GameRoom extends Topic
 
 	/** @Triggers **/
 	protected function onGameOver() {
-		$this->broadcast(array('action' => 'gameOver'));
+		$playersList = $this->getPlayers();
+		$this->broadcast(array('action' => 'gameOver','data'   => $playersList)));
+		$this->notificationStatus();
 	}
 
 	protected function onAllAlreadyResponde() {
@@ -207,6 +209,7 @@ class GameRoom extends Topic
 		 	// load and increment this will close room if open
 		 	try {
 		 		$this->broadcast(array('action' => 'newQuestion', 'data' => $this->getQuestion()->toWs()));
+		 		$this->notificationStatus();
 		 	} catch (\Exception $e) {
 		 		if (!empty($id) && !empty($player)) {
 		 			$player->callError($id, $this->getRoomId(), $e->getMessage());
@@ -297,6 +300,7 @@ class GameRoom extends Topic
             $playersList = $this->getPlayers();
             $this->broadcast(array('action' => 'playerConfigChange', 
                                        'data'   => $playersList));
+            $this->notificationStatus();
         }
     }
 
