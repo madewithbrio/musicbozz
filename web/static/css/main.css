@@ -81,6 +81,9 @@ form input[type="tel"]:focus {
   background-color: #555;
   /*.box-shadow(0 5px 0 0 #444);*/
 }
+.mejs-container {
+  display: none;
+}
 .content {
   max-width: 720px;
   padding: 30px;
@@ -91,12 +94,28 @@ form input[type="tel"]:focus {
 .active {
   display: block;
 }
+/* STATES */
+body[data-container="homepage"] #homepage {
+  display: block;
+}
+body[data-container="homepage"] .invite .start-multi-private {
+  display: block;
+}
+body[data-container="homepage"] .invite .enter-multi-private {
+  display: block;
+}
+body[data-container="room"] #room {
+  display: block;
+}
 #homepage header img {
   display: block;
   width: 100%;
   max-width: 960px;
   height: auto;
   margin: 0 auto;
+}
+#homepage .multi {
+  display: none;
 }
 #homepage section {
   margin-bottom: 50px;
@@ -293,9 +312,6 @@ form input[type="tel"]:focus {
   text-align: center;
   color: #333;
   color: rgba(0, 0, 0, 0.3);
-}
-#room .mejs-container {
-  display: none;
 }
 #room .question {
   padding: 10px;

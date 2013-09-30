@@ -26,16 +26,31 @@ form input[type="submit"] {}
 		&:hover {background-color:lighten(saturate(@main-color,20%),10%);/*.box-shadow(0 5px 0 0 darken(@main-color,5%));*/}
 	}
 	&:hover {background-color:#555;/*.box-shadow(0 5px 0 0 #444);*/}
-	
 }
+
+.mejs-container {display:none;}
 
 .content {max-width:720px;padding:30px;margin:0 auto;background:#0099AB url(../img/bg-blue.jpg) top center;display:none;}
 .active {display:block;}
+
+
+/* STATES */
+body[data-container="homepage"] {
+	#homepage {display:block;}
+	.invite {
+		.start-multi-private {display:block;}
+		.enter-multi-private {display:block;}
+	}
+}
+body[data-container="room"] {
+	#room {display:block;}
+}
 
 #homepage {
 	header {
 		img {display:block;width:100%;max-width:960px;height:auto;margin:0 auto;}
 	}
+	.multi {display:none;}
 	section {margin-bottom:50px;
 		&.how-to {
 			img {display:block;width:100%;max-width:520px;margin:20px auto;}
@@ -98,7 +113,6 @@ form input[type="submit"] {}
 		.remaining-time {background:@main-color;}
 		.timer {font-size:30px;line-height:40px;text-align:center;color:#333;color:rgba(0,0,0,0.3);}
 	}
-	.mejs-container {display:none;}
 	.question {padding:10px;
 		.question_number {font-size:12px;}
 		.query {font-size:22px;font-weight:700;text-transform:uppercase;}
