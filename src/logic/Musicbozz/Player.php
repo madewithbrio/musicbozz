@@ -9,7 +9,7 @@ class Player extends WampConnection {
 	private $username;
 	private $others;
 	private $score;
-	private $master;
+	private $master = false;
 
 	public function __construct (Conn $conn, $name = "player", $others = array(), $score = 0) {
 		parent::__construct($conn);
