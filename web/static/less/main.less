@@ -34,8 +34,11 @@ form input[type="submit"] {}
 .active {display:block;}
 
 
-/* STATES */
 
+
+
+
+/* STATES */
 #homepage,
 #room {display:none;}
 body[data-container="homepage"] {
@@ -53,7 +56,24 @@ body[data-container="homepage"] {
 }
 body[data-container="room"] {
 	#room {display:block;}
+	&.alone {
+		header {
+			.room {display:none;}
+			.players {
+				li:not(.master) {display:none;}
+			}
+		}
+	}
+	&.playing {
+		#share {display:none;}
+	}
 }
+
+
+
+
+
+
 
 #homepage {
 	header {
@@ -115,9 +135,9 @@ body[data-container="room"] {
 			}
 		}
 	}
-	.song-scrubber {position:relative;height:44px;margin-bottom:10px;background:#FFF;border:2px solid #FFF;.rounded(30px);
+	.song-scrubber {position:relative;height:44px;margin-bottom:10px;background:#FFF;border:2px solid #FFF;.rounded(22px);
 		.bar,
-		.timer {position:absolute;top:0;left:0;width:100%;height:40px;.rounded(30px);.transition(0.2s,linear);}
+		.timer {position:absolute;top:0;left:0;width:100%;height:40px;.rounded(20px);.transition(0.2s,linear);}
 		.timer {left:50%;width:50px;margin-left:-25px;}
 		.remaining-time {background:@main-color;}
 		.timer {font-size:30px;line-height:40px;text-align:center;color:#333;color:rgba(0,0,0,0.3);}
@@ -145,7 +165,6 @@ body[data-container="room"] {
 	}
 	&.alone {
 		header {
-			.room {display:none;}
 			.players {
 				li {}
 			}
