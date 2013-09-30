@@ -37,11 +37,7 @@ class GameRoom extends Topic
 	 */
 	public function add(ConnectionInterface $player) {
 		$this->getLogger()->info("number of players in root: " . $this->count());
-		if ($this->count() == 0) {
-			$this->setMaster($player);
-			$this->questionNumber = 0;
-		}
-
+		
 		// room closed
 		if (!$this->isOpen()) {
 			$this->getLogger()->info("room closed");
@@ -50,6 +46,11 @@ class GameRoom extends Topic
 		}
 
 		parent::add($player);
+		if ($this->count() == 1) {
+			$this->setMaster($player);
+			$this->questionNumber = 0;
+		}
+
 		$this->getLogger()->info("player have join");
 		$this->broadcast(array('action' => 'newPlayer', 'data' => $this->getPlayers()));
 		$this->notificationStatus();
