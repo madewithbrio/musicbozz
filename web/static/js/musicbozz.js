@@ -267,7 +267,7 @@ var musicbozz = (function(facebookSDK){
 
 		controller.gameover = function() {
 			view.showGameover();
-			service.outRoom(gameRoom);
+			service.outRoom(roomInstance);
 		};
 
 		controller.eventHandler = function(t, e) {
@@ -302,7 +302,7 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'gameOver':
-					controller.gameover();
+					setTimeout(function() { controller.gameover(); }, 2000);
 					break;
 					
 				default:
@@ -369,8 +369,8 @@ var musicbozz = (function(facebookSDK){
 			});
 		};
 
-		service.outRoom(gameRoom) {
-			session.unsubscribe(gameRoom.getRoomId());
+		service.outRoom = function(gameRoom) {
+			ws_session.unsubscribe(gameRoom.getRoomId());
 		};
 
 		service.listPlayers = function(gameRoom, onSuccess, onError) {
