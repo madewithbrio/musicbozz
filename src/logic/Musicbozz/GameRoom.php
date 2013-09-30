@@ -188,15 +188,18 @@ class GameRoom extends Topic
 	/** @Public Interface for WS **/
 	public function getNewQuestion($player, $id){
 		$this->getLogger()->info("new question");
+		/**
 		if ($this->count() == 0) {
 			$this->getLogger()->info("room empty");
 			$this->notificationStatus();
 			return;
 		}
-
+		**/
 		if ($this->isOver()) {
 			$this->broadcast(array('action' => 'gameOver'));
 		} else {
+			$this->broadcast(array('action' => 'loadingSong'));
+			
 			// reset question 
 			$this->question = null;
 			$this->answers = array();

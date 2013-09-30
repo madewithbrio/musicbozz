@@ -112,6 +112,7 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		view.renderQuestion = function(data) {
+			$body.removeClass('loading-song');
 			$('ul.players .score').removeClass('active positive negative');
 			$('div[data-template="question"]').html(Mustache.render(getTemplate('question'), data));
 			player.setSrc(data.url);
@@ -141,6 +142,10 @@ var musicbozz = (function(facebookSDK){
 			this.liElement.children().addClass('selected ' + clazzName);
 			this.liElement.parent().addClass('has_answer');
 		};
+
+		view.loadingSong = function() {
+			$body.addClass('loading-song');
+		}
 
 		var getTemplate = function(name) {
 			if (typeof name === "string" && typeof partialTemplates[name] === "string") { return partialTemplates[name]; }
@@ -278,6 +283,10 @@ var musicbozz = (function(facebookSDK){
 				case 'newPlayer':
 				case 'playerLeave':
 					service.listPlayers(roomInstance, controller.setPlayers  , errorHandling);
+					break;
+
+				case 'loadingSong':
+					view.loadingSong();
 					break;
 			
 				case 'newQuestion':
