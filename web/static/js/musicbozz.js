@@ -95,7 +95,7 @@ var musicbozz = (function(facebookSDK){
 
 		view.renderPlayers = function(res) {
 	        $('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: res}, getTemplate()));
-	        if (master) $body.addClass('master');
+	        if (roomInstance.isMaster()) $body.addClass('master');
 	        /**
 	        if (!master) {
 	        	$('#start_game').hide();
@@ -232,6 +232,7 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		controller.playersAnswerResult = function(result) {
+			player.pause();
 			view.renderPlayersAnswerResult(result);
 		};
 
@@ -248,7 +249,7 @@ var musicbozz = (function(facebookSDK){
 				answer = $li.parent().find('li').index($li);
 			if (hasAnswer) return;
 			hasAnswer = true; 
-			player.pause();
+			//player.pause();
 			$('a[data-element="answer"]').unbind('click.answer');
 
 			service.setAnswer(roomInstance, answer, hash, view.renderPlayerAnswer.bind({liElement: $li}));
@@ -259,7 +260,7 @@ var musicbozz = (function(facebookSDK){
 			for (i = res.length - 1; i >= 0; i--) {
 	        	if  ((res[i].username == service.getPlayer().username) &&
 	        		(res[i].master))
-	        	master = true;
+	        	roomInstance.setMaster(true);
 	        }
 
 	    	view.renderPlayers(res);
@@ -294,7 +295,7 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'allPlayersAllreadyResponde':
-					controller.questionOver();
+					setTimeout(function() { controller.questionOver(); }, 1000);
 					break;
 
 				case 'setMaster':

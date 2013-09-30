@@ -112,6 +112,7 @@ class GameRoom extends Topic
 	}
 
 	protected function isAllPlayersAlreadyResponde() {
+		$this->getLogger()->info("answers: " . sizeof($this->answers) . " players: ". $this->count());
 		return sizeof($this->answers) == $this->count();
 	}
 
