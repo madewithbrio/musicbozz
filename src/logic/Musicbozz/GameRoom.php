@@ -36,7 +36,7 @@ class GameRoom extends Topic
 	 * @ override
 	 */
 	public function add(ConnectionInterface $player) {
-		if ($this->count() == 0) {
+		if ($this->count() == 1) {
 			$this->setMaster($player);
 			$this->questionNumber = 0;
 		}
