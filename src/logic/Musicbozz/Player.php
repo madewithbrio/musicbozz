@@ -16,6 +16,7 @@ class Player extends WampConnection {
 		$this->name = $name;
 		$this->others = $others;
 		$this->score = $score;
+		$this->master = false;
 	}
 
 	public function getSessionId() {
@@ -29,11 +30,12 @@ class Player extends WampConnection {
 	public function getScore() { return $this->score; }
 	public function getOthers() { return $this->others; }
 
-	public function setMaster($bool) { $this->master = $master; }
+	public function setMaster($master) { $this->master = $master; }
 	public function setOthers($others) { $this->others = $others; }
 	public function isMaster() { return $this->master; }
 	
 	public function toWs() {
+var_dump($this->isMaster());
 		return array(
 			'name' 	=> $this->getName(),
 			'score' => $this->getScore(),
