@@ -53,7 +53,7 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		Room.prototype.addPlayer = function() {};
-		Room.prototype.setMaster = function(master) { this.master; };
+		Room.prototype.setMaster = function(master) { this.master = master; };
 		Room.prototype.getPlayer = function() { return this.player; };
 		Room.prototype.getQuestion = function() {};
 		Room.prototype.isAlone = function() { return this.type == 'alone'; };
@@ -240,6 +240,7 @@ var musicbozz = (function(facebookSDK){
 			clearTimeout(timeoutQuestion);
 			view.cleanPlayesrAnswerNotifications();
 			controller.setPlayers(data);
+			console.log(roomInstance);
 			if(roomInstance.isMaster()) service.getNewQuestion(roomInstance);
 		//	if (result.isOver) { $('div.question').html(""); }
 		};
@@ -257,12 +258,12 @@ var musicbozz = (function(facebookSDK){
 
 		controller.setPlayers = function(res) {
 			var i;
-			for (i = res.length - 1; i >= 0; i--) {
-	        	if  ((res[i].username == service.getPlayer().username) &&
+			for (i = 0; i < res.length; i++) {
+				if (!res) break;
+	        	if  ((res[i].others && res[i].others.username == service.getPlayer().username) &&
 	        		(res[i].master))
 	        	roomInstance.setMaster(true);
 	        }
-
 	    	view.renderPlayers(res);
 		};
 
@@ -304,6 +305,7 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'gameOver':
+					player.pause();
 					setTimeout(function() { controller.gameover(); }, 2000);
 					break;
 					
