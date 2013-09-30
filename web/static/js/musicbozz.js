@@ -108,6 +108,7 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		view.renderQuestion = function(data) {
+			$('ul.players .score').removeClass('active positive negative');
 			$('div[data-template="question"]').html(Mustache.render(getTemplate('question'), data));
 			player.setSrc(data.url);
 			player.load();
@@ -120,7 +121,7 @@ var musicbozz = (function(facebookSDK){
 
 			if (data.questionScore == 0) clazzName = ""; // hack because 0 
 			$pointsContainer.html(data.totalScore);
-			$pointsContainer.addClass(clazzName).addClass('active'); //.html(data.questionScore);
+			$playerContainer.find('.score').addClass(clazzName).addClass('active').html(data.questionScore);
 		};
 
 		view.cleanPlayesrAnswerNotifications = function() {
@@ -290,6 +291,7 @@ var musicbozz = (function(facebookSDK){
 				case 'setMaster':
 					roomInstance.setMaster(true);
 					break;
+					
 				case 'gameOver':
 					console.log("game over");
 					break;

@@ -170,7 +170,7 @@ class GameRoom extends Topic
 
 	/** @Triggers **/
 	protected function onGameOver() {
-
+		$this->broadcast(array('action' => 'gameOver'));
 	}
 
 	protected function onAllAlreadyResponde() {
