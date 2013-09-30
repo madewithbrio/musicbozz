@@ -99,7 +99,7 @@ class GameRoom extends Topic
 			'players' => $players,
 			'isOpen'  => $this->isOpen(),
 			'isOver'  => $this->isOver(),
-			'question' => $this->question
+			//'question' => $this->question
 			);
 	}
 
@@ -178,7 +178,7 @@ class GameRoom extends Topic
 	protected function onGameOver() {
 		$this->question = null;
 		$this->questionNumber = 0;
-		
+
 		$playersList = $this->getPlayers();
 		$this->broadcast(array('action' => 'gameOver','data'   => $playersList));
 		$this->notificationStatus();
