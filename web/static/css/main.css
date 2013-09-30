@@ -94,6 +94,10 @@ form input[type="tel"]:focus {
   display: block;
 }
 /* STATES */
+#homepage,
+#room {
+  display: none;
+}
 body[data-container="homepage"] #homepage {
   display: block;
 }
