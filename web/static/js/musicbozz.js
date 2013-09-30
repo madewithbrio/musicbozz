@@ -85,6 +85,10 @@ var musicbozz = (function(facebookSDK){
 			$body.attr('data-container', 'homepage');
 		};
 
+		view.showGameover = function() {
+			$body.attr('data-container', 'gameover');
+		};
+
 		view.renderGamestart = function() {
 			$body.removeClass('standing-by').addClass('playing');
 		};
@@ -259,7 +263,12 @@ var musicbozz = (function(facebookSDK){
 	        }
 
 	    	view.renderPlayers(res);
-		}
+		};
+
+		controller.gameover = function() {
+			view.showGameover();
+			service.outRoom(gameRoom);
+		};
 
 		controller.eventHandler = function(t, e) {
 			switch (e.action) {
@@ -291,9 +300,9 @@ var musicbozz = (function(facebookSDK){
 				case 'setMaster':
 					roomInstance.setMaster(true);
 					break;
-					
+
 				case 'gameOver':
-					console.log("game over");
+					controller.gameover();
 					break;
 					
 				default:
@@ -358,6 +367,10 @@ var musicbozz = (function(facebookSDK){
 			}, function(){
 				console.log("session closed");
 			});
+		};
+
+		service.outRoom(gameRoom) {
+			session.unsubscribe(gameRoom.getRoomId());
 		};
 
 		service.listPlayers = function(gameRoom, onSuccess, onError) {

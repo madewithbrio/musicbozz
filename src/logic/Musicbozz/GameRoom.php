@@ -7,6 +7,7 @@ use \Exception;
 
 class GameRoom extends Topic
 {
+	const NUMBER_QUESTIONS = 5;
 	private $questionNumber = 0;
 	private $question;
 	private $answers;
@@ -115,7 +116,11 @@ class GameRoom extends Topic
 	}
 
 	protected function isOver() {
-		return ($this->questionNumber > 20);
+		return ($this->questionNumber > self::NUMBER_QUESTIONS);
+	}
+
+	protected function isLastQuestion() {
+		return ($this->questionNumber == self::NUMBER_QUESTIONS);
 	}
 
 
@@ -245,7 +250,7 @@ class GameRoom extends Topic
 										 'res' => $result[2], 
 										 'position' => $params['answer']));
 			if ($this->isAllPlayersAlreadyResponde()) {
-				if ($this->isOver()) {
+				if ($this->isLastQuestion()) {
 					$this->onGameOver();
 				} else {
 					$this->onAllAlreadyResponde();
