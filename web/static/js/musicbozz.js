@@ -72,26 +72,26 @@ var musicbozz = (function(facebookSDK){
 		var view = {}, 
 			partialTemplates = [],			
 			$room = $('#room'), 
-			$homepage = $('#homepage');
+			$homepage = $('#homepage'),
+			$body = $('body');
 
 		view.showRoom = function(alone) {
-			if (alone) $room.addClass('alone');
-			$room.show();
-			$homepage.hide();
+			if (alone) $body.addClass('alone');
+			else $body.addClass('multi');
+			$body.attr('data-container', 'room');
 		};
 
 		view.showHomepage = function() {
-			$homepage.show();
-			$room.hide();
+			$body.attr('data-container', 'homepage');
 		};
 
 		view.renderGamestart = function() {
-			$('#standBy').hide();
-			$('#gameBoard').show();
+			$body.removeClass('standing-by').addClass('playing');
 		};
 
 		view.renderPlayers = function(res) {
 	        $('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: res}, getTemplate()));
+	        if (master) $body.addClass('master');
 	        /**
 	        if (!master) {
 	        	$('#start_game').hide();
@@ -154,14 +154,19 @@ var musicbozz = (function(facebookSDK){
 
 		var onLoadHomepage = function() {
 			var room = /room=(.+)/.exec(window.location.hash);
-			if (!room) return undefined;
-			$("#joinPrivateRoom").find('a').attr('data-room-name', room);
-			$("#joinPrivateRoom").show();
-			$("#startPrivateRoom").hide();
+			if (!room){
+				$body.addClass('start');
+			} else {
+				$("#joinPrivateRoom").find('a').attr('data-room-name', room);
+				$body.addClass('invite');
+			}
+			view.showHomepage();
 		};
 
-		loadTemplates();
-		onLoadHomepage();
+		$(document).ready(function(){
+			loadTemplates();
+			onLoadHomepage();
+		});
 
 		return view;		
 	})();
