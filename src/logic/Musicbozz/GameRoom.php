@@ -99,6 +99,8 @@ class GameRoom extends Topic
 			'players' => $players,
 			'isOpen'  => $this->isOpen(),
 			'isOver'  => $this->isOver(),
+			'isPublic'=> $this->isPublic(),
+			'id' 	  => $this->getRoomId(),
 			//'question' => $this->question
 			);
 	}
