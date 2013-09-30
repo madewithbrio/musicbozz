@@ -1,1 +1,7 @@
 vendor
+service/websocket-1/log/run~HEAD
+service/websocket-2/log/run~HEAD
+service/websocket-1/log/run~65e6cf2db78c5f68bb13932eb083661a52662611
+service/websocket-2/log/run~65e6cf2db78c5f68bb13932eb083661a52662611
+service/websocket-2/log/main-musicbuzz-websockets2
+service/websocket-1/log/main-musicbuzz-websockets1
