@@ -13,33 +13,33 @@ var musicbozz = (function(facebookSDK){
 	'use strict';
 	var roomInstance, 
 	    convertDecimalToSec = function(decimal) {
-		var secs  = Math.floor(decimal) || 0;
-  		if (secs < 10) secs = "0" + secs;
-  		return secs;
+			var secs  = Math.floor(decimal) || 0;
+	  		if (secs < 10) secs = "0" + secs;
+	  		return secs;
 	    },
 	    player = new MediaElementPlayer('#player', {
-		type: 'audio/mp3',
-		success: function(media, node, player) {
-			media.addEventListener('timeupdate', function(e){
-				//console.log(this);
-				var played = 0, $scrubber = $('#scrubber');
-				if ((media.currentTime != undefined)) {
-				    played = parseInt((100 - (media.currentTime / media.duration) * 100), 10) || 0;
-				    $scrubber.find('.remaining-time').css({width: played + '%'});
-				    $scrubber.find('.timer').html(convertDecimalToSec(media.duration - media.currentTime));
-				}
-			});
-			media.addEventListener('canplay', function() {
-				var hash = $('div[data-template="question"] .query').attr('data-hash');
-				service.setReadyToPlay(roomInstance, hash);
-			});
-			media.addEventListener('ended', function() { 
-				var hash = $('div[data-template="question"] .query').attr('data-hash');
-				service.notifyTimeEnded(roomInstance, hash);
-			});
-
-		}
-	});
+			type: 'audio/mp3',
+			success: function(media, node, player) {
+				media.addEventListener('timeupdate', function(e){
+					//console.log(this);
+					var played = 0, $scrubber = $('#scrubber');
+					if ((media.currentTime != undefined)) {
+					    played = parseInt((100 - (media.currentTime / media.duration) * 100), 10) || 0;
+					    $scrubber.find('.remaining-time').css({width: played + '%'});
+					    $scrubber.find('.timer').html(convertDecimalToSec(media.duration - media.currentTime));
+					}
+				});
+				media.addEventListener('canplay', function() {
+					var hash = $('div[data-template="question"] .query').attr('data-hash');
+					service.setReadyToPlay(roomInstance, hash);
+				});
+				media.addEventListener('ended', function() { 
+					var hash = $('div[data-template="question"] .query').attr('data-hash');
+					service.notifyTimeEnded(roomInstance, hash);
+				});
+	
+			}
+		});
 
 	var Room = (function() {
 		var Room = function(player, type, roomName) {
@@ -62,15 +62,14 @@ var musicbozz = (function(facebookSDK){
 			return ((this.type == 'alone') ? 'alone/' : 'room/') + this.roomName;
 		};
 		Room.prototype.getLocation = function() {
-			return 'ws://vmdev-musicbozz.vmdev.bk.sapo.pt/ws/'
-				 + this.getRoomId();
+			return 'ws://vmdev-musicbozz.vmdev.bk.sapo.pt/ws/' + this.getRoomId();
 		};
 
 		return Room;
 	})();
 
 	var view = (function(){
-		var 	view = {}, 
+		var view = {}, 
 			partialTemplates = [],			
 			$room = $('#room'), 
 			$homepage = $('#homepage');
@@ -92,7 +91,7 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		view.renderPlayers = function(res) {
-	        	$('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: res}, getTemplate()));
+	        $('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: res}, getTemplate()));
 	        /**
 	        if (!master) {
 	        	$('#start_game').hide();
@@ -168,7 +167,9 @@ var musicbozz = (function(facebookSDK){
 	})();
 
 	var controller = (function() {
-		var controller = {}, hasAnswer = false, timeoutQuestion,
+		var controller = {}, 
+			hasAnswer = false, 
+			timeoutQuestion,
 			errorHandling = function(error, desc){ 
 				console.error(error, desc); 
 			};
@@ -306,7 +307,10 @@ var musicbozz = (function(facebookSDK){
 	})();
 
 	var service = (function() {
-		var service = {}, ws_session, playerConfig;
+		var service = {}, 
+			ws_session, 
+			playerConfig;
+			
 		service.getPlayer = function() {
 			return playerConfig;
 		};
