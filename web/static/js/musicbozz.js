@@ -232,7 +232,6 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		controller.playersAnswerResult = function(result) {
-			player.pause();
 			view.renderPlayersAnswerResult(result);
 		};
 
@@ -295,6 +294,7 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'allPlayersAllreadyResponde':
+					player.pause();
 					setTimeout(function() { controller.questionOver(); }, 1000);
 					break;
 
