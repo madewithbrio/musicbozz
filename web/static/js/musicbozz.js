@@ -112,7 +112,7 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		view.renderQuestion = function(data) {
-			$body.removeClass('loading-song');
+			//
 			$('ul.players .score').removeClass('active positive negative');
 			$('div[data-template="question"]').html(Mustache.render(getTemplate('question'), data));
 			player.setSrc(data.url);
@@ -229,9 +229,8 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		controller.startAudioPlayer = function() {
-			console.log("start");
+			$body.removeClass('loading-song');
 			setTimeout( function() { 
-				console.log(player);
 				player.play(); 
 			}, 250);
 		};
