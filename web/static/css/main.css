@@ -131,6 +131,9 @@ body[data-container="room"].playing #share {
 body[data-container="room"].master #share {
   display: block;
 }
+body[data-container="room"].loading-song {
+  background-color: red;
+}
 #homepage header img {
   display: block;
   width: 100%;
