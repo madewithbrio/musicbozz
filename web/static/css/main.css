@@ -411,7 +411,52 @@ body[data-container="gameover"] #gameover {
 #room .question .answers li:nth-child(4) a:before {
   background: #46a1cc;
 }
-#loading-overlay {
+#gameover .final-score {
+  list-style: none;
+  padding: 0;
+}
+#gameover .final-score li {
+  float: left;
+  width: 23%;
+  margin: 0 1%;
+  text-align: center;
+  /*
+			&:nth-child(1) a .game-ranking {//background-color:@gold-color; //gold
+				i {color:@gold-color;}
+			}
+			&:nth-child(2) a .game-ranking {//background-color:@silver-color; //silver
+				i {color:@silver-color;}
+			}
+			&:nth-child(3) a .game-ranking {//background-color:@bronze-color; //bronze
+				i {color:@bronze-color;}
+			}
+			*/
+
+}
+#gameover .final-score li a {
+  display: block;
+}
+#gameover .final-score li a .game-ranking {
+  padding: 10px;
+}
+#gameover .final-score li a .game-ranking .game-rank {
+  position: relative;
+}
+#gameover .final-score li a .game-ranking .game-rank span {
+  width: 20px;
+  height: 20px;
+  margin: 0 0 0 -10px;
+  line-height: 100px;
+  font-size: 28px;
+  font-weight: bold;
+}
+#gameover .final-score li a .thumb img {
+  width: 100%;
+}
+#gameover .final-score li a .overall-ranking {
+  padding: 10px;
+}
+#container-loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -420,7 +465,28 @@ body[data-container="gameover"] #gameover {
   background-color: rgba(255, 255, 255, 0.9);
   z-index: 999999;
 }
-#loading-overlay img {
+#container-loading-overlay img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  margin: -25px 0 0 -25px;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 2s;
+}
+#question-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0099AB;
+  z-index: 999999;
+}
+#question-loading-overlay img {
   position: absolute;
   top: 50%;
   left: 50%;
