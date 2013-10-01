@@ -31,15 +31,21 @@ abstract class ServiceImplementation {
 	public function getPath() { return $_SERVER["PATH_INFO"]; }
 
 	private function toXML($data, $root = 'root') {
-		header('application/xml; charset=UTF-8');
+		header('Content-Type: application/xml; charset=UTF-8');
 		$xml = Array2XML::createXML($root, $data);
 		echo $xml->saveXML();
 		exit();
 	} 
 
 	private function toJSON($data) {
-		header('application/json; charset=UTF-8');
-		echo json_encode($data);
+		$jsonp = $_GET['jsonp'];
+		if (!empty($jsonp)) {
+			header('Content-Type: application/javascript');
+			printf('%s(%s);', $jsonp, json_encode($data));
+		} else {
+			header('Content-Type: application/json; charset=UTF-8');
+			echo json_encode($data);
+		}
 		exit();
 	}
 
