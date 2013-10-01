@@ -11,15 +11,21 @@
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/font-awesome.css">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
     </head>
     <body>
-        <div id="homepage" class="">
+        <div id="homepage" class="panel">
             <header>
                 <img src="img/header.png" alt="" />
             </header>
             <div class="content">
                 <section class="play clearfix">
+                    <div class="column multi start-multi-public">
+                        <h3>Joga com desconhecidos</h3>
+                        <p>Não tens amigos?</p>
+                        <a href="" class="button main-action" data-game-type="private" data-action="start">Começar jogo!</a>
+                    </div>
                     <div class="column multi start-multi-private">
                         <h3>Joga com amigos</h3>
                         <p>Começa um jogo e convida mais três amigos do Facebook para jogarem contigo.</p>
@@ -63,13 +69,13 @@
             </div>
         </div>
 
-        <div id="room">
+
+        <div id="room" class="panel">
             <header class="clearfix">
                 <h2 class="room">Sala <span class="room-id">10</span></h2>
                 <ul class="players clearfix" data-template="players"></ul>
             </header>
-
-            <div class="content main">
+            <div class="content">
                 <div id="share" class="step">
                     <p>Partilha este link com os teus amigos.</p>
                     <form>
@@ -86,9 +92,95 @@
                     <audio id="player" preload><source></source type="audio/mp3"></audio>
                     <div class="question" data-template="question"></div>
                 </div>
-
             </div>
+        </div>
 
+
+        <div id="gameover" class="panel">
+            <header>
+            </header>
+            <div class="content">
+                <h2>Game Over</h2>
+                <section>
+                    <ol class="final-score clearfix">
+                        <li>
+                            <a href="#">
+                                <div class="game-ranking">
+                                    <p class="game-rank"><span>1</span></p>
+                                    <p class="game-score">234.946</p>
+                                </div>
+                                <div class="thumb">
+                                    <img src="http://lorempixel.com/100/100/" alt="" />
+                                </div>
+                                <p class="name ellipsis">Nome</p>
+                                <div class="overall-ranking">
+                                    <p class="overall-rank">#34000 na geral</p>
+                                    <p class="overall-score">423.345 pontos na geral</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="game-ranking">
+                                    <p class="game-rank"><span>2</span></p>
+                                    <p class="game-score">234.946</p>
+                                </div>
+                                <div class="thumb">
+                                    <img src="http://lorempixel.com/100/100/?1" alt="" />
+                                </div>
+                                <p class="name ellipsis">Nome</p>
+                                <div class="overall-ranking">
+                                    <p class="overall-rank">#34000 na geral</p>
+                                    <p class="overall-score">423.345 pontos na geral</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="game-ranking">
+                                    <p class="game-rank"><span>3</span></p>
+                                    <p class="game-score">234.946</p>
+                                </div>
+                                <div class="thumb">
+                                    <img src="http://lorempixel.com/100/100/?2" alt="" />
+                                </div>
+                                <p class="name ellipsis">Nome</p>
+                                <div class="overall-ranking">
+                                    <p class="overall-rank">#34000 na geral</p>
+                                    <p class="overall-score">423.345 pontos na geral</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <div class="game-ranking">
+                                    <p class="game-rank"><span>4</span></p>
+                                    <p class="game-score">234.946</p>
+                                </div>
+                                <div class="thumb">
+                                    <img src="http://lorempixel.com/100/100/?2" alt="" />
+                                </div>
+                                <p class="name ellipsis">Nome</p>
+                                <div class="overall-ranking">
+                                    <p class="overall-rank">#34000 na geral</p>
+                                    <p class="overall-score">423.345 pontos na geral</p>
+                                </div>
+                            </a>
+                        </li>
+                    </ol>
+                </section>
+                <section class="play clearfix">
+                    <div class="column">
+                        <a href="#" class="button main-action">Jogar de novo</a>
+                    </div>
+                    <div class="column">
+                        <a href="#" class="button">Voltar ao início</a>
+                    </div>
+            </div>
+        </div>
+
+        <div id="loading-overlay">
+            <img src="img/loader-01.png" alt="a carregar..." />
         </div>
 
 
