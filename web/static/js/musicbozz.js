@@ -429,7 +429,7 @@ var musicbozz = (function(facebookSDK){
 			$.ajax({
 				url: 'http://vmdev-musicbozz.vmdev.bk.sapo.pt/rest.php/rooms/public',
 				dataType: 'jsonp',
-				jsonp: true,
+				jsonp: 'jsonp',
 			}).done(onSuccess).fail(onError);
 		}
 		
