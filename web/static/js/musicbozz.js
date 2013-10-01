@@ -78,6 +78,7 @@ var musicbozz = (function(facebookSDK){
 		view.showRoom = function(alone) {
 			if (alone) $body.addClass('alone');
 			else $body.addClass('multi');
+
 			$body.addClass('loading-container');
 			setTimeout(function(){
 				$body.attr('data-container', 'room');
@@ -164,7 +165,7 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		view.startSong = function() {
-			$body.removeClass('loading-song');
+			$body.removeClass('loading-song').removeClass('loading-container');
 		};
 
 		var getTemplate = function(name) {
@@ -244,9 +245,9 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		controller.startGame = function() {
+			view.loadingSong();
 			service.getNewQuestion(roomInstance, function(question) {
 				view.renderGamestart();
-				//view.renderQuestion(question);
 			}, errorHandling);
 		};
 
@@ -456,6 +457,7 @@ var musicbozz = (function(facebookSDK){
 				session.call(gameRoom.getRoomId(), 'setPlayer', gameRoom.getPlayer());
 				if (gameRoom.isAlone()) {
 					controller.startGame();
+					//setTimeout(function() {  }, 1000);
 				}
 			}, function(){
 				console.log("session closed");
