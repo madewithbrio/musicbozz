@@ -94,9 +94,9 @@ form input[type="tel"]:focus {
   display: block;
 }
 /* STATES */
-#homepage,
-#room,
+.panel,
 #share,
+#loading-overlay,
 #stand-by {
   display: none;
 }
@@ -122,6 +122,9 @@ body[data-container="room"].alone #room header .players li {
 body[data-container="room"].alone #room header .players li:not(.master) {
   display: none;
 }
+body[data-container="room"].alone #room #share {
+  display: none;
+}
 body[data-container="room"].standing-by #stand-by {
   display: block;
 }
@@ -131,8 +134,11 @@ body[data-container="room"].playing #share {
 body[data-container="room"].master #share {
   display: block;
 }
-body[data-container="room"].loading-song {
-  background-color: red;
+body[data-container="room"].loading-song #loading-overlay {
+  display: block;
+}
+body[data-container="gameover"] #gameover {
+  display: block;
 }
 #homepage header img {
   display: block;
@@ -237,7 +243,7 @@ body[data-container="room"].loading-song {
   max-width: 720px;
   padding: 0 0 0 360px;
   margin: 0 auto;
-  background: #ffffff url(../img/header.png) no-repeat 0 0;
+  background: url(../img/header.png) no-repeat 0 0;
   background-size: contain;
   color: #666;
 }
@@ -279,6 +285,7 @@ body[data-container="room"].loading-song {
   top: 0;
   left: 0;
   width: 100%;
+  background: rgba(77, 77, 77, 0.7);
   font-size: 26px;
   font-weight: 900;
   line-height: 60px;
@@ -403,6 +410,35 @@ body[data-container="room"].loading-song {
 }
 #room .question .answers li:nth-child(4) a:before {
   background: #46a1cc;
+}
+#loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 999999;
+}
+#loading-overlay img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  margin: -25px 0 0 -25px;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 2s;
+}
+@-webkit-keyframes rotate {
+  0% {
+    -webkit-transform: rotate3d(0, 0, 1, 0deg);
+  }
+  100% {
+    -webkit-transform: rotate3d(0, 0, 1, 360deg);
+  }
 }
 /*
 * {-webkit-font-smoothing:antialiased;}

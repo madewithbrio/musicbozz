@@ -14,7 +14,7 @@
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
     </head>
     <body>
-        <div id="homepage" class="">
+        <div id="homepage" class="panel">
             <header>
                 <img src="img/header.png" alt="" />
             </header>
@@ -93,13 +93,13 @@
             </div>
         </div>
 
-        <div id="room">
+
+        <div id="room" class="panel">
             <header class="clearfix">
                 <h2 class="room">Sala <span class="room-id">10</span></h2>
                 <ul class="players clearfix" data-template="players"></ul>
             </header>
-
-            <div class="content main">
+            <div class="content">
                 <div id="share" class="step">
                     <p>Partilha este link com os teus amigos.</p>
                     <form>
@@ -116,9 +116,20 @@
                     <audio id="player" preload><source></source type="audio/mp3"></audio>
                     <div class="question" data-template="question"></div>
                 </div>
-
             </div>
+        </div>
 
+
+        <div id="gameover" class="panel">
+            <header>
+            </header>
+            <div class="content">
+                <h2>game over</h2>
+            </div>
+        </div>
+
+        <div id="loading-overlay">
+            <img src="img/loader-01.png" alt="a carregar..." />
         </div>
 
 
