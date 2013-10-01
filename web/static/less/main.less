@@ -50,8 +50,18 @@ form input[type="submit"] {}
 /* STATES */
 .panel,
 #share,
-#loading-overlay,
+#song-loading-overlay,
+#container-loading-overlay,
 #stand-by {display:none;}
+
+body {
+	&.loading-song {
+		#song-loading-overlay {display:block;}
+	}
+	&.loading-container {
+		#container-loading-overlay {display:block;}
+	}
+}
 
 body[data-container="homepage"] {
 	#homepage {display:block;}
@@ -88,9 +98,6 @@ body[data-container="room"] {
 	}
 	&.master {
 		#share {display:block;}
-	}
-	&.loading-song {
-		#loading-overlay {display:block;}
 	}
 }
 
@@ -239,7 +246,7 @@ body[data-container="gameover"] {
 	}
 }
 
-#question-loading-overlay {position:fixed;top:0;left:0;width:100%;height:100%;background-color:#0099AB;z-index:999999;
+#song-loading-overlay {position:fixed;top:0;left:0;width:100%;height:100%;background-color:#0099AB;z-index:999999;
 	img {position:absolute;top:50%;left:50%;width:50px;height:50px;margin:-25px 0 0 -25px;
 		-webkit-animation-iteration-count:infinite;
 		-webkit-animation-timing-function:linear;

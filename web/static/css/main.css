@@ -96,9 +96,16 @@ form input[type="tel"]:focus {
 /* STATES */
 .panel,
 #share,
-#loading-overlay,
+#song-loading-overlay,
+#container-loading-overlay,
 #stand-by {
   display: none;
+}
+body.loading-song #song-loading-overlay {
+  display: block;
+}
+body.loading-container #container-loading-overlay {
+  display: block;
 }
 body[data-container="homepage"] #homepage {
   display: block;
@@ -132,9 +139,6 @@ body[data-container="room"].playing #share {
   display: none;
 }
 body[data-container="room"].master #share {
-  display: block;
-}
-body[data-container="room"].loading-song #loading-overlay {
   display: block;
 }
 body[data-container="gameover"] #gameover {
@@ -477,7 +481,7 @@ body[data-container="gameover"] #gameover {
   -webkit-animation-name: rotate;
   -webkit-animation-duration: 2s;
 }
-#question-loading-overlay {
+#song-loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -486,7 +490,7 @@ body[data-container="gameover"] #gameover {
   background-color: #0099AB;
   z-index: 999999;
 }
-#question-loading-overlay img {
+#song-loading-overlay img {
   position: absolute;
   top: 50%;
   left: 50%;
