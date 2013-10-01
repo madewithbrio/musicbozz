@@ -155,12 +155,14 @@ class GameRoom extends Topic
 		$key = 'leaderboard::' + $this->getGameRoomType();
 		
 		foreach ($this as $player) {
+			$this->getLogger()->info("store player score in $key");
 			\Sapo\Redis::getInstance()->zadd($key, $player->getScore(), $player->getPlayerId());
 			$this->storePlayer($player);
 		}
 	}
 	
 	protected function storePlayer($player) {
+		$this->getLogger()->info("store player " + $player->getPlayerId());
 		\Sapo\Redis::getInstance()->hset('players', $player->getPlayerId(), serialize($player));
 	}
 
