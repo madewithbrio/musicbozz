@@ -145,11 +145,11 @@ var musicbozz = (function(facebookSDK){
 
 		view.loadingSong = function() {
 			$body.addClass('loading-song');
-		}
+		};
 
 		view.startSong = function() {
 			$body.removeClass('loading-song');
-		}
+		};
 
 		var getTemplate = function(name) {
 			if (typeof name === "string" && typeof partialTemplates[name] === "string") { return partialTemplates[name]; }
@@ -361,18 +361,48 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		service.loadFacebookPersona = function(onResponseClb) {
-			facebookSDK.api('/me', function(response) {
-	          console.log(response);
+			facebookSDK.api('/me?fields=id,first_name,username,link,picture', function(response) {
+	          var avatar = (!response.data || !respose.data.url) 
+	          	? (response.username ? 'http://graph.facebook.com/'+response.username+'/picture' : undefined)
+	          	: response.data.url;
 	          playerConfig = {
+	          	facebookId: response.id,
 	          	name: response.first_name,
-	          	avatar: 'http://graph.facebook.com/'+response.username+'/picture',
-	          	username: response.username,
+	          	avatar: avatar,
+	          	username: response.username || response.first_name + '#' + response.id,
 	          	link: response.link
 	          };
 	          if (typeof onResponseClb === 'function') onResponseClb.apply(null, playerConfig);
 	        });
 		};
 
+		service.getFriends = function() {
+			facebookSDK.api({
+			    method: 'fql.query',
+			    query: 'SELECT uid, name, username,  pic , online_presence, status FROM user WHERE uid IN ( SELECT uid2 FROM friend WHERE uid1 = "'+ service.getPlayer().id +'") ', // and online_presence  = "active"
+			    return_ssl_resources: 1
+			}, function(response){
+			    console.log(response);
+			});
+		};
+		
+		service.sendMessageViaFacebook = function(friend, url) {
+			facebookSDK.ui({
+			  method: 'send',
+			  to: friend,
+			  display: 'iframe',
+			  link: url,
+			});
+		};
+		
+		service.inviteViaFacebook = function(url) {
+			facebookSDK.ui({method: 'apprequests',
+			  message: 'Beat me in: '+url
+			}, function(response){
+				console.log(response);
+			});
+		};
+		
 		service.connect = function(gameRoom) {
 			ab.connect(gameRoom.getLocation(), function(session){
 				ws_session = session;

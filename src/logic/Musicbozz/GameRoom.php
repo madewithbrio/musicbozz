@@ -41,7 +41,7 @@ class GameRoom extends Topic
 		
 		// room closed
 		if (!$this->isOpen()) {
-			$this->getLogger()->info("room closed");
+			$this->getLogger()->error("room closed");
 			$player->close();
 			return;
 		}
@@ -79,7 +79,6 @@ class GameRoom extends Topic
 		return $result;
 	}
 
-
 	protected function setMaster(ConnectionInterface $player) {
 		$this->getLogger()->info("player was set as master");
 		$player->setMaster(true);
@@ -99,7 +98,11 @@ class GameRoom extends Topic
 			'players' => $players,
 			'isOpen'  => $this->isOpen(),
 			'isOver'  => $this->isOver(),
+			
 			'isPublic'=> $this->isPublic(),
+			'isPrivate' => $this->isPrivate(),
+			'isAlone' => $this->isAlone(),
+			
 			'id' 	  => $this->getRoomId(),
 			//'question' => $this->question
 			);
@@ -109,6 +112,20 @@ class GameRoom extends Topic
 		return (preg_match('/^room\/(\d+)$/', $this->getRoomId()));
 	}
 
+	protected function isPrivate() {
+		return (preg_match('/^room\/(.*[a-zA-Z]+.*)$/', $this->getRoomId()));
+	}
+	
+	protected function isAlone() {
+		return strpos('alone', $this->getRoomId()) === 0;
+	}
+	
+	protected function getGameRoomType() {
+		if ($this->isAlone()) return 'alone';
+		if ($this->isPrivate()) return 'private';
+		return 'public';
+	}
+	
 	protected function isAllPlayersReady() {
 		return $this->playersReadyToPlay == $this->count();
 	}
@@ -126,14 +143,25 @@ class GameRoom extends Topic
 		return ($this->questionNumber == self::NUMBER_QUESTIONS);
 	}
 
-
 	protected function isOpen() {
 		return ($this->questionNumber === 0 &&  $this->count() < 4);
 	}
 
 	protected function notificationStatus() {
-		print "notify redis\n";
 		\Sapo\Redis::getInstance()->hset('rooms', $this->getRoomId(), serialize($this->getStatus()));
+	}
+	
+	protected function storeScore() {
+		$key = 'leaderboard::' + $this->getGameRoomType();
+		
+		foreach ($this as $player) {
+			\Sapo\Redis::getInstance()->zadd($key, $player->getScore(), $player->getPlayerId());
+			$this->storePlayer($player);
+		}
+	}
+	
+	protected function storePlayer($player) {
+		\Sapo\Redis::getInstance()->hset('players', $player->getPlayerId(), serialize($player));
 	}
 
 	protected function getQuestion() {
@@ -184,8 +212,11 @@ class GameRoom extends Topic
 		$playersList = $this->getPlayers();
 		$this->broadcast(array('action' => 'gameOver','data'   => $playersList));
 		$this->notificationStatus();
+		
+		// save score
+		$this->storeScore();
 	}
-
+	
 	protected function onAllAlreadyResponde() {
 		#$this->getLoop()->addTimer(2000, $this->getNewQuestion());
 		$playersList = $this->getPlayers();
@@ -203,7 +234,10 @@ class GameRoom extends Topic
 		}
 		**/
 		if ($this->isOver()) {
-			$this->broadcast(array('action' => 'gameOver'));
+			$this->onGameOver();
+			$player->callError($id, $this->getRoomId(), "game allready over");
+			return;
+			
 		} else {
 			//$this->broadcast(array('action' => 'loadingSong'));
 
@@ -230,7 +264,7 @@ class GameRoom extends Topic
 	public function setAnswer(ConnectionInterface $player, $id, $params) {
 		$this->getLogger()->info("set answer");
 		try {
-			$result = $this->addAnswer($player->getSessionId(), $params['answer'], $params['hash']);
+			$result = $this->addAnswer($player->getPlayerId(), $params['answer'], $params['hash']);
 			$gameMode = $this->getGameMode();
 
 			if (!empty($result)) {
@@ -298,6 +332,7 @@ class GameRoom extends Topic
         if (!empty($config)) {
             $oldName = $player->getName();
             $player->setName($config['name']);
+			$player->setPlayerId($config['facebookId']);
             $player->setOthers($config);
 
             $player->callResult($id, array('msg' => "Name changed"));

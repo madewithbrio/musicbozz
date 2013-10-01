@@ -6,7 +6,7 @@ use \Ratchet\Wamp\WampConnection;
 
 class Player extends WampConnection {
 	private $name;
-	private $username;
+	private $playerId;
 	private $others;
 	private $score;
 	private $master;
@@ -17,10 +17,14 @@ class Player extends WampConnection {
 		$this->others = $others;
 		$this->score = $score;
 		$this->master = false;
+		$this->playerId = null;
 	}
 
-	public function getSessionId() {
-		return $this->WAMP->sessionId;
+	public function getPlayerId() {
+		return !empty($this->playerId) ? $this->playerId : $this->WAMP->sessionId;
+	}
+	public function setPlayerId($userId) {
+		$this->playerId = $userId;
 	}
 
 	public function setName($name) { $this->name = $name; }
