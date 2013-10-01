@@ -163,7 +163,7 @@ class GameRoom extends Topic
 	
 	protected function storePlayer($player) {
 		$this->getLogger()->info("store player " . $player->getPlayerId());
-		\Sapo\Redis::getInstance()->hset('players', $player->getPlayerId(), serialize($player));
+		\Sapo\Redis::getInstance()->hsetnx('players', $player->getPlayerId(), serialize($player));
 	}
 
 	protected function getQuestion() {
