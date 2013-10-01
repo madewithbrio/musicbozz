@@ -47,4 +47,12 @@ class Player extends WampConnection {
 			'id' 	=> $this->getPlayerId()
 			);
 	}
+
+	public function toPersistence() {
+		return array(
+			'name' 	=> $this->getName(),
+			'others' => $this->getOthers(),
+			'id' 	=> $this->getPlayerId()
+		);
+	}
 }

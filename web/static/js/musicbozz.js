@@ -78,15 +78,27 @@ var musicbozz = (function(facebookSDK){
 		view.showRoom = function(alone) {
 			if (alone) $body.addClass('alone');
 			else $body.addClass('multi');
-			$body.attr('data-container', 'room');
+			$body.addClass('loading-container');
+			setTimeout(function(){
+				$body.attr('data-container', 'room');
+				$body.removeClass('loading-container');
+			}, 2000);
 		};
 
 		view.showHomepage = function() {
-			$body.attr('data-container', 'homepage');
+			$body.addClass('loading-container');
+			setTimeout(function(){
+				$body.attr('data-container', 'homepage');
+				$body.removeClass('loading-container');
+			}, 2000);
 		};
 
 		view.showGameover = function() {
-			$body.attr('data-container', 'gameover');
+			$body.addClass('loading-container');
+			setTimeout(function(){
+				$body.attr('data-container', 'gameover');
+				$body.removeClass('loading-container');
+			}, 2000);
 		};
 
 		view.renderGamestart = function() {
@@ -94,7 +106,6 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		view.renderPublicRoomsStatus = function(data) {
-			console.log(data);
 			$('#public_rooms').html(Mustache.render(getTemplate('roomslist'), {rooms: data}, getTemplate()));
 		};
 
@@ -334,7 +345,8 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'gameOver':
-					setTimeout(function() { controller.gameover(); }, 2000);
+					controller.gameover();
+					//setTimeout(function() {  }, 2000);
 					break;
 					
 				default:
