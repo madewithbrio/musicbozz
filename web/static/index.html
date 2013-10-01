@@ -51,38 +51,8 @@
                 </section>
                 <section class="open-rooms">
                     <h2>Junta-te a outros</h2>
-                    <ul class="rooms clearfix">
-                        <li class="room">
-                            <a href="#" class="clearfix">
-                                <p class="room-name">Sala 999</p>
-                                <ul class="players clearfix">
-                                    <li class="player">
-                                        <div class="avatar">
-                                            <img src="http://lorempixel.com/100/100/?1" alt="" />
-                                        </div>
-                                        <p class="player-name">Nome do jogador</p>
-                                    </li>
-                                    <li class="player">
-                                        <div class="avatar">
-                                            <img src="http://lorempixel.com/100/100/?2" alt="" />
-                                        </div>
-                                        <p class="player-name">Nome do jogador</p>
-                                    </li>
-                                    <li class="player">
-                                        <div class="avatar">
-                                            <img src="http://lorempixel.com/100/100/?3" alt="" />
-                                        </div>
-                                        <p class="player-name">Nome do jogador</p>
-                                    </li>
-                                    <li class="player">
-                                        <div class="avatar">
-                                            
-                                        </div>
-                                        <p class="player-name">Nome do jogador</p>
-                                    </li>
-                                </ul>
-                            </a>
-                        </li>
+                    <ul class="rooms clearfix" id="public_rooms">
+                        
                     </ul>
                 </section>
                 <section class="prizes">
@@ -175,7 +145,33 @@
             </li>
         </script>
 
+        <script type="text/mustache" data-element="template" data-name="roomslist">
+            {{#rooms}}
+                {{> roomitem}}
+            {{/rooms}}
+        </script>
 
+        <script type="text/mustache" data-element="template" data-name="roomitem">
+            <li class="room{{#isClosed}} closed{{/isClosed}}">
+                <a href="#" class="clearfix" data-game-type="public" data-action="start" data-room-name="{{name}}">
+                    <p class="room-name">Sala {{name}}</p>
+                    <ul class="players clearfix">
+                        {{#players}}
+                            {{> roomplayer}}
+                        {{/players}}
+                    </ul>
+                </a>
+            </li>
+        </script>
+
+        <script type="text/mustache" data-element="template" data-name="roomplayer">
+            <li class="player">
+                <div class="avatar">
+                    <img src="{{others.avatar}}" alt="" />
+                </div>
+                <p class="player-name">{{name}}</p>
+            </li>
+        </script>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script src="http://autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
