@@ -281,6 +281,7 @@ var musicbozz = (function(facebookSDK){
 
 		controller.setPlayers = function(res) {
 			var i;
+			if (!res) return;
 			for (i = 0; i < res.length; i++) {
 				if (!res) break;
 	        	if  ((res[i].others && res[i].others.username == service.getPlayer().username) &&
@@ -292,6 +293,7 @@ var musicbozz = (function(facebookSDK){
 
 		controller.gameover = function() {
 			player.pause();
+			clearTimeout(timeoutQuestion);
 			view.showGameover();
 			service.outRoom(roomInstance);
 		};
@@ -350,6 +352,7 @@ var musicbozz = (function(facebookSDK){
 			if (!$target.is('a[data-action="start"]')) {
 				$target = $target.parents('a[data-action="start"]');
 			}
+			if ($target.size() === 0) return;
 			e.preventDefault();
 			controller.goRoom($target.attr('data-game-type'), $target.attr('data-room-name'));
 		});
@@ -444,6 +447,10 @@ var musicbozz = (function(facebookSDK){
 				}
 			}, function(){
 				console.log("session closed");
+			},
+			{
+			    'maxRetries': 5,
+			    'retryDelay': 2000
 			});
 		};
 
