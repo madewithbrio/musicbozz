@@ -90,10 +90,10 @@ class GameRoom extends Topic
 		$leaderboad_type = LeaderboardType::factory($this->getGameRoomType());
 		$players = $this->getPlayers();
 		usort($players, function($p1, $p2) {
-			if (!isset($p1['score'])) return -1;
-			if (!isset($p2['score'])) return 1;
+			if (!isset($p1['score'])) return 1;
+			if (!isset($p2['score'])) return -1;
 			if ($p1['score'] == $p2['score']) return 0;
-			return ($p1['score'] < $p2['score']) ? -1 : 1;
+			return ($p1['score'] < $p2['score']) ? 1 : -1;
 		});
 
 		foreach ($players as $key => &$player) {
