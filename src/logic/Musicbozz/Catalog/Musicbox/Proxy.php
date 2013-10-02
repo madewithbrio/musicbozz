@@ -2,7 +2,7 @@
 namespace Musicbozz\Catalog\Musicbox;
 
 use Musicbozz\Catalog\Musicbox\PublicApi as ServiceClient;
-
+use \Sapo\Redis;
 class Proxy
 {
 	private $soapClient;
@@ -35,14 +35,20 @@ class Proxy
 
 	private function doRequest($method, $requestParameters)
 	{
-		$response = self::getSOAPClient()->$method($requestParameters);
-		$returnProp = $method . "Result";
-
-		// @todo process type of exception
-		if (empty($response) || !isset($response->{$returnProp})) {
-			throw new Exception("Error Processing Request", 1);
+		$key = sha1($method . serialize($requestParameters));
+		$result = unserialize(Redis::getInstance()->get($key));
+		if (empty($response)) {
+			$result = self::getSOAPClient()->$method($requestParameters);
+			$returnProp = $method . "Result";
+	
+			// @todo process type of exception
+			if (empty($response) || !isset($response->{$returnProp})) {
+				throw new Exception("Error Processing Request", 1);
+			}
+			$result = $response->{$returnProp};
+			Redis::getInstance()->set($key, serialize($result), 'EX 43200'); // save for 12 hours
 		}
-		return $response->{$returnProp};
+		return $result;
 	}
 
 	public function AddAlbumToFavorites($AlbumId)

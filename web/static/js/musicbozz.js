@@ -207,6 +207,7 @@ var musicbozz = (function(facebookSDK){
 				$body.addClass('invite');
 			}
 			controller.refreshPublicRooms();
+			service.outRoom(roomInstance);
 			view.showHomepage();
 		};
 
@@ -389,6 +390,11 @@ var musicbozz = (function(facebookSDK){
 			controller.startGame();
 		});
 
+		$('a[data-type="goHome"]').bind('click', function(e){
+			e.preventDefault();
+			controller.goHomepage();
+		});
+		
 		$(document).delegate('a[data-element="answer"]', 'click.answer', function(e){
 			e.preventDefault();
 			controller.setAnswer(this);
@@ -461,7 +467,7 @@ var musicbozz = (function(facebookSDK){
 				dataType: 'jsonp',
 				jsonp: 'jsonp',
 			}).done(onSuccess).fail(onError);
-		}
+		};
 		
 		service.connect = function(gameRoom) {
 			if (typeof ws_session !== 'undefined') return;
@@ -481,7 +487,11 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		service.outRoom = function(gameRoom) {
-			ws_session.unsubscribe(gameRoom.getRoomId());
+			if (typeof ws_session !== 'undefined') {
+				ws_session.unsubscribe(gameRoom.getRoomId());
+				ws_session.close();
+				ws_session = undefined;
+			}
 		};
 
 		service.listPlayers = function(gameRoom, onSuccess, onError) {
@@ -522,7 +532,7 @@ var musicbozz = (function(facebookSDK){
 		service.broadcastStart = function (gameRoom, hash) {
 			if (!gameRoom.isMaster()) return;
 			ws_session.call(gameRoom.getRoomId(), 'forcePlay', {hash: hash});
-		}
+		};
 		
 		return service;
 	})();
