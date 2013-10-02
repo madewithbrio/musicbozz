@@ -15,7 +15,7 @@ class Leaderboard {
 
 	public static function getRank(LeaderboardType $leaderboard_type, $playerId) {
 		$rank = Redis::getInstance()->zrevrank((string) $leaderboard_type, $playerId);
-		if (!empty($rank)) return $rank +1;
+		if (is_int($rank)) return $rank +1;
 		return null;
 	}
 

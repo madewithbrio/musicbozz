@@ -96,8 +96,9 @@ class GameRoom extends Topic
 			return ($p1['score'] < $p2['score']) ? -1 : 1;
 		});
 
-		foreach ($players as &$player) {
+		foreach ($players as $key => &$player) {
 			if (!empty($player)) {
+				$player['gamerank'] = $key;
 				$player['rank'] = Leaderboard::getRank($leaderboad_type, $player['id']);
 				$player['topscore'] = Leaderboard::getScore($leaderboad_type, $player['id']);
 			}
