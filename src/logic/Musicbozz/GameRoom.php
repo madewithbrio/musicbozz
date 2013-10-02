@@ -214,15 +214,11 @@ class GameRoom extends Topic
 
 	protected function getGameMode() {
 		if (null === $this->gameMode) {
-			//if ($this->questionNumber < 5) {
-				$this->gameMode = GameMode::factory('Standard');
-			/**
-			} else if ($this->questionNumber < 10) {
-				$this->gameMode = GameMode::factory('Normal');
+			if ($this->isAlone()) {
+				$this->gameMode = GameMode::factory('Alone');
 			} else {
-				$this->gameMode = GameMode::factory('Speed');
+				$this->gameMode = GameMode::factory('Standard');
 			}
-			**/
 		}
 		return $this->gameMode;
 	}
@@ -283,12 +279,13 @@ class GameRoom extends Topic
 	public function setAnswer(ConnectionInterface $player, $id, $params) {
 		$this->log(sprintf("set answer for player %s", $player->getPlayerId()));
 		try {
+			$timespend = mricrotime(true) - $this->getQuestion()->getTimer();
 			$result = $this->addAnswer($player->getPlayerId(), $params['answer'], $params['hash']);
 			$gameMode = $this->getGameMode();
 
 			if (!empty($result)) {
 		        if ($result[2]) { // correct
-		            $score = $gameMode->getScoreForCorrectAnswer($result[3]);
+		            $score = $gameMode->getScoreForCorrectAnswer($result[3], $timespend);
 		        } else { // bad
 		            $score = $gameMode->getScoreForBadAnswer();
 		        }
@@ -339,6 +336,7 @@ class GameRoom extends Topic
         	if ($params['hash'] !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
             ++$this->playersReadyToPlay;
             if ($this->isAllPlayersReady()) {
+            	$this->getQuestion()->setTimer(microtime(true));
                 $this->broadcast(array('action' => 'allPlayersReady'));
             }
         } catch (Exception $e) {

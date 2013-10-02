@@ -18,7 +18,7 @@ interface GameMode_Workflow {
 	public function isBroadcastPlayerQuestionScore();
 	public function isBroadcastPlayerTotalScore();
 
-	public function getScoreForCorrectAnswer($position);
+	public function getScoreForCorrectAnswer($position, $timespend);
 	public function getScoreForBadAnswer();
 }
 
@@ -28,7 +28,7 @@ final class GameMode_Standard implements GameMode_Workflow {
 	public function isBroadcastPlayerQuestionScore() { return true; }
 	public function isBroadcastPlayerTotalScore() { return true; }
 
-	public function getScoreForCorrectAnswer($position){
+	public function getScoreForCorrectAnswer($position, $timespend){
 		switch($position) {
 			case 1: return 50;
 			case 2: return 40;
@@ -49,7 +49,7 @@ final class GameMode_Normal implements GameMode_Workflow {
 	public function isBroadcastPlayerQuestionScore() { return true; }
 	public function isBroadcastPlayerTotalScore() { return true; }
 
-	public function getScoreForCorrectAnswer($position) {
+	public function getScoreForCorrectAnswer($position, $timespend) {
 		return 200;
 	}
 
@@ -65,7 +65,7 @@ final class GameMode_Speed implements GameMode_Workflow {
 	public function isBroadcastPlayerQuestionScore() { return true; }
 	public function isBroadcastPlayerTotalScore() { return true; }
 
-	public function getScoreForCorrectAnswer($position) {
+	public function getScoreForCorrectAnswer($position, $timespend) {
 		switch($position) {
 			case 1: return 500;
 			case 2: return 300;
@@ -73,6 +73,23 @@ final class GameMode_Speed implements GameMode_Workflow {
 			case 4: return 100;
 			default: return 0;
 		}
+	}
+
+	public function getScoreForBadAnswer() {
+		return -100;
+	}
+}
+
+
+final class GameMode_Alone implements GameMode_Workflow {
+
+	public function isBroadcastPlayerHaveAnswer() { return true; }
+	public function isBroadcastPlayerAnswer() { return true; }
+	public function isBroadcastPlayerQuestionScore() { return true; }
+	public function isBroadcastPlayerTotalScore() { return true; }
+
+	public function getScoreForCorrectAnswer($position, $timespend) {
+		return (500/30000) * $timespend;
 	}
 
 	public function getScoreForBadAnswer() {
