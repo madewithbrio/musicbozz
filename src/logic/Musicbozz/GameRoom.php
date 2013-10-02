@@ -4,6 +4,9 @@ namespace Musicbozz;
 use \Ratchet\ConnectionInterface;
 use \Ratchet\Wamp\Topic;
 use \Exception;
+use \Musicbozz\Persistence\Player as PlayerPersistence;
+use \Musicbozz\Persistence\Leaderboard;
+use \Musicbozz\Persistence\Leaderboard\Type as LeaderboardType;
 
 class GameRoom extends Topic
 {
@@ -27,11 +30,11 @@ class GameRoom extends Topic
     
 
 	private function getLogger() {
-	    	if (null === $this->logger) {
-	    		$this->logger = \Logger::getLogger(sprintf('GameRoom[%s]', $this->getRoomId()));
-	    	}
-	    	return $this->logger;
+    	if (null === $this->logger) {
+    		$this->logger = \Logger::getLogger(sprintf('GameRoom[%s]', $this->getRoomId()));
     	}
+    	return $this->logger;
+	}
 
 	/**
 	 * @ override
@@ -152,20 +155,13 @@ class GameRoom extends Topic
 	}
 	
 	protected function storeScore() {
-		$key = 'leaderboard::' . $this->getGameRoomType();
-		
+		$leaderboad_type = LeaderboardType::factory($this->getGameRoomType());
 		foreach ($this as $player) {
-			$this->getLogger()->info("store player score in $key with score: ".$player->getScore());
-			\Sapo\Redis::getInstance()->zadd($key, $player->getScore(), $player->getPlayerId());
-			$this->storePlayer($player);
+			PlayerPersistence::save($player->getPlayerId(), $player->toPersistence());
+			Leaderboard::save($leaderboad_type, $player->getScore(), $player->getPlayerId());
 		}
 	}
 	
-	protected function storePlayer($player) {
-		$this->getLogger()->info("store player " . $player->getPlayerId());
-		\Musicbozz\Persistence\Player::save($player->getPlayerId(), $player->toPersistence());
-	}
-
 	protected function getQuestion() {
 		if (null === $this->question) {
 			$this->question = Question::factory(Question_Type::getRandom(), ++$this->questionNumber);

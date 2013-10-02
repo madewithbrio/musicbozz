@@ -7,4 +7,5 @@ $server = new Sapo\Rest\Server;
 $server->add(preg_match('@question@', $path), new \Musicbozz\Rest\QuestionService());
 $server->add(preg_match('@rooms/public@', $path), new \Musicbozz\Rest\RoomsService());
 $server->add(preg_match('@room/.+@', $path), new \Musicbozz\Rest\RoomService());
+$server->add(preg_match('@top/.+@', $path), new \Musicbozz\Rest\LeaderboardService());
 $server->run();
