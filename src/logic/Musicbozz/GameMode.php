@@ -89,7 +89,7 @@ final class GameMode_Alone implements GameMode_Workflow {
 	public function isBroadcastPlayerTotalScore() { return true; }
 
 	public function getScoreForCorrectAnswer($position, $timespend) {
-		return (500/30000) * $timespend;
+		return round((500/30000) * ($timespend*1000),0);
 	}
 
 	public function getScoreForBadAnswer() {
