@@ -358,7 +358,7 @@ var musicbozz = (function(facebookSDK){
 
 		// bind gui components
 		// prevent default all link and submit actions
-		$(document).delegate('a', 'click', function(e){e.preventDefault();});
+		//$(document).delegate('a', 'click', function(e){e.preventDefault();});
 		$(document).delegate('form', 'submit', function(e){e.preventDefault();});
 
 		$(document).delegate('a[data-action="start"]').bind('click', function(e){

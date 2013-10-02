@@ -98,7 +98,7 @@ class GameRoom extends Topic
 
 		foreach ($players as $key => &$player) {
 			if (!empty($player)) {
-				$player['gamerank'] = $key;
+				$player['gamerank'] = $key+1;
 				$player['rank'] = Leaderboard::getRank($leaderboad_type, $player['id']);
 				$player['topscore'] = Leaderboard::getScore($leaderboad_type, $player['id']);
 			}
