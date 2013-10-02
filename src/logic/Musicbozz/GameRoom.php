@@ -346,6 +346,17 @@ class GameRoom extends Topic
         }
     }
 
+    public function forcePlay(ConnectionInterface $player, $id, array $params) {
+		$this->log(sprintf("player %s force play", $player->getPlayerId()));
+        try {
+        	if (!$player->isMaster()) throw new Exception("player is not master", 1);
+        	if ($params['hash'] !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
+			$this->broadcast(array('action' => 'allPlayersReady'));
+        } catch (Exception $e) {
+             $player->callError($id, $this->getRoomId(), $e->getMessage());
+        }
+    }
+
     public function setPlayerConfig(ConnectionInterface $player, $id, $config) {
     	$this->log(sprintf("player %s set configuration", $player->getPlayerId()));
         if (!empty($config)) {

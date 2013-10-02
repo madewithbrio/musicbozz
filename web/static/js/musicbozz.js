@@ -192,6 +192,7 @@ var musicbozz = (function(facebookSDK){
 		var controller = {}, 
 			hasAnswer = false, 
 			timeoutQuestion,
+			timeoutReadyStatusForce,
 			timeoutPublicRoomsStatus,
 			errorHandling = function(error, desc){ 
 				console.error(error, desc); 
@@ -260,6 +261,17 @@ var musicbozz = (function(facebookSDK){
 
 		controller.newQuestion = function(question) {
 			hasAnswer = false;
+			if (roomInstance.isMaster()) {
+				timeoutReadyStatusForce = setTimeout(function() { 
+					var hash = $('div[data-template="question"] .query').attr('data-hash');
+					service.broadcastStart(roomInstance, hash); 
+				}, 5000);
+			} else {
+				timeoutReadyStatusForce = setTimeout(function() { 
+					var hash = $('div[data-template="question"] .query').attr('data-hash');
+					service.setReadyToPlay(roomInstance, hash); 
+				}, 5000);
+			}
 			view.loadingSong();
 			view.renderQuestion(question);
 		};
@@ -332,6 +344,7 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'allPlayersReady':
+					clearTimeout(timeoutReadyStatusForce);
 					controller.startAudioPlayer();
 					break;
 
@@ -415,7 +428,7 @@ var musicbozz = (function(facebookSDK){
 		service.getFriends = function() {
 			facebookSDK.api({
 			    method: 'fql.query',
-			    query: 'SELECT uid, name, username,  pic , online_presence, status FROM user WHERE uid IN ( SELECT uid2 FROM friend WHERE uid1 = "'+ service.getPlayer().id +'") ', // and online_presence  = "active"
+			    query: 'SELECT uid, name, username,  pic , online_presence, status FROM user WHERE uid IN ( SELECT uid2 FROM friend WHERE uid1 = "'+ service.getPlayer().id +'") and online_presence  = "active"', // and online_presence  = "active"
 			    return_ssl_resources: 1
 			}, function(response){
 			    console.log(response);
@@ -504,6 +517,10 @@ var musicbozz = (function(facebookSDK){
 			ws_session.call(gameRoom.getRoomId(), 'setAnswer', {answer: answer, hash: hash}).then(onSuccess, onError);
 		};
 
+		service.broadcastStart = function (gameRoom, hash) {
+			if (!gameRoom.isMaster()) return;
+			ws_session.call(gameRoom.getRoomId(), 'forcePlay', {hash: hash});
+		}
 		
 		return service;
 	})();
