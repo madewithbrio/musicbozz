@@ -35,6 +35,10 @@ class Service implements WampServerInterface {
                 $gameRoom->setReadyToPlay($player, $id, $params[0]);
                 break;
 
+            case 'setRematch':
+                $gameRoom->setRematch($player, $id);
+                break;
+                
             default:
                 $player->callError($id, $gameRoom, 'RPC not supported yet');
                 break;
