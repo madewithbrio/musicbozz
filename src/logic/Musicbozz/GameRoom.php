@@ -228,7 +228,7 @@ class GameRoom extends Topic
 	public function getNewQuestion($player, $id){
 		$this->log(sprintf("new question asked by %s", $player->getPlayerId()));
 		if (!$player->isMaster()) {
-			$this->log(sprintf("player %s is not master", $player->getPlayerId());
+			$this->log(sprintf("player %s is not master", $player->getPlayerId()));
 			$player->callError($id, $this->getRoomId(), "you are not master in this room");
 			return;
 		}
