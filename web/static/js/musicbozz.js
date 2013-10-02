@@ -402,7 +402,7 @@ var musicbozz = (function(facebookSDK){
 
 	var service = (function() {
 		var service = {}, 
-			ws_session, 
+			ws_session = undefined, 
 			playerConfig;
 			
 		service.getPlayer = function() {
@@ -464,14 +464,14 @@ var musicbozz = (function(facebookSDK){
 		}
 		
 		service.connect = function(gameRoom) {
-			if (ws_session !== null) return;
+			if (typeof ws_session !== 'undefined') return;
 			ab.connect(gameRoom.getLocation(), function(session){
 				ws_session = session;
 				console.log("session open");
 				session.subscribe(gameRoom.getRoomId(),controller.eventHandler);
 				session.call(gameRoom.getRoomId(), 'setPlayer', gameRoom.getPlayer());
 			}, function(){
-				ws_session = null;
+				ws_session = undefined;
 				console.log("session closed");
 			},
 			{
