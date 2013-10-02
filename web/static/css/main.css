@@ -415,6 +415,9 @@ body[data-container="gameover"] #gameover {
 #room .question .answers li:nth-child(4) a:before {
   background: #46a1cc;
 }
+#room .game {
+  position: relative;
+}
 #gameover .final-score {
   list-style: none;
   padding: 0;
@@ -482,7 +485,7 @@ body[data-container="gameover"] #gameover {
   -webkit-animation-duration: 2s;
 }
 #song-loading-overlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
