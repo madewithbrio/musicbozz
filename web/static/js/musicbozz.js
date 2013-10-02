@@ -464,12 +464,14 @@ var musicbozz = (function(facebookSDK){
 		}
 		
 		service.connect = function(gameRoom) {
+			if (ws_session !== null) return;
 			ab.connect(gameRoom.getLocation(), function(session){
 				ws_session = session;
 				console.log("session open");
 				session.subscribe(gameRoom.getRoomId(),controller.eventHandler);
 				session.call(gameRoom.getRoomId(), 'setPlayer', gameRoom.getPlayer());
 			}, function(){
+				ws_session = null;
 				console.log("session closed");
 			},
 			{
