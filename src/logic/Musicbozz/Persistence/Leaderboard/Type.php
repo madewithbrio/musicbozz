@@ -1,5 +1,6 @@
 <?php
 namespace Musicbozz\Persistence\Leaderboard;
+use \Exception;
 class Type {
 	const ALONE = 'leaderboard::alone';
 	const ROOMPRIVATE = 'leaderboard::private';
