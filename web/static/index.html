@@ -81,16 +81,20 @@
                     <form>
                         <input id="room_link" type="text" name="link" value="http://ron.honho.sl.pt" />
                     </form>
-                    <a href="" class="button main-action" data-type="startGame">Bora lá jogar!</a>
+                    <a href="" class="button main-action" data-type="startGame">Começar o jogo!</a>
+                    <a href="" class="button" data-type="startGame">Convida 3 amigos</a>
                 </div>
 
                 <div id="stand-by" class="step stand-by">
                     <p>Agora tem calma contigo enquanto o teu amigo não arranca o jogo...</p>
                 </div>
 
-                <div id="gameBoard" class="step">
+                <div id="gameBoard" class="game step">
                     <audio id="player" preload><source></source type="audio/mp3"></audio>
                     <div class="question" data-template="question"></div>
+                    <div id="song-loading-overlay">
+                        <img src="img/loader-01.png" alt="a carregar..." />
+                    </div>
                 </div>
             </div>
         </div>
@@ -179,9 +183,6 @@
             </div>
         </div>
 
-        <div id="song-loading-overlay">
-            <img src="img/loader-01.png" alt="a carregar..." />
-        </div>
         <div id="container-loading-overlay">
             <img src="img/loader-01.png" alt="a carregar..." />
         </div>
