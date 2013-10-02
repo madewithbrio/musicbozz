@@ -75,7 +75,7 @@ var musicbozz = (function(facebookSDK){
 			$homepage = $('#homepage'),
 			$body = $('body');
 
-		view.showRoom = function(alone) {
+		view.showRoom = function(alone, onComplete) {
 			if (alone) $body.addClass('alone');
 			else $body.addClass('multi');
 
@@ -83,6 +83,7 @@ var musicbozz = (function(facebookSDK){
 			setTimeout(function(){
 				$body.attr('data-container', 'room');
 				$body.removeClass('loading-container');
+				if (typeof onComplete === 'function') onComplete.call();
 			}, 2000);
 		};
 
@@ -94,9 +95,10 @@ var musicbozz = (function(facebookSDK){
 			}, 2000);
 		};
 
-		view.showGameover = function() {
+		view.showGameover = function(data) {
 			$body.addClass('loading-container');
 			setTimeout(function(){
+				$('#gameRank').html(Mustache.render(getTemplate('playersrank'), {players: data}, getTemplate()));
 				$body.attr('data-container', 'gameover');
 				$body.removeClass('loading-container');
 			}, 2000);
@@ -110,8 +112,8 @@ var musicbozz = (function(facebookSDK){
 			$('#public_rooms').html(Mustache.render(getTemplate('roomslist'), {rooms: data}, getTemplate()));
 		};
 
-		view.renderPlayers = function(res) {
-	        $('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: res}, getTemplate()));
+		view.renderPlayers = function(data) {
+	        $('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: data}, getTemplate()));
 	        if (roomInstance.isMaster()) $body.addClass('master');
 	        /**
 	        if (!master) {
@@ -213,8 +215,13 @@ var musicbozz = (function(facebookSDK){
 			  	if (response.status === 'connected') {
 			  		service.loadFacebookPersona(function(){
 			  			roomInstance = new Room(service.getPlayer(), type, roomName);
-				    	view.showRoom(roomInstance.isAlone());
-				    	service.connect(roomInstance);
+			  			service.connect(roomInstance);
+
+				    	view.showRoom(roomInstance.isAlone(), function(){
+				    		if (roomInstance.isAlone()) {
+								controller.startGame();
+							}
+				    	});
 			  		});
 			  	} else if (response.status === 'not_authorized') {
 			    	controller.login(type, roomName);
@@ -303,10 +310,10 @@ var musicbozz = (function(facebookSDK){
 	    	view.renderPlayers(res);
 		};
 
-		controller.gameover = function() {
+		controller.gameover = function(res) {
 			player.pause();
 			clearTimeout(timeoutQuestion);
-			view.showGameover();
+			view.showGameover(res);
 		};
 
 		controller.eventHandler = function(t, e) {
@@ -333,7 +340,7 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'allPlayersAlreadyResponde':
-					setTimeout(function() { controller.questionOver(e.data); }, 2000);
+					setTimeout(function() { controller.questionOver(e.data); }, 1000);
 					break;
 
 				case 'setMaster':
@@ -341,8 +348,7 @@ var musicbozz = (function(facebookSDK){
 					break;
 
 				case 'gameOver':
-					controller.gameover();
-					//setTimeout(function() {  }, 2000);
+					setTimeout(function() { controller.gameover(e.data); }, 1000);
 					break;
 					
 				default:
@@ -450,10 +456,6 @@ var musicbozz = (function(facebookSDK){
 				console.log("session open");
 				session.subscribe(gameRoom.getRoomId(),controller.eventHandler);
 				session.call(gameRoom.getRoomId(), 'setPlayer', gameRoom.getPlayer());
-				if (gameRoom.isAlone()) {
-					controller.startGame();
-					//setTimeout(function() {  }, 1000);
-				}
 			}, function(){
 				console.log("session closed");
 			},

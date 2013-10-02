@@ -106,71 +106,7 @@
             <div class="content">
                 <h2>Game Over</h2>
                 <section>
-                    <ol class="final-score clearfix">
-                        <li>
-                            <a href="#">
-                                <div class="game-ranking">
-                                    <p class="game-rank"><span>1</span></p>
-                                    <p class="game-score">234.946</p>
-                                </div>
-                                <div class="thumb">
-                                    <img src="http://lorempixel.com/100/100/" alt="" />
-                                </div>
-                                <p class="name ellipsis">Nome</p>
-                                <div class="overall-ranking">
-                                    <p class="overall-rank">#34000 na geral</p>
-                                    <p class="overall-score">423.345 pontos na geral</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <div class="game-ranking">
-                                    <p class="game-rank"><span>2</span></p>
-                                    <p class="game-score">234.946</p>
-                                </div>
-                                <div class="thumb">
-                                    <img src="http://lorempixel.com/100/100/?1" alt="" />
-                                </div>
-                                <p class="name ellipsis">Nome</p>
-                                <div class="overall-ranking">
-                                    <p class="overall-rank">#34000 na geral</p>
-                                    <p class="overall-score">423.345 pontos na geral</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <div class="game-ranking">
-                                    <p class="game-rank"><span>3</span></p>
-                                    <p class="game-score">234.946</p>
-                                </div>
-                                <div class="thumb">
-                                    <img src="http://lorempixel.com/100/100/?2" alt="" />
-                                </div>
-                                <p class="name ellipsis">Nome</p>
-                                <div class="overall-ranking">
-                                    <p class="overall-rank">#34000 na geral</p>
-                                    <p class="overall-score">423.345 pontos na geral</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <div class="game-ranking">
-                                    <p class="game-rank"><span>4</span></p>
-                                    <p class="game-score">234.946</p>
-                                </div>
-                                <div class="thumb">
-                                    <img src="http://lorempixel.com/100/100/?2" alt="" />
-                                </div>
-                                <p class="name ellipsis">Nome</p>
-                                <div class="overall-ranking">
-                                    <p class="overall-rank">#34000 na geral</p>
-                                    <p class="overall-score">423.345 pontos na geral</p>
-                                </div>
-                            </a>
-                        </li>
+                    <ol class="final-score clearfix" id="gameRank">
                     </ol>
                 </section>
                 <section class="play clearfix">
@@ -228,6 +164,33 @@
                 </div>
                 {{/name}}
             </li>
+        </script>
+
+        <script type="text/mustache" data-element="template" data-name="playersrank">
+            {{#players}}
+                {{> playerscore}}
+            {{/players}}
+        </script>
+
+        <script type="text/mustache" data-element="template" data-name="playerscore">
+            {{#name}}
+            <li>
+                <a href="{{others.link}}" data-player-id="{{id}}" class="player" target="_blank">
+                    <div class="game-ranking">
+                        <p class="game-rank"><span>{{.}}</span></p>
+                        <p class="game-score">{{score}}</p>
+                    </div>
+                    <div class="thumb">
+                        <img src="{{#others.avatar}}{{others.avatar}}{{/others.avatar}}{{^others.avatar}}img/avatar.png{{/others.avatar}}" alt="" />
+                    </div>
+                    <p class="name ellipsis">{{name}}</p>
+                    <div class="overall-ranking">
+                        <p class="overall-rank">#{{rank}} na geral</p>
+                        <p class="overall-score">{{topscore}} pontos na geral</p>
+                    </div>
+                </a>
+            </li>
+            {{/name}}
         </script>
 
         <script type="text/mustache" data-element="template" data-name="roomslist">

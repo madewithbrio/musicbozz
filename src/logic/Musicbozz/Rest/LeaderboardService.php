@@ -12,7 +12,16 @@ class LeaderboardService extends ServiceImplementation {
 		if (preg_match('@top/(alone|private|public)@', $this->getPath(), $match)) {
 			$type = LeaderboardType::factory($match[1]);
 			$top = Leaderboard::getTop($type, 10);
-			var_dump($top); die;
+			$leaderboard = array();
+			foreach ($top as $rank => $possition) {
+				$player = PlayerPersistence::get($possition[0]);
+				$leaderboard[] = array(
+					'rank' => $rank+1,
+					'player' => $player,
+					'score' => $possition[1]
+				);
+			}
+			$this->sendResponse( $leaderboard );
 		}
 	}
 

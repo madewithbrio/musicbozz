@@ -78,12 +78,32 @@ class GameRoom extends Topic
 		$this->getLogger()->debug(sprintf("[%s] %s", $this->getRoomId(), $msg));
 	}
 
-	private function getPlayers () {
+	protected function getPlayers () {
 		$result = array_fill(0,4,array()); $i = 0;
 		foreach ($this as $player) {
 		    $result[$i++] = $player->toWs();
 		}
 		return $result;
+	}
+
+	protected function getPlayersWithRank() {
+		$leaderboad_type = LeaderboardType::factory($this->getGameRoomType());
+		$players = $this->getPlayers();
+		usort($players, function($p1, $p2) {
+			if (!isset($p1['score'])) return -1;
+			if (!isset($p2['score'])) return 1;
+			if ($p1['score'] == $p2['score']) return 0;
+			return ($p1['score'] < $p2['score']) ? -1 : 1;
+		});
+
+		foreach ($players as &$player) {
+			if (!empty($player)) {
+				$player['rank'] = Leaderboard::getRank($leaderboad_type, $player['id']);
+				$player['topscore'] = Leaderboard::getScore($leaderboad_type, $player['id']);
+			}
+		}
+		
+		return $players;
 	}
 
 	protected function setMaster(ConnectionInterface $player) {
@@ -214,7 +234,7 @@ class GameRoom extends Topic
 		// save score
 		$this->storeScore();
 
-		$playersList = $this->getPlayers();
+		$playersList = $this->getPlayersWithRank();
 		$this->broadcast(array('action' => 'gameOver','data'   => $playersList));
 		$this->notificationStatus();
 	}
