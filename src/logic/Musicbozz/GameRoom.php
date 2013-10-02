@@ -150,8 +150,8 @@ class GameRoom extends Topic
 	
 	protected function getGameRoomType() {
 		if ($this->isAlone()) return 'alone';
-		if ($this->isPrivate()) return 'private';
-		return 'public';
+		if ($this->isPrivate()) return 'roomprivate';
+		return 'roompublic';
 	}
 	
 	protected function isAllPlayersReady() {
