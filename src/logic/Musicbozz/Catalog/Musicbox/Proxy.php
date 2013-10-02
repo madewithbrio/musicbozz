@@ -43,7 +43,7 @@ class Proxy
 	
 			// @todo process type of exception
 			if (empty($response) || !isset($response->{$returnProp})) {
-				throw new Exception("Error Processing Request", 1);
+				throw new \Exception("Error Processing Request", 1);
 			}
 			$result = $response->{$returnProp};
 			Redis::getInstance()->set($key, serialize($result), 'EX 43200'); // save for 12 hours
