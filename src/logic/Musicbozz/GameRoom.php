@@ -87,7 +87,7 @@ class GameRoom extends Topic
 	}
 
 	protected function setMaster(ConnectionInterface $player) {
-		$this->log(sprintf("player %s was set as master", $player->getPlayerId());
+		$this->log(sprintf("player %s was set as master", $player->getPlayerId()));
 		$player->setMaster(true);
 		//$player->event($this->getId(), array('action' => 'setMaster'));
 	}
