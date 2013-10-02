@@ -279,7 +279,7 @@ class GameRoom extends Topic
 	public function setAnswer(ConnectionInterface $player, $id, $params) {
 		$this->log(sprintf("set answer for player %s", $player->getPlayerId()));
 		try {
-			$timespend = mricrotime(true) - $this->getQuestion()->getTimer();
+			$timespend = microtime(true) - $this->getQuestion()->getTimer();
 			$result = $this->addAnswer($player->getPlayerId(), $params['answer'], $params['hash']);
 			$gameMode = $this->getGameMode();
 
