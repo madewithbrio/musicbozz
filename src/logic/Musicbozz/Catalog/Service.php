@@ -4,8 +4,8 @@ namespace Musicbozz\Catalog;
 
 use Musicbozz\Catalog\Musicbox\Proxy as MusicBoxService;
 use Musicbozz\Catalog\LastFM\PublicApi as LastFMService;
-use Musicbozz\Perstence\SimilarTrack as CacheSimilarTrack;
-use Musicbozz\Perstence\SimilarArtist as CacheSimilarArtist;
+use Musicbozz\Persistence\SimilarTrack as CacheSimilarTrack;
+use Musicbozz\Persistence\SimilarArtist as CacheSimilarArtist;
 
 class Service {
 	private $musicBoxInstance;
@@ -120,7 +120,7 @@ class Service {
 	}
 
 	public function getSimilarArtists($track, $nrResult = 3) {
-		$cacheKey =md5($track);
+		$cacheKey = md5($track->ArtistName);
 		$response = CacheSimilarArtist::get($cacheKey);
 		if (!empty($response)) {
 			print "use cache for similar artist \n";
@@ -151,7 +151,7 @@ class Service {
 	}
 
 	public function getSimilarTrack($track, $nrResult = 3) {
-		$cacheKey =md5($track);
+		$cacheKey = md5($track->ArtistName . $track->TrackName);
 		$response = CacheSimilarTrack::get($cacheKey);
 		if (!empty($response)) {
 			print "use cache for similar track \n";
