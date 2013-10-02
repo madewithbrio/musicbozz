@@ -31,7 +31,7 @@ class GameRoom extends Topic
 
 	private function getLogger() {
     	if (null === $this->logger) {
-    		$this->logger = \Logger::getLogger(sprintf('GameRoom[%s]', $this->getRoomId()));
+    		$this->logger = \Logger::getLogger(__CLASS__);
     	}
     	return $this->logger;
 	}
@@ -40,7 +40,7 @@ class GameRoom extends Topic
 	 * @ override
 	 */
 	public function add(ConnectionInterface $player) {
-		$this->getLogger()->info("number of players in root: " . $this->count());
+		$this->log("number of players in root: " . $this->count());
 		
 		// room closed
 		if (!$this->isOpen()) {
@@ -55,7 +55,7 @@ class GameRoom extends Topic
 			$this->questionNumber = 0;
 		}
 
-		$this->getLogger()->info("player have join");
+		$this->log("player have join");
 		$this->broadcast(array('action' => 'newPlayer', 'data' => $this->getPlayers()));
 		$this->notificationStatus();
 	}
@@ -69,9 +69,13 @@ class GameRoom extends Topic
 		if ($this->count() == 0) {
 			$this->questionNumber = 0;
 		}
-		$this->getLogger()->info("player have leave");
+		$this->log("player have leave");
 		$this->broadcast(array('action' => 'playerLeave', 'data' => $this->getPlayers()));
 		$this->notificationStatus();
+	}
+
+	public function log($msg) {
+		$this->getLogger()->debug(sprintf("[%s] %s", $this->getRoomId(), $msg));
 	}
 
 	private function getPlayers () {
@@ -83,7 +87,7 @@ class GameRoom extends Topic
 	}
 
 	protected function setMaster(ConnectionInterface $player) {
-		$this->getLogger()->info("player was set as master");
+		$this->log(sprintf("player %s was set as master", $player->getPlayerId());
 		$player->setMaster(true);
 		//$player->event($this->getId(), array('action' => 'setMaster'));
 	}
@@ -120,7 +124,7 @@ class GameRoom extends Topic
 	}
 	
 	protected function isAlone() {
-		return strpos('alone', $this->getRoomId()) === 0;
+		return strpos($this->getRoomId(), 'alone') === 0;
 	}
 	
 	protected function getGameRoomType() {
@@ -134,7 +138,7 @@ class GameRoom extends Topic
 	}
 
 	protected function isAllPlayersAlreadyResponde() {
-		$this->getLogger()->info("answers: " . sizeof($this->answers) . " players: ". $this->count());
+		$this->log("answers: " . sizeof($this->answers) . " players: ". $this->count());
 		return sizeof($this->answers) == $this->count();
 	}
 
@@ -207,38 +211,34 @@ class GameRoom extends Topic
 		$this->question = null;
 		$this->questionNumber = 0;
 
+		// save score
+		$this->storeScore();
+
 		$playersList = $this->getPlayers();
 		$this->broadcast(array('action' => 'gameOver','data'   => $playersList));
 		$this->notificationStatus();
-		
-		// save score
-		$this->storeScore();
 	}
 	
 	protected function onAllAlreadyResponde() {
-		#$this->getLoop()->addTimer(2000, $this->getNewQuestion());
 		$playersList = $this->getPlayers();
 		$this->broadcast(array('action' => 'allPlayersAlreadyResponde','data'   => $playersList));
 	}
 
 	/** @Public Interface for WS **/
 	public function getNewQuestion($player, $id){
-		$this->getLogger()->info("new question");
-		/**
-		if ($this->count() == 0) {
-			$this->getLogger()->info("room empty");
-			$this->notificationStatus();
+		$this->log(sprintf("new question asked by %s", $player->getPlayerId()));
+		if (!$player->isMaster()) {
+			$this->log(sprintf("player %s is not master", $player->getPlayerId());
+			$player->callError($id, $this->getRoomId(), "you are not master in this room");
 			return;
 		}
-		**/
+
 		if ($this->isOver()) {
 			$this->onGameOver();
 			$player->callError($id, $this->getRoomId(), "game allready over");
 			return;
 			
 		} else {
-			//$this->broadcast(array('action' => 'loadingSong'));
-
 			// reset question 
 			$this->question = null;
 			$this->answers = array();
@@ -260,7 +260,7 @@ class GameRoom extends Topic
 	}
 
 	public function setAnswer(ConnectionInterface $player, $id, $params) {
-		$this->getLogger()->info("set answer");
+		$this->log(sprintf("set answer for player %s", $player->getPlayerId()));
 		try {
 			$result = $this->addAnswer($player->getPlayerId(), $params['answer'], $params['hash']);
 			$gameMode = $this->getGameMode();
@@ -294,6 +294,7 @@ class GameRoom extends Topic
 			$player->callResult($id, array('action' => 'answerResult', 
 										 'res' => $result[2], 
 										 'position' => $params['answer']));
+
 			if ($this->isAllPlayersAlreadyResponde()) {
 				if ($this->isLastQuestion()) {
 					$this->onGameOver();
@@ -301,7 +302,6 @@ class GameRoom extends Topic
 					$this->onAllAlreadyResponde();
 				}
 			}
-
 		}
 		catch (\Exception $e) {
 			$player->callError($id, $this->getRoomId(), $e->getMessage());
@@ -313,7 +313,7 @@ class GameRoom extends Topic
 	}
 
 	public function setReadyToPlay(ConnectionInterface $player, $id, array $params) {
-		$this->getLogger()->info("player set ready");
+		$this->log(sprintf("player %s set ready to play", $player->getPlayerId()));
         try {
         	if ($params['hash'] !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
             ++$this->playersReadyToPlay;
@@ -326,7 +326,7 @@ class GameRoom extends Topic
     }
 
     public function setPlayerConfig(ConnectionInterface $player, $id, $config) {
-    	$this->getLogger()->info("player set configuration");
+    	$this->log(sprintf("player %s set configuration", $player->getPlayerId()));
         if (!empty($config)) {
             $oldName = $player->getName();
             $player->setName($config['name']);
