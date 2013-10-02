@@ -307,7 +307,6 @@ var musicbozz = (function(facebookSDK){
 			player.pause();
 			clearTimeout(timeoutQuestion);
 			view.showGameover();
-			service.outRoom(roomInstance);
 		};
 
 		controller.eventHandler = function(t, e) {
@@ -317,11 +316,7 @@ var musicbozz = (function(facebookSDK){
 				case 'playerLeave':
 					service.listPlayers(roomInstance, controller.setPlayers  , errorHandling);
 					break;
-			/**
-				case 'loadingSong':
-					
-					break;
-			**/
+	
 				case 'newQuestion':
 					//service.getNewQuestion(roomInstance, view.renderQuestion , errorHandling);
 					//renderQuestion(e.data);
@@ -337,7 +332,7 @@ var musicbozz = (function(facebookSDK){
 					controller.playersAnswerResult(e.data);
 					break;
 
-				case 'allPlayersAllreadyResponde':
+				case 'allPlayersAlreadyResponde':
 					setTimeout(function() { controller.questionOver(e.data); }, 2000);
 					break;
 

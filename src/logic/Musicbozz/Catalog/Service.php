@@ -4,6 +4,8 @@ namespace Musicbozz\Catalog;
 
 use Musicbozz\Catalog\Musicbox\Proxy as MusicBoxService;
 use Musicbozz\Catalog\LastFM\PublicApi as LastFMService;
+use Musicbozz\Persistence\SimilarTrack as CacheSimilarTrack;
+use Musicbozz\Persistence\SimilarArtist as CacheSimilarArtist;
 
 class Service {
 	private $musicBoxInstance;
@@ -118,6 +120,12 @@ class Service {
 	}
 
 	public function getSimilarArtists($track, $nrResult = 3) {
+		$cacheKey = md5($track->ArtistName);
+		$response = CacheSimilarArtist::get($cacheKey);
+		if (!empty($response)) {
+			print "use cache for similar artist \n";
+			return $response;
+		}
 		try {
 			$artists = LastFMService::getSimilarArtist($track->ArtistName);
 		} catch (\Exception $e) {
@@ -138,10 +146,18 @@ class Service {
 				$response[] = $artistName;
 			}
 		} while(sizeof($response) < $nrResult && ++$i < $maxRand);
+		CacheSimilarArtist::save($cacheKey, $response);
 		return $response;
 	}
 
 	public function getSimilarTrack($track, $nrResult = 3) {
+		$cacheKey = md5($track->ArtistName . $track->TrackName);
+		$response = CacheSimilarTrack::get($cacheKey);
+		if (!empty($response)) {
+			print "use cache for similar track \n";
+			return $response;
+		}
+
 		try {
 			$tracks = LastFMService::getSimilarTrackByArtist($track->ArtistName, $track->TrackName);
 		} catch (\Exception $e) {
@@ -162,6 +178,8 @@ class Service {
 				$response[] = $trackName;
 			}
 		} while(sizeof($response) < $nrResult && ++$i < $maxRand);
+
+		CacheSimilarTrack::save($cacheKey, $response);
 		return $response;
 	}
 

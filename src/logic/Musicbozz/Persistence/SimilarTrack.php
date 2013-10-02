@@ -3,8 +3,8 @@
 namespace Musicbozz\Persistence;
 use \Sapo\Redis;
 
-class Player {
-	const HASHKEY = 'players';
+class SimilarTrack {
+	const HASHKEY = 'SimilarTrack';
 
 	public static function save($key, $object) {
 		print "Redis:: HSET " . self::HASHKEY ." ".$key."\n";
