@@ -18,7 +18,7 @@ class GameRoom extends Topic
 	private $answers;
 	private $playersReadyToPlay = 0;
 	private $gameMode;
-	private $loop;
+	private $rematch = array();
 	private $logger;
 
 	public function __construct($topicId) {
@@ -38,6 +38,18 @@ class GameRoom extends Topic
     	return $this->logger;
 	}
 
+	private function resetRoom() {
+		$this->questionNumber = 0;
+		$this->rematch = array();
+		$this->resetQuestion();
+	}
+
+	private function resetQuestion() {
+		$this->question = null;
+		$this->playersReadyToPlay = 0;
+		$this->answers = array();
+	}
+
 	/**
 	 * @ override
 	 */
@@ -54,7 +66,7 @@ class GameRoom extends Topic
 		parent::add($player);
 		if ($this->count() == 1) {
 			$this->setMaster($player);
-			$this->questionNumber = 0;
+			$this->resetRoom();
 		}
 
 		$this->log("player have join");
@@ -69,7 +81,7 @@ class GameRoom extends Topic
 			break;
 		}
 		if ($this->count() == 0) {
-			$this->questionNumber = 0;
+			$this->resetRoom();
 		}
 		$this->log("player have leave");
 		$this->broadcast(array('action' => 'playerLeave', 'data' => $this->getPlayers()));

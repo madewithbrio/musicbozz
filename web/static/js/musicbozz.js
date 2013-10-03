@@ -281,7 +281,7 @@ var musicbozz = (function(facebookSDK){
 				}, errorHandling);
 			}
 			if (!roomInstance.isAlone()) {
-				view.showRoom(onStart);
+				onStart.call();
 			} else {
 				onStart.call();
 			}
@@ -301,6 +301,7 @@ var musicbozz = (function(facebookSDK){
 					service.setReadyToPlay(roomInstance, hash); 
 				}, 5000);
 			}
+			view.showRoom();
 			view.loadingSong();
 			view.renderQuestion(question);
 		};
