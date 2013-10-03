@@ -52,7 +52,7 @@
                         </div>
                         <div class="small-100 medium-33 large-33 multi-private enter-multi-private" id="joinPrivateRoom">
                             <div class="game-mode">
-                                <h3>Joga com amigos</h3>
+                                <h3>Recebeste um convite</h3>
                                 <p>Convidaram-te para um jogo, agora mete os teus amigos a chorar.</p>
                                 <a href="" class="button main-action" data-game-type="private" data-action="start">Entrar no jogo!</a>
                             </div>
@@ -66,54 +66,63 @@
                         </div>
                     </div>
                 </section>
-                <section class="how-to">
-                    <h2>Lembras-te do Buzz?</h2>
-                    <p>Aquele jogo que tinha a voz do Jorge Gabriel! Não? Ok, pouco importa!<br />Se achas que sabes tudo sobre música, então convida mais três amigos para uma batalha online de conhecimento musical. Nós passamos 30 segundos de uma música e tu tens de adivinhar o nome ou o artista.</p>
-                    <div class="musicboxquiz-for-dummies">
-                        <img src="img/how-to.png" alt="" />
+                <div class="column-group gutters">
+                    <div class="small-100 medium-50 large-50">
+                        <section class="how-to">
+                            <h2>Lembras-te do Buzz?</h2>
+                            <p>Aquele jogo que tinha a voz do Jorge Gabriel! Não? Ok, pouco importa! Se achas que sabes tudo sobre música, então convida mais três amigos para uma batalha online de conhecimento musical. Nós passamos 30 segundos de uma música e tu tens de adivinhar o nome ou o artista.</p>
+                            <div class="musicboxquiz-for-dummies">
+                                <img src="img/how-to.png" alt="" />
+                            </div>
+                            <div class="video-wrapper">
+                                <video controls>
+                                    <source src="http://rd3.videos.sapo.pt/JVuFIZKKf8AtJ5pAAjvP/mov/1?player=EXTERNO&time=1380819886&token=_8851a668eb52269941afbb8e34af63ee" type='video/mp4' />
+                                </video>
+                                <a href="#" class="twerker">
+                                    <img src="img/twerker.jpg" alt="" />
+                                </a>
+                            </div>
+                        </section>
                     </div>
-                    <div class="video-wrapper">
-                        <iframe src="http://videos.sapo.pt/playhtml?file=http://rd3.videos.sapo.pt/JVuFIZKKf8AtJ5pAAjvP/mov/1" frameborder="0" scrolling="no" width="400" height="350"></iframe>
-                        <a href="#" class="twerker">
-                            <img src="img/twerker.jpg" alt="" />
-                        </a>
+                    <div class="small-100 medium-50 large-50">
+                        <section id="open-rooms" class="open-rooms">
+                            <h2>Joga com outros</h2>
+                            <ul class="rooms clearfix" id="public_rooms">
+                                
+                            </ul>
+                             <a href="#" class="button" data-game-type="private" data-action="start">Comecar jogo!</a>
+                        </section>
+                        <section class="prizes">
+                            <h2>Prémios</h2>
+                            <p>Bacon ipsum dolor sit amet flank shoulder sausage doner, cow ribeye beef tail meatball fatback jowl salami prosciutto pork belly. Short ribs bresaola sirloin cow pig chuck flank, bacon meatloaf corned beef boudin biltong drumstick shank sausage. Biltong venison chuck pancetta tongue t-bone short loin bresaola tail corned beef jowl sausage strip steak ribeye spare ribs. Ground round tongue filet mignon frankfurter.</p>
+                            <p>Rump hamburger chicken short loin biltong filet mignon cow swine boudin venison capicola spare ribs andouille pork loin brisket. Meatloaf shoulder ball tip prosciutto, t-bone short loin rump brisket pancetta. Beef ribs andouille bresaola cow biltong, chicken ham hock doner. Pork loin capicola swine leberkas jerky bacon chicken pastrami. Ground round frankfurter pig, beef ribs salami tail drumstick pork chop turducken rump. Corned beef tongue beef ribs, strip steak tenderloin doner kevin. Beef ball tip swine, jowl flank tongue meatloaf capicola shankle.</p>
+                        </section>
                     </div>
-                </section>
-                <section id="open-rooms" class="open-rooms">
-                    <h2>Joga com outros</h2>
-                    <ul class="rooms clearfix" id="public_rooms">
-                        
-                    </ul>
-                     <a href="#" class="button" data-game-type="private" data-action="start">Comecar jogo!</a>
-                </section>
-                <section class="prizes">
-                    <h2>Prémios</h2>
-                    <p>Bacon ipsum dolor sit amet flank shoulder sausage doner, cow ribeye beef tail meatball fatback jowl salami prosciutto pork belly. Short ribs bresaola sirloin cow pig chuck flank, bacon meatloaf corned beef boudin biltong drumstick shank sausage. Biltong venison chuck pancetta tongue t-bone short loin bresaola tail corned beef jowl sausage strip steak ribeye spare ribs. Ground round tongue filet mignon frankfurter.</p>
-                    <p>Rump hamburger chicken short loin biltong filet mignon cow swine boudin venison capicola spare ribs andouille pork loin brisket. Meatloaf shoulder ball tip prosciutto, t-bone short loin rump brisket pancetta. Beef ribs andouille bresaola cow biltong, chicken ham hock doner. Pork loin capicola swine leberkas jerky bacon chicken pastrami. Ground round frankfurter pig, beef ribs salami tail drumstick pork chop turducken rump. Corned beef tongue beef ribs, strip steak tenderloin doner kevin. Beef ball tip swine, jowl flank tongue meatloaf capicola shankle.</p>
-                </section>
+                </div>
             </div>
         </div>
 
 
         <div id="waiting-room" class="panel room">
             <header class="clearfix">
+                <a href="#" class="logo">music box quiz</a>
                 <h2 class="room-name">Sala <span class="room-id">10</span></h2>
                 <ul class="players clearfix" data-template="players"></ul>
             </header>
             <div class="ink-grid content">
                 <div class="standing-by-master">
-                    <p>Partilha este link com os teus amigos.</p>
-                    <form>
-                        <input id="room_link" type="text" name="link" value="http://ron.honho.sl.pt" />
-                    </form>
                     <div class="column-group gutters">
                         <div class="small-100 medium-50 large-50">
-                            <a href="" class="button main-action" data-type="startGame">Começar o jogo!</a>
+                            <p>Partilha este link com os teus amigos.</p>
+                            <form>
+                                <input id="room_link" type="text" name="link" value="http://ron.honho.sl.pt" />
+                            </form>
                         </div>
                         <div class="small-100 medium-50 large-50">
                             <a href="" class="button" data-type="inviteGame">Convida 3 amigos</a>
                         </div>
                     </div>
+                    <a href="" class="button main-action" data-type="startGame">Começar o jogo!</a>
                 </div>
                 <div class="standing-by-slave">
                     <p>Agora tem calma contigo enquanto o teu amigo não arranca o jogo...</p>
@@ -124,35 +133,38 @@
 
         <div id="room" class="panel room">
             <header class="clearfix">
+                <a href="#" class="logo">music box quiz</a>
                 <h2 class="room-name">Sala <span class="room-id">10</span></h2>
                 <ul class="players clearfix" data-template="players"></ul>
             </header>
-            <div class="content">
-                <div id="gameBoard" class="game step">
-                    <audio id="player" preload><source></source type="audio/mp3"></audio>
-                    <div class="question" data-template="question"></div>
-                    <div id="song-loading-overlay">
-                        <img src="img/loader-02.png" alt="a carregar..." />
-                    </div>
+            <div id="gameBoard" class="content game">
+                <audio id="player" preload><source></source type="audio/mp3"></audio>
+                <div class="question" data-template="question"></div>
+                <div id="song-loading-overlay">
+                    <img src="img/loader-02.png" alt="a carregar..." />
                 </div>
             </div>
         </div>
 
 
-        <div id="gameover" class="panel">
+        <div id="gameover" class="ink-grid panel">
+            <header>
+                <img src="img/header.png" alt="" />
+            </header>
             <div class="content">
                 <h2>Game Over</h2>
                 <section>
                     <ol class="final-score clearfix" id="gameRank">
                     </ol>
                 </section>
-                <section class="play clearfix">
-                    <div class="column">
+                <div class="ink-grid">
+                    <div class="small-100 medium-50 large-50">
                         <a href="#" class="button main-action">Jogar de novo</a>
                     </div>
-                    <div class="column">
+                    <div class="small-100 medium-50 large-50">
                         <a href="#" class="button" data-type="goHome">Voltar ao início</a>
                     </div>
+                </div>
             </div>
         </div>
 
@@ -235,7 +247,7 @@
                 {{> roomitem}}
             {{/rooms}}
             {{^rooms}}
-            <div class="blankstate">nao existe salas</div>
+            <div class="blankstate">Não existem salas disponíveis</div>
             {{/rooms}}
         </script>
 

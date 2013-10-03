@@ -92,14 +92,21 @@ form input[type="tel"]:focus {
 }
 .content {
   padding: 30px;
-  margin: 0 0 30px 0;
+  margin: 0;
   background: #0099ab url(../img/bg-blue.jpg) top center;
-  -webkit-border-radius: 40px;
-  -moz-border-radius: 40px;
-  border-radius: 40px;
 }
 .active {
   display: block;
+}
+.panel header {
+  background-color: #ffffff;
+}
+.panel header img {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  margin: 0 auto;
 }
 /* STATES */
 .panel,
@@ -111,6 +118,9 @@ form input[type="tel"]:focus {
 }
 body.loading-song #song-loading-overlay {
   display: block;
+}
+body.loading-song .question {
+  visibility: hidden;
 }
 body.loading-container #container-loading-overlay {
   display: block;
@@ -149,18 +159,26 @@ body[data-container="room"].alone #room header .players li:not(.master) {
 body[data-container="gameover"] #gameover {
   display: block;
 }
-#homepage header {
-  background-color: #ffffff;
+#homepage section .multi-private {
+  display: none;
 }
-#homepage header img {
-  display: block;
-  width: 100%;
-  max-width: 960px;
-  height: auto;
-  margin: 0 auto;
+#homepage section .multi-private .game-mode {
+  padding: 50px 10px;
+}
+#homepage section .single,
+#homepage section .multi-public {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+#homepage section .game-mode {
+  padding: 20px 10px 10px 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+  text-align: center;
 }
 #homepage section.how-to {
   margin: 50px auto;
+  max-width: 520px;
+  margin: 0 auto;
 }
 #homepage section.how-to img {
   display: block;
@@ -188,31 +206,12 @@ body[data-container="gameover"] #gameover {
   margin: 0 auto;
   z-index: 999999;
 }
-#homepage section.how-to .video-wrapper iframe {
+#homepage section.how-to .video-wrapper video {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-}
-#homepage section .multi-private {
-  display: none;
-}
-#homepage section .multi-private .game-mode {
-  padding: 50px 10px;
-}
-#homepage section .single,
-#homepage section .multi-public {
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-#homepage section .game-mode {
-  padding: 20px 10px 10px 10px;
-  background-color: rgba(255, 255, 255, 0.2);
-  text-align: center;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  border-radius: 20px;
 }
 #homepage ul.rooms {
   margin: 10px 0;
@@ -220,10 +219,6 @@ body[data-container="gameover"] #gameover {
 #homepage ul.rooms p {
   margin: 0;
   line-height: normal;
-}
-#homepage ul.rooms li {
-  float: left;
-  width: 50%;
 }
 #homepage ul.rooms li a {
   display: block;
@@ -262,26 +257,35 @@ body[data-container="gameover"] #gameover {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 800px;
+  width: 700px;
   height: 600px;
-  margin: -300px 0 0 -400px;
+  margin: -300px 0 0 -350px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  overflow: hidden;
 }
 .room header {
-  max-width: 720px;
-  padding: 0 0 0 360px;
-  margin: 0 auto;
-  /*background: url(../img/header.png) no-repeat 0 0;*/
-  background-size: contain;
-  color: #666;
+  /*background: url(../img/header.png) no-repeat 0 0;background-size:contain;*/
+  background: #444444 url(../img/bg-black.jpg) top center;
+}
+.room header .logo {
+  float: left;
+  width: 200px;
+  height: 100px;
+  margin: 13px 10px;
+  background: transparent url(../img/logo.png) no-repeat center center;
+  background-size: 200px auto;
+  text-indent: -999999px;
 }
 .room header .room-name {
   float: left;
   font-size: 20px;
-  line-height: 120px;
-  color: #555;
+  line-height: 126px;
 }
 .room header .players {
   float: right;
+  margin: 0 10px;
 }
 .room header .players li {
   float: left;
@@ -291,7 +295,15 @@ body[data-container="gameover"] #gameover {
   display: block;
   margin-left: 5px;
   text-align: center;
-  color: #666;
+}
+.room header .players li .player:hover {
+  color: #FFF;
+  -moz-opacity: 0.8;
+  -khtml-opacity: 0.8;
+  -webkit-opacity: 0.8;
+  opacity: 0.8;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+  filter: alpha(opacity=80);
 }
 .room header .players li .player .total-points {
   margin: 0;
@@ -303,17 +315,24 @@ body[data-container="gameover"] #gameover {
   width: 60px;
   height: 60px;
   margin: 0 auto;
-  background: rgba(0, 0, 0, 0.1) url(../img/bg_thumb.png) no-repeat 0 0;
+  background: rgba(255, 255, 255, 0.1) url(../img/bg_thumb.png) no-repeat 0 0;
   background-size: 60px auto;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
 }
 .room header .players li .player .thumb img {
   width: 100%;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
 }
 .room header .players li .player .thumb .score {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
+  margin: 0;
   background: rgba(77, 77, 77, 0.7);
   font-size: 26px;
   font-weight: 900;
@@ -448,6 +467,7 @@ body[data-container="gameover"] #gameover {
 }
 #room .game {
   position: relative;
+  min-height: 300px;
 }
 #gameover .final-score {
   list-style: none;
@@ -510,10 +530,11 @@ body[data-container="gameover"] #gameover {
   width: 50px;
   height: 50px;
   margin: -25px 0 0 -25px;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  -webkit-animation-name: rotate;
-  -webkit-animation-duration: 2s;
+  -webkit-animation: rotate 2s linear 0s infinite normal none;
+  -moz-animation: rotate 2s linear 0s infinite normal none;
+  -o-animation: rotate 2s linear 0s infinite normal none;
+  -ms-animation: rotate 2s linear 0s infinite normal none;
+  animation: rotate 2s linear 0s infinite normal none;
 }
 #song-loading-overlay {
   position: absolute;
@@ -521,8 +542,7 @@ body[data-container="gameover"] #gameover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #0099AB;
-  z-index: 999999;
+  z-index: 999998;
 }
 #song-loading-overlay img {
   position: absolute;
@@ -531,17 +551,26 @@ body[data-container="gameover"] #gameover {
   width: 50px;
   height: 50px;
   margin: -25px 0 0 -25px;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  -webkit-animation-name: rotate;
-  -webkit-animation-duration: 2s;
+  -webkit-animation: rotate 2s linear 0s infinite normal none;
+  -moz-animation: rotate 2s linear 0s infinite normal none;
+  -o-animation: rotate 2s linear 0s infinite normal none;
+  -ms-animation: rotate 2s linear 0s infinite normal none;
+  animation: rotate 2s linear 0s infinite normal none;
 }
 @-webkit-keyframes rotate {
   0% {
     -webkit-transform: rotate3d(0, 0, 1, 0deg);
+    -moz-transform: rotate3d(0, 0, 1, 0deg);
+    -o-transform: rotate3d(0, 0, 1, 0deg);
+    -ms-transform: rotate3d(0, 0, 1, 0deg);
+    transform: rotate3d(0, 0, 1, 0deg);
   }
   100% {
     -webkit-transform: rotate3d(0, 0, 1, 360deg);
+    -moz-transform: rotate3d(0, 0, 1, 360deg);
+    -o-transform: rotate3d(0, 0, 1, 360deg);
+    -ms-transform: rotate3d(0, 0, 1, 360deg);
+    transform: rotate3d(0, 0, 1, 360deg);
   }
 }
 /*
