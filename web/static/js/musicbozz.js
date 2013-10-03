@@ -78,10 +78,7 @@ var musicbozz = (function(facebookSDK){
 			$homepage = $('#homepage'),
 			$body = $('body');
 
-		view.showRoom = function(alone, onComplete) {
-			if (alone) $body.addClass('alone');
-			else $body.addClass('multi');
-
+		view.showRoom = function(onComplete) {
 			$body.addClass('loading-container').addClass('standing-by').removeClass('playing');
 			setTimeout(function(){
 				$body.attr('data-container', 'room');
@@ -89,6 +86,19 @@ var musicbozz = (function(facebookSDK){
 				if (typeof onComplete === 'function') onComplete.call();
 			}, 2000);
 		};
+
+		view.showWaitingRoom = function() {
+			$body.addClass('loading-container');
+			setTimeout(function(){
+				$body.attr('data-container', 'waitingroom');
+				$body.removeClass('loading-container');
+			}, 2000);
+		}
+
+		view.renderGameType = function(isAlone) {
+			if (isAlone) $body.addClass('alone');
+			else $body.addClass('multi');			
+		}
 
 		view.showHomepage = function() {
 			$body.addClass('loading-container');
@@ -221,12 +231,17 @@ var musicbozz = (function(facebookSDK){
 			  		service.loadFacebookPersona(function(){
 			  			roomInstance = new Room(service.getPlayer(), type, roomName);
 			  			service.connect(roomInstance);
-
-				    	view.showRoom(roomInstance.isAlone(), function(){
-				    		if (roomInstance.isAlone()) {
-								controller.startGame();
-							}
-				    	});
+			  			view.renderGameType(roomInstance.isAlone());
+			  			if (roomInstance.isAlone()) {
+			  				view.showRoom(function(){
+					    		if (roomInstance.isAlone()) {
+									controller.startGame();
+								}
+					    	});
+			  			} else {
+			  				view.showWaitingRoom();
+			  			}
+				    	
 			  		});
 			  	} else if (response.status === 'not_authorized') {
 			    	controller.login(type, roomName);
