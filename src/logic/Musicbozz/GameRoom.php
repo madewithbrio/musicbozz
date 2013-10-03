@@ -10,7 +10,7 @@ use \Musicbozz\Persistence\Leaderboard\Type as LeaderboardType;
 
 class GameRoom extends Topic
 {
-	const NUMBER_QUESTIONS = 5;
+	const NUMBER_QUESTIONS = 20;
 	private $questionNumber = 0;
 	private $question;
 	private $answers;

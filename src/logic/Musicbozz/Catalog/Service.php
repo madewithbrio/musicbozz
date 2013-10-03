@@ -104,10 +104,10 @@ class Service {
 	}
 
 	private function isSimilar($text1, $text2) {
-		$text1 = preg_replace('/^(^[\w\d\s]*)/', '$1', $text1);
-		$text2 = preg_replace('/^(^[\w\d\s]*)/', '$1', $text2);
+		//$text1 = preg_replace('/^(^[\w\d\s]*)/', '$1', $text1);
+		//$text2 = preg_replace('/^(^[\w\d\s]*)/', '$1', $text2);
 		similar_text($text1, $text2, $percentage);
-		return ($percentage > 50);
+		return ($percentage > 30);
 	}
 
 	public function getRandomTrackFromArtist($artistId)
