@@ -11,7 +11,7 @@ use \Sapo\Services\Puny;
 
 class GameRoom extends Topic
 {
-	const NUMBER_QUESTIONS = 20;
+	const NUMBER_QUESTIONS = 5;
 	const SITEURL = 'vmdev-musicbozz.vmdev.bk.sapo.pt';
 	private $questionNumber = 0;
 	private $question;
