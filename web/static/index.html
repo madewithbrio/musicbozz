@@ -13,6 +13,19 @@
         <link rel="stylesheet" href="css/font-awesome.css">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/main.css">
+        <script>
+            window.fbAsyncInit = function() {
+                  FB.init({
+                    appId      : '667899479901883', // App ID
+                    channelUrl : '//vmdev-musicbozz.vmdev.bk.sapo.pt/channel.html', // Channel File
+                    status     : true, // check login status
+                    cookie     : true, // enable cookies to allow the server to access the session
+                    xfbml      : true,  // parse XFBML
+                    frictionlessRequests : true
+                  });
+            };
+        </script>
+        <script src="http://connect.facebook.net/en_US/all.js"></script>
     </head>
     <body>
         <div id="homepage" class="ink-grid panel">
@@ -248,11 +261,12 @@
         </script>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-        <script src="http://autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="http://autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
+
         <script src="js/mustache.js"></script>
         <script src="js/plugins.js"></script>
-        <script src="http://connect.facebook.net/en_US/all.js"></script>
+        
         <script src="js/mediaelement.min.js"></script>
         <script src="js/mediaelementplayer.min.js"></script>
         <script src="js/musicbozz.js"></script>

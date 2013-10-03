@@ -1,14 +1,4 @@
 
-window.fbAsyncInit = function() {
-      FB.init({
-        appId      : '667899479901883', // App ID
-        channelUrl : '//vmdev-musicbozz.vmdev.bk.sapo.pt/channel.html', // Channel File
-        status     : true, // check login status
-        cookie     : true, // enable cookies to allow the server to access the session
-        xfbml      : true,  // parse XFBML
-        frictionlessRequests : true
-      });
-};
 
 var musicbozz = (function(facebookSDK){
 	'use strict';
