@@ -44,6 +44,17 @@ var musicbozz = (function(facebookSDK){
 			this.url = undefined;
 		};
 
+		var makeid = function(len)
+		{
+		    var text = "", i,
+		    	possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		    if (typeof len === 'undefined') len = 8;
+		    for( i=0; i < len; i++ )
+		        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+		    return text;
+		}
+
 		Room.prototype.addPlayer = function() {};
 		Room.prototype.setMaster = function(master) { this.master = master; };
 		Room.prototype.getPlayer = function() { return this.player; };
@@ -51,7 +62,8 @@ var musicbozz = (function(facebookSDK){
 		Room.prototype.isAlone = function() { return this.type == 'alone'; };
 		Room.prototype.isMaster = function () { return this.master; };
 		Room.prototype.getRoomId = function() {
-			return ((this.type == 'alone') ? 'alone/' : 'room/') + this.roomName;
+			var rommName = (this.type !== 'public') ? this.rommName + "/" + makeid() : this.roomName;
+			return ((this.type == 'alone') ? 'alone/' : 'room/') + roomName;
 		};
 		Room.prototype.getLocation = function() {
 			return 'ws://vmdev-musicbozz.vmdev.bk.sapo.pt/ws/' + this.getRoomId();

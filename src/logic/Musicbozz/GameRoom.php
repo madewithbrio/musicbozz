@@ -370,10 +370,20 @@ class GameRoom extends Topic
     public function setPlayerConfig(ConnectionInterface $player, $id, $config) {
     	$this->log(sprintf("player %s set configuration", $player->getPlayerId()));
         if (!empty($config)) {
-            $oldName = $player->getName();
+        	$oldName = $player->getName();
             $player->setName($config['name']);
 			$player->setPlayerId($config['facebookId']);
             $player->setOthers($config);
+
+        	foreach ($this as $_conn) {
+        		if ($_conn->getSessionId() === $player->getSessionId()) continue;
+        		if ($_conn->getPlayerId() === $player->getPlayerId()) {
+        			$player->callError($id, $this->getRoomId(), "you are already join");
+        			$player->close();
+        			return;
+        		}
+        	}
+           
 
 			$result = array();
 			if ($player->isMaster()) {

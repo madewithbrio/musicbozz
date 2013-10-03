@@ -20,6 +20,9 @@ class Player extends WampConnection {
 		$this->playerId = null;
 	}
 
+	public function getSessionId() {
+		return $this->WAMP->sessionId;
+	}
 	public function getPlayerId() {
 		return !empty($this->playerId) ? $this->playerId : $this->WAMP->sessionId;
 	}
