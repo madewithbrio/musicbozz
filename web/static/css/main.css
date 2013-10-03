@@ -13,12 +13,16 @@
   -webkit-font-smoothing: antialiased;
 }
 body {
+  background-color: #ffffff;
   font-family: 'Open Sans', sans-serif;
   color: #FFF;
 }
 a {
   text-decoration: none;
   color: #FFF;
+}
+a:hover {
+  text-decoration: none;
 }
 p {
   margin: 0;
@@ -36,6 +40,7 @@ h4 {
   font-style: italic;
   font-weight: 900;
   font-size: 40px;
+  color: #FFF;
 }
 h3 {
   font-size: 26px;
@@ -79,23 +84,27 @@ form input[type="tel"]:focus {
 }
 .button:hover {
   background-color: #555;
+  color: #FFF;
   /*.box-shadow(0 5px 0 0 #444);*/
 }
 .mejs-container {
   display: none;
 }
 .content {
-  max-width: 720px;
   padding: 30px;
-  margin: 0 auto;
-  background: #0099AB;
-  /* url(../img/bg-blue.jpg) top center;*/
+  margin: 0 0 30px 0;
+  background: #0099ab url(../img/bg-blue.jpg) top center;
+  -webkit-border-radius: 40px;
+  -moz-border-radius: 40px;
+  border-radius: 40px;
 }
 .active {
   display: block;
 }
 /* STATES */
 .panel,
+.standing-by-master,
+.standing-by-slave,
 #song-loading-overlay,
 #container-loading-overlay {
   display: none;
@@ -115,6 +124,15 @@ body[data-container="homepage"].start #homepage .start-multi-private {
 body[data-container="homepage"].invite #homepage .enter-multi-private {
   display: block;
 }
+body[data-container="waitingroom"] #waiting-room {
+  display: block;
+}
+body[data-container="waitingroom"].slave .standing-by-slave {
+  display: block;
+}
+body[data-container="waitingroom"].master .standing-by-master {
+  display: block;
+}
 body[data-container="room"] #room {
   display: block;
 }
@@ -128,17 +146,11 @@ body[data-container="room"].alone #room header .players li {
 body[data-container="room"].alone #room header .players li:not(.master) {
   display: none;
 }
-body[data-container="waitingroom"] #waiting-room {
-  display: block;
-}
-body[data-container="waitingroom"].playing #share {
-  display: none;
-}
-body[data-container="waitingroom"].master #share {
-  display: block;
-}
 body[data-container="gameover"] #gameover {
   display: block;
+}
+#homepage header {
+  background-color: #ffffff;
 }
 #homepage header img {
   display: block;
@@ -147,11 +159,8 @@ body[data-container="gameover"] #gameover {
   height: auto;
   margin: 0 auto;
 }
-#homepage .multi {
-  display: none;
-}
-#homepage section {
-  margin-bottom: 50px;
+#homepage section.how-to {
+  margin: 50px auto;
 }
 #homepage section.how-to img {
   display: block;
@@ -186,11 +195,24 @@ body[data-container="gameover"] #gameover {
   width: 100%;
   height: 100%;
 }
-#homepage section.play .column {
-  float: left;
-  width: 40%;
-  margin: 0 5%;
+#homepage section .multi-private {
+  display: none;
+}
+#homepage section .multi-private .game-mode {
+  padding: 50px 10px;
+}
+#homepage section .single,
+#homepage section .multi-public {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+#homepage section .game-mode {
+  padding: 20px 10px 10px 10px;
+  background-color: rgba(255, 255, 255, 0.2);
   text-align: center;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
 }
 #homepage ul.rooms {
   margin: 10px 0;
@@ -199,77 +221,84 @@ body[data-container="gameover"] #gameover {
   margin: 0;
   line-height: normal;
 }
-#homepage ul.rooms li.room {
+#homepage ul.rooms li {
   float: left;
   width: 50%;
 }
-#homepage ul.rooms li.room a {
+#homepage ul.rooms li a {
   display: block;
   padding: 5px 5px 5px 10px;
   background-color: rgba(255, 255, 255, 0.15);
 }
-#homepage ul.rooms li.room a .room-name {
+#homepage ul.rooms li a .room-name {
   float: left;
   line-height: 50px;
   text-transform: uppercase;
   font-weight: 900;
 }
-#homepage ul.rooms li.room a ul.players {
+#homepage ul.rooms li a ul.players {
   float: right;
 }
-#homepage ul.rooms li.room a ul.players li.player {
+#homepage ul.rooms li a ul.players li.player {
   float: left;
   width: 25%;
 }
-#homepage ul.rooms li.room a ul.players li.player .avatar {
+#homepage ul.rooms li a ul.players li.player .avatar {
   width: 50px;
   height: 50px;
   margin: 0 0 0 4px;
   background-color: rgba(255, 255, 255, 0.4);
 }
-#homepage ul.rooms li.room a ul.players li.player .avatar img {
+#homepage ul.rooms li a ul.players li.player .avatar img {
   width: 100%;
 }
-#homepage ul.rooms li.room a ul.players li.player .player-name {
+#homepage ul.rooms li a ul.players li.player .player-name {
   display: none;
 }
-#homepage ul.rooms li.room a:hover {
+#homepage ul.rooms li a:hover {
   background-color: rgba(0, 0, 0, 0.2);
 }
-#room {
-  padding: 0;
+.room {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 600px;
+  margin: -300px 0 0 -400px;
 }
-#room header {
+.room header {
   max-width: 720px;
   padding: 0 0 0 360px;
   margin: 0 auto;
-  background: url(../img/header.png) no-repeat 0 0;
+  /*background: url(../img/header.png) no-repeat 0 0;*/
   background-size: contain;
   color: #666;
 }
-#room header .room {
+.room header .room-name {
   float: left;
   font-size: 20px;
   line-height: 120px;
+  color: #555;
 }
-#room header .players {
+.room header .players {
   float: right;
 }
-#room header .players li {
+.room header .players li {
   float: left;
   width: 25%;
 }
-#room header .players li .player {
+.room header .players li .player {
   display: block;
   margin-left: 5px;
   text-align: center;
   color: #666;
 }
-#room header .players li .player .total-points {
+.room header .players li .player .total-points {
+  margin: 0;
   font-size: 20px;
   font-weight: 900;
 }
-#room header .players li .player .thumb {
+.room header .players li .player .thumb {
   position: relative;
   width: 60px;
   height: 60px;
@@ -277,10 +306,10 @@ body[data-container="gameover"] #gameover {
   background: rgba(0, 0, 0, 0.1) url(../img/bg_thumb.png) no-repeat 0 0;
   background-size: 60px auto;
 }
-#room header .players li .player .thumb img {
+.room header .players li .player .thumb img {
   width: 100%;
 }
-#room header .players li .player .thumb .score {
+.room header .players li .player .thumb .score {
   position: absolute;
   top: 0;
   left: 0;
@@ -292,23 +321,27 @@ body[data-container="gameover"] #gameover {
   color: #FFF;
   display: none;
 }
-#room header .players li .player .thumb .score.active {
+.room header .players li .player .thumb .score.active {
   display: block;
 }
-#room header .players li .player .thumb .score.positive {
+.room header .players li .player .thumb .score.positive {
   background: rgba(163, 179, 0, 0.7);
 }
-#room header .players li .player .thumb .score.positive:before {
+.room header .players li .player .thumb .score.positive:before {
   content: "+";
 }
-#room header .players li .player .thumb .score.negative {
+.room header .players li .player .thumb .score.negative {
   background: rgba(226, 74, 74, 0.7);
 }
-#room header .players li .player .name {
+.room header .players li .player .name {
+  margin: 0;
   font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;
   line-height: 20px;
+}
+#room {
+  padding: 0;
 }
 #room .song-scrubber {
   position: relative;
@@ -355,9 +388,11 @@ body[data-container="gameover"] #gameover {
   padding: 10px;
 }
 #room .question .question_number {
+  margin: 0;
   font-size: 12px;
 }
 #room .question .query {
+  margin: 0;
   font-size: 22px;
   font-weight: 700;
   text-transform: uppercase;
@@ -650,8 +685,12 @@ form.i_know_the_room input[type="submit"] {top:50px;}
 }
 /* SMALL SCREENS */
 @media screen and (max-width: 649px) {
+  .ink-grid {
+    background: #0099ab url(../img/bg-blue.jpg) top center;
+  }
   .content {
-    padding: 10px;
+    padding: 0;
+    background: none;
   }
   #homepage section {
     margin-bottom: 50px;
