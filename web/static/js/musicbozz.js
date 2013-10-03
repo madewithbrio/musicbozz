@@ -5,7 +5,8 @@ window.fbAsyncInit = function() {
         channelUrl : '//vmdev-musicbozz.vmdev.bk.sapo.pt/channel.html', // Channel File
         status     : true, // check login status
         cookie     : true, // enable cookies to allow the server to access the session
-        xfbml      : true  // parse XFBML
+        xfbml      : true,  // parse XFBML
+        frictionlessRequests : true
       });
 };
 
@@ -397,6 +398,14 @@ var musicbozz = (function(facebookSDK){
 			controller.goHomepage();
 		});
 		
+		$('a[data-type="inviteGame"]').bind('click', function(e){
+			e.preventDefault();
+			if (!roomInstance.getUrl()) {
+				alert("can invete friends, we dont have url to send");
+			}
+			service.inviteViaFacebook(roomInstance.getUrl());
+		});
+		
 		$(document).delegate('a[data-element="answer"]', 'click.answer', function(e){
 			e.preventDefault();
 			controller.setAnswer(this);
@@ -453,8 +462,14 @@ var musicbozz = (function(facebookSDK){
 		};
 		
 		service.inviteViaFacebook = function(url) {
-			facebookSDK.ui({method: 'apprequests',
-			  message: 'Beat me in: '+url
+			facebookSDK.ui({
+				method: 'apprequests',
+				appId:'667899479901883',
+				max_recipients: 3,
+				title: "musicbozz",
+				data: "beat me!!",
+				message: 'hello world',
+			  	redirect_uri: url
 			}, function(response){
 				console.log(response);
 			});
@@ -480,7 +495,7 @@ var musicbozz = (function(facebookSDK){
 				session.call(gameRoom.getRoomId(), 'setPlayer', gameRoom.getPlayer()).then(function(res){
 					if (!res) return;
 					if (res.url) {
-						$('#room_link').value(res.url);
+						$('#room_link').val(res.url);
 						gameRoom.setUrl(res.url);
 					}
 				});
