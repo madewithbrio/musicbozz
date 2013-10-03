@@ -81,7 +81,7 @@ var musicbozz = (function(facebookSDK){
 			if (alone) $body.addClass('alone');
 			else $body.addClass('multi');
 
-			$body.addClass('loading-container');
+			$body.addClass('loading-container').addClass('standing-by').removeClass('playing');
 			setTimeout(function(){
 				$body.attr('data-container', 'room');
 				$body.removeClass('loading-container');
