@@ -46,7 +46,7 @@ class Proxy
 				throw new \Exception("Error Processing Request", 1);
 			}
 			$result = $response->{$returnProp};
-			Redis::getInstance()->set($key, serialize($result), 'EX 43200'); // save for 12 hours
+			Redis::getInstance()->set($key, serialize($result), 'EX', '43200'); // save for 12 hours
 		}
 		return $result;
 	}
