@@ -37,8 +37,8 @@ class Proxy
 	{
 		$key = sha1($method . serialize($requestParameters));
 		$result = unserialize(Redis::getInstance()->get($key));
-		if (empty($response)) {
-			$result = self::getSOAPClient()->$method($requestParameters);
+		if (empty($result)) {
+			$response = self::getSOAPClient()->$method($requestParameters);
 			$returnProp = $method . "Result";
 	
 			// @todo process type of exception
