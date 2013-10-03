@@ -378,6 +378,7 @@ class GameRoom extends Topic
         	foreach ($this as $_conn) {
         		if ($_conn->getSessionId() === $player->getSessionId()) continue;
         		if ($_conn->getPlayerId() === $player->getPlayerId()) {
+        			$this->log(sprintf("player %s already in room", $player->getPlayerId());
         			$player->callError($id, $this->getRoomId(), "you are already join");
         			$player->close();
         			return;
