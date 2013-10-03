@@ -62,7 +62,7 @@ var musicbozz = (function(facebookSDK){
 		Room.prototype.isAlone = function() { return this.type == 'alone'; };
 		Room.prototype.isMaster = function () { return this.master; };
 		Room.prototype.getRoomId = function() {
-			var rommName = (this.type !== 'public') ? this.rommName + "/" + makeid() : this.roomName;
+			var roomName = (this.type !== 'public') ? this.roomName + "/" + makeid() : this.roomName;
 			return ((this.type == 'alone') ? 'alone/' : 'room/') + roomName;
 		};
 		Room.prototype.getLocation = function() {
