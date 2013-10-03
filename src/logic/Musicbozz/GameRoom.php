@@ -7,10 +7,12 @@ use \Exception;
 use \Musicbozz\Persistence\Player as PlayerPersistence;
 use \Musicbozz\Persistence\Leaderboard;
 use \Musicbozz\Persistence\Leaderboard\Type as LeaderboardType;
+use \Sapo\Services\Puny;
 
 class GameRoom extends Topic
 {
 	const NUMBER_QUESTIONS = 20;
+	const SITEURL = 'vmdev-musicbozz.vmdev.bk.sapo.pt';
 	private $questionNumber = 0;
 	private $question;
 	private $answers;
@@ -152,6 +154,14 @@ class GameRoom extends Topic
 		if ($this->isAlone()) return 'alone';
 		if ($this->isPrivate()) return 'roomprivate';
 		return 'roompublic';
+	}
+	
+	protected function getShareUrl() {
+		if ($this->isAlone()) return;
+		if (preg_match('/^room\/(.+)$/', $this->getRoomId(), $match)) {
+			$url = sprintf('http://%s#room=%s', self::SITEURL, $match[1]);
+			return Puny::punify($url);
+		} 
 	}
 	
 	protected function isAllPlayersReady() {
@@ -363,7 +373,9 @@ class GameRoom extends Topic
 			$player->setPlayerId($config['facebookId']);
             $player->setOthers($config);
 
-            $player->callResult($id, array('msg' => "Name changed"));
+			$result = array();
+			if ($player->isMaster()) $result['url'] = $this->getShareUrl(;)
+            $player->callResult($id, $result);
 
             $playersList = $this->getPlayers();
             $this->broadcast(array('action' => 'playerConfigChange', 

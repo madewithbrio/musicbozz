@@ -50,6 +50,7 @@ var musicbozz = (function(facebookSDK){
 			this.question = undefined;
 			this.roomName = roomName || this.player.username;
 			this.master = !roomName;
+			this.url = undefined;
 		};
 
 		Room.prototype.addPlayer = function() {};
@@ -64,7 +65,8 @@ var musicbozz = (function(facebookSDK){
 		Room.prototype.getLocation = function() {
 			return 'ws://vmdev-musicbozz.vmdev.bk.sapo.pt/ws/' + this.getRoomId();
 		};
-
+		Room.prototype.setUrl = function(url) { this.url = url; };
+		Room.prototype.getUrl = function() { return this.url; };
 		return Room;
 	})();
 
@@ -475,7 +477,13 @@ var musicbozz = (function(facebookSDK){
 				ws_session = session;
 				console.log("session open");
 				session.subscribe(gameRoom.getRoomId(),controller.eventHandler);
-				session.call(gameRoom.getRoomId(), 'setPlayer', gameRoom.getPlayer());
+				session.call(gameRoom.getRoomId(), 'setPlayer', gameRoom.getPlayer()).then(function(res){
+					if (!res) return;
+					if (res.url) {
+						$('#room_link').value(res.url);
+						gameRoom.setUrl(res.url);
+					}
+				});
 			}, function(){
 				ws_session = undefined;
 				console.log("session closed");
