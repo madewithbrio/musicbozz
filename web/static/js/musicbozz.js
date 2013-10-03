@@ -73,6 +73,7 @@ var musicbozz = (function(facebookSDK){
 
 	var view = (function(){
 		var view = {}, 
+			transationTimeout = 500,
 			partialTemplates = [],			
 			$room = $('#room'), 
 			$homepage = $('#homepage'),
@@ -84,7 +85,7 @@ var musicbozz = (function(facebookSDK){
 				$body.attr('data-container', 'room');
 				$body.removeClass('loading-container');
 				if (typeof onComplete === 'function') onComplete.call();
-			}, 2000);
+			}, transationTimeout);
 		};
 
 		view.showWaitingRoom = function() {
@@ -92,7 +93,7 @@ var musicbozz = (function(facebookSDK){
 			setTimeout(function(){
 				$body.attr('data-container', 'waitingroom');
 				$body.removeClass('loading-container');
-			}, 2000);
+			}, transationTimeout);
 		}
 
 		view.renderGameType = function(isAlone) {
@@ -105,7 +106,7 @@ var musicbozz = (function(facebookSDK){
 			setTimeout(function(){
 				$body.attr('data-container', 'homepage');
 				$body.removeClass('loading-container');
-			}, 2000);
+			}, transationTimeout);
 		};
 
 		view.showGameover = function(data) {
@@ -114,7 +115,7 @@ var musicbozz = (function(facebookSDK){
 				$('#gameRank').html(Mustache.render(getTemplate('playersrank'), {players: data}, getTemplate()));
 				$body.attr('data-container', 'gameover');
 				$body.removeClass('loading-container');
-			}, 2000);
+			}, transationTimeout);
 		};
 
 		view.renderGamestart = function() {
@@ -272,10 +273,18 @@ var musicbozz = (function(facebookSDK){
 		};
 
 		controller.startGame = function() {
-			view.loadingSong();
-			service.getNewQuestion(roomInstance, function(question) {
-				view.renderGamestart();
-			}, errorHandling);
+			var onStart = function() {
+				view.loadingSong();
+				service.getNewQuestion(roomInstance, function(question) {
+					view.renderGamestart();
+				}, errorHandling);
+			}
+			if (!roomInstance.isAlone()) {
+				view.showRoom(onStart);
+			} else {
+				onStart.call();
+			}
+			
 		};
 
 		controller.newQuestion = function(question) {
