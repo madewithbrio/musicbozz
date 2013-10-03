@@ -39,7 +39,7 @@ var musicbozz = (function(facebookSDK){
 			this.player = player;
 			this.players = [];
 			this.question = undefined;
-			this.roomName = roomName || this.player.username;
+			this.roomName = roomName || this.player.username + "/" + makeid();
 			this.master = !roomName;
 			this.url = undefined;
 		};
@@ -62,8 +62,7 @@ var musicbozz = (function(facebookSDK){
 		Room.prototype.isAlone = function() { return this.type == 'alone'; };
 		Room.prototype.isMaster = function () { return this.master; };
 		Room.prototype.getRoomId = function() {
-			var roomName = (this.type !== 'public') ? this.roomName + "/" + makeid() : this.roomName;
-			return ((this.type == 'alone') ? 'alone/' : 'room/') + roomName;
+			return ((this.type == 'alone') ? 'alone/' : 'room/') + this.roomName;
 		};
 		Room.prototype.getLocation = function() {
 			return 'ws://vmdev-musicbozz.vmdev.bk.sapo.pt/ws/' + this.getRoomId();
