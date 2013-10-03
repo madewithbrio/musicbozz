@@ -374,7 +374,7 @@ class GameRoom extends Topic
             $player->setOthers($config);
 
 			$result = array();
-			if ($player->isMaster()) $result['url'] = $this->getShareUrl(;)
+			if ($player->isMaster()) $result['url'] = $this->getShareUrl();
             $player->callResult($id, $result);
 
             $playersList = $this->getPlayers();
