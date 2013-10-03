@@ -9,37 +9,47 @@
         <title>music box quiz</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="http://cdn.ink.sapo.pt/2.1.1/css/ink.css">
         <link rel="stylesheet" href="css/font-awesome.css">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
-        <div id="homepage" class="panel">
+        <div id="homepage" class="ink-grid panel">
             <header>
                 <img src="img/header.png" alt="" />
             </header>
             <div class="content">
                 <section class="play clearfix">
-                    <div class="column multi start-multi-public">
-                        <h3>Joga com desconhecidos</h3>
-                        <p>Não tens amigos?</p>
-                        <a href="" class="button main-action" data-game-type="private" data-action="start">Começar jogo!</a>
-                    </div>
-                    <div class="column multi start-multi-private">
-                        <h3>Joga com amigos</h3>
-                        <p>Começa um jogo e convida mais três amigos do Facebook para jogarem contigo.</p>
-                        <a href="" class="button main-action" data-game-type="private" data-action="start">Começar jogo!</a>
-                    </div>
-                    <div class="column multi enter-multi-private" id="joinPrivateRoom">
-                        <h3>Joga com amigos</h3>
-                        <p>Convidaram-te para um jogo, agora mete os teus amigos a chorar.</p>
-                        <a href="" class="button main-action" data-game-type="private" data-action="start">Entrar no jogo!</a>
-                    </div>
-                    <div class="column single start-single">
-                        <h3>Mêmo à boss</h3>
-                        <p>Se jogar com os amigos já não te dá pica então estás pronto para desafia o top.<!--Os 10 melhores ganham contas <i>music box</i> durante um ano.--></p>
-                        <a href="" class="button" data-game-type="alone" data-action="start">Jogar sozinho!</a>
+                    <div class="column-group horizontal-gutters">
+                        <div class="small-100 medium-33 large-33 multi-public">
+                            <div class="game-mode">
+                                <h3>Joga com outros</h3>
+                                <p>Farto de levar abébias dos teus amigos? Procura outros n00bs para te vingares.</p>
+                                <a href="#open-rooms" class="button">Procurar jogo</a>
+                            </div>
+                        </div>
+                        <div class="small-100 medium-33 large-33 multi-private start-multi-private">
+                            <div class="game-mode">
+                                <h3>Joga com amigos</h3>
+                                <p>Começa um jogo e convida mais três amigos do Facebook para jogarem.</p>
+                                <a href="" class="button main-action" data-game-type="private" data-action="start">Começar jogo!</a>
+                            </div>
+                        </div>
+                        <div class="small-100 medium-33 large-33 multi-private enter-multi-private" id="joinPrivateRoom">
+                            <div class="game-mode">
+                                <h3>Joga com amigos</h3>
+                                <p>Convidaram-te para um jogo, agora mete os teus amigos a chorar.</p>
+                                <a href="" class="button main-action" data-game-type="private" data-action="start">Entrar no jogo!</a>
+                            </div>
+                        </div>
+                        <div class="small-100 medium-33 large-33 single start-single">
+                            <div class="game-mode">
+                                <h3>Joga para o record</h3>
+                                <p>Se jogar com os amigos já não te dá pica então estás pronto para desafiar o top.<!--Os 10 melhores ganham contas <i>music box</i> durante um ano.--></p>
+                                <a href="" class="button" data-game-type="alone" data-action="start">Jogar sozinho</a>
+                            </div>
+                        </div>
                     </div>
                 </section>
                 <section class="how-to">
@@ -55,11 +65,12 @@
                         </a>
                     </div>
                 </section>
-                <section class="open-rooms">
-                    <h2>Junta-te a outros</h2>
+                <section id="open-rooms" class="open-rooms">
+                    <h2>Joga com outros</h2>
                     <ul class="rooms clearfix" id="public_rooms">
                         
                     </ul>
+                     <a href="#" class="button" data-game-type="private" data-action="start">Comecar jogo!</a>
                 </section>
                 <section class="prizes">
                     <h2>Prémios</h2>
@@ -70,9 +81,9 @@
         </div>
 
 
-        <div id="waiting-room" class="panel">
+        <div id="waiting-room" class="panel room">
             <header class="clearfix">
-                <h2 class="room">Sala <span class="room-id">10</span></h2>
+                <h2 class="room-name">Sala <span class="room-id">10</span></h2>
                 <ul class="players clearfix" data-template="players"></ul>
             </header>
             <div class="content">
@@ -91,9 +102,9 @@
         </div>
 
 
-        <div id="room" class="panel">
+        <div id="room" class="panel room">
             <header class="clearfix">
-                <h2 class="room">Sala <span class="room-id">10</span></h2>
+                <h2 class="room-name">Sala <span class="room-id">10</span></h2>
                 <ul class="players clearfix" data-template="players"></ul>
             </header>
             <div class="content">
@@ -109,8 +120,6 @@
 
 
         <div id="gameover" class="panel">
-            <header>
-            </header>
             <div class="content">
                 <h2>Game Over</h2>
                 <section>
@@ -211,7 +220,7 @@
         </script>
 
         <script type="text/mustache" data-element="template" data-name="roomitem">
-            <li class="room{{#isClosed}} closed{{/isClosed}}">
+            <li class="{{#isClosed}} closed{{/isClosed}}">
                 <a href="#" class="clearfix" data-game-type="public" data-action="start" data-room-name="{{name}}">
                     <p class="room-name">Sala {{name}}</p>
                     <ul class="players clearfix">
