@@ -35,9 +35,9 @@ class Proxy
 
 	private function doRequest($method, $requestParameters)
 	{
-		$key = sha1(serialize($requestParameters));
-		$result = unserialize(Redis::getInstance()->hget($method, $key));
-		if (empty($result)) {
+		//$key = sha1(serialize($requestParameters));
+		//$result = unserialize(Redis::getInstance()->hget($method, $key));
+		//if (empty($result)) {
 			$response = self::getSOAPClient()->$method($requestParameters);
 			$returnProp = $method . "Result";
 	
@@ -47,8 +47,8 @@ class Proxy
 			}
 			$result = $response->{$returnProp};
 			//Redis::getInstance()->set($key, serialize($result), 'EX', '43200'); // save for 12 hours
-			Redis::getInstance()->hset($method, serialize($result));
-		}
+			//Redis::getInstance()->hset($method, serialize($result));
+		//}
 		return $result;
 	}
 
