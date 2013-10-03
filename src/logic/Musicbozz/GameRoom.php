@@ -376,8 +376,8 @@ class GameRoom extends Topic
 			$result = array();
 			if ($player->isMaster()) {
 				$url = $this->getShareUrl();
-				$result['url'] = $url;
-				$this->log("share url: ". $url);
+				$result['url'] = (string) $url;
+				$this->log("room share url: ". $url);
 			}
             $player->callResult($id, $result);
 
