@@ -205,6 +205,9 @@
             {{#rooms}}
                 {{> roomitem}}
             {{/rooms}}
+            {{^rooms}}
+            <div class="blankstate">nao existe salas</div>
+            {{/rooms}}
         </script>
 
         <script type="text/mustache" data-element="template" data-name="roomitem">

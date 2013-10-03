@@ -504,7 +504,7 @@ var musicbozz = (function(facebookSDK){
 			if (typeof onError !== 'function') onError = function(){};
 			
 			$.ajax({
-				url: 'http://vmdev-musicbozz.vmdev.bk.sapo.pt/rest.php/rooms/public',
+				url: 'http://vmdev-musicbozz.vmdev.bk.sapo.pt/rest.php/rooms/public?onlyWithPlayers=true&onlyOpen=true',
 				dataType: 'jsonp',
 				jsonp: 'jsonp',
 			}).done(onSuccess).fail(onError);

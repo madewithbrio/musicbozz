@@ -8,6 +8,8 @@ use Musicbozz\Question_Type;
 
 class RoomsService extends ServiceImplementation {
 	public function getItem() {
+		$filterPlayers = filter_input(INPUT_GET, 'onlyWithPlayers', FILTER_VALIDATE_BOOLEAN, array('flags' => FILTER_NULL_ON_FAILURE));
+		$filterOpen = filter_input(INPUT_GET, 'onlyOpen', FILTER_VALIDATE_BOOLEAN, array('flags' => FILTER_NULL_ON_FAILURE));
 		$publicRoomIds = array();
 		for ($i = 1; $i <= 10; $i++) {
 			$publicRoomIds[] = 'room/'.$i;
@@ -20,6 +22,7 @@ class RoomsService extends ServiceImplementation {
 				$room['name'] = str_replace('room/', '', $room['id']);
 				
 			} else {
+
 				$room = array(
 					'players' 	=> array(),
 					'isOpen' 	=> true,
@@ -31,6 +34,8 @@ class RoomsService extends ServiceImplementation {
 					'id' 		=> $publicRoomIds[$i]
 				);
 			}
+			if ($filterPlayers && sizeof($room['players']) === 0) continue;
+			if ($filterOpen && !$room['isOpen']) continue;
 			$rooms[] = $room;
 
 		}
