@@ -53,6 +53,8 @@ form input[type="submit"] {}
 
 /* STATES */
 .panel,
+.standing-by-master,
+.standing-by-slave,
 #song-loading-overlay,
 #container-loading-overlay {display:none;}
 body {
@@ -79,11 +81,11 @@ body[data-container="homepage"] {
 }
 body[data-container="waitingroom"] {
 	#waiting-room {display:block;}
-	&.playing {
-		#share {display:none;}
+	&.slave {
+		.standing-by-slave {display:block;}
 	}
 	&.master {
-		#share {display:block;}
+		.standing-by-master {display:block;}
 	}
 }
 body[data-container="room"] {
@@ -150,14 +152,14 @@ body[data-container="gameover"] {
 	}
 }
 
-.room {position:absolute;top:50%;left:50%;width:700px;height:500px;margin:-250px 0 0 -350px;
-	header {max-width:720px;padding:0 0 0 360px;margin:0 auto;background: url(../img/header.png) no-repeat 0 0;background-size:contain;color:#666;
-		.room-name {float:left;font-size:20px;line-height:120px;}
+.room {position:absolute;top:50%;left:50%;width:800px;height:600px;margin:-300px 0 0 -400px;
+	header {max-width:720px;padding:0 0 0 360px;margin:0 auto;/*background: url(../img/header.png) no-repeat 0 0;*/background-size:contain;color:#666;
+		.room-name {float:left;font-size:20px;line-height:120px;color:#555;}
 		.players {float:right;
 			li {float:left;width:25%;
 				.player {display:block;margin-left:5px;text-align:center;color:#666;
 					//p {margin:0;line-height:normal;}
-					.total-points {font-size:20px;font-weight:900;}
+					.total-points {margin:0;font-size:20px;font-weight:900;}
 					.thumb {position:relative;width:60px;height:60px;margin:0 auto;background:rgba(0,0,0,0.1) url(../img/bg_thumb.png) no-repeat 0 0;background-size:60px auto;
 						img {width:100%;}
 						.score {position:absolute;top:0;left:0;width:100%;background:rgba(77,77,77,0.7);font-size:26px;font-weight:900;line-height:60px;color:#FFF;display:none;
@@ -168,7 +170,7 @@ body[data-container="gameover"] {
 							&.negative {background:rgba(226,74,74,0.7);}
 						}
 					}
-					.name {font-size:10px;font-weight:900;text-transform:uppercase;line-height:20px;}
+					.name {margin:0;font-size:10px;font-weight:900;text-transform:uppercase;line-height:20px;}
 				}
 			}
 		}
@@ -188,8 +190,8 @@ body[data-container="gameover"] {
 		.timer {font-size:30px;line-height:40px;text-align:center;color:#333;color:rgba(0,0,0,0.3);}
 	}
 	.question {padding:10px;
-		.question_number {font-size:12px;}
-		.query {font-size:22px;font-weight:700;text-transform:uppercase;}
+		.question_number {margin:0;font-size:12px;}
+		.query {margin:0;font-size:22px;font-weight:700;text-transform:uppercase;}
 		.answers {padding:5px 0;
 			li {margin:0 0 10px 0;background:#FFF;
 				a {display:block;position:relative;padding:5px 10px 5px 15px;font-size:18px;border:2px solid #FFF;color:#555;
