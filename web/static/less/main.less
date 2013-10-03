@@ -39,7 +39,7 @@ form input[type="submit"] {}
 
 .mejs-container {display:none;}
 
-.content {max-width:720px;padding:30px;margin:0 auto;background:#0099AB url(../img/bg-blue.jpg) top center;}
+.content {max-width:720px;padding:30px;margin:0 auto;background:#0099AB;/* url(../img/bg-blue.jpg) top center;*/}
 .active {display:block;}
 
 
@@ -49,10 +49,8 @@ form input[type="submit"] {}
 
 /* STATES */
 .panel,
-#share,
 #song-loading-overlay,
-#container-loading-overlay,
-#stand-by {display:none;}
+#container-loading-overlay {display:none;}
 
 body {
 	&.loading-song {
@@ -87,12 +85,13 @@ body[data-container="room"] {
 					li:not(.master) {display:none;}
 				}
 			}
-			#share {display:none;}
 		}
 	}
-	&.standing-by {
-		#stand-by {display:block;}
-	}
+	
+}
+
+body[data-container="waitingroom"] {
+	#waiting-room {display:block;}
 	&.playing {
 		#share {display:none;}
 	}
@@ -100,7 +99,6 @@ body[data-container="room"] {
 		#share {display:block;}
 	}
 }
-
 
 body[data-container="gameover"] {
 	#gameover {display:block;}

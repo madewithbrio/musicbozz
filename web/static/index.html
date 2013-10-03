@@ -70,13 +70,13 @@
         </div>
 
 
-        <div id="room" class="panel">
+        <div id="waiting-room" class="panel">
             <header class="clearfix">
                 <h2 class="room">Sala <span class="room-id">10</span></h2>
                 <ul class="players clearfix" data-template="players"></ul>
             </header>
             <div class="content">
-                <div id="share" class="step">
+                <div class="standing-by-master">
                     <p>Partilha este link com os teus amigos.</p>
                     <form>
                         <input id="room_link" type="text" name="link" value="http://ron.honho.sl.pt" />
@@ -84,11 +84,19 @@
                     <a href="" class="button main-action" data-type="startGame">Começar o jogo!</a>
                     <a href="" class="button" data-type="inviteGame">Convida 3 amigos</a>
                 </div>
-
-                <div id="stand-by" class="step stand-by">
+                <div class="standing-by-slave">
                     <p>Agora tem calma contigo enquanto o teu amigo não arranca o jogo...</p>
                 </div>
+            </div>
+        </div>
 
+
+        <div id="room" class="panel">
+            <header class="clearfix">
+                <h2 class="room">Sala <span class="room-id">10</span></h2>
+                <ul class="players clearfix" data-template="players"></ul>
+            </header>
+            <div class="content">
                 <div id="gameBoard" class="game step">
                     <audio id="player" preload><source></source type="audio/mp3"></audio>
                     <div class="question" data-template="question"></div>

@@ -88,17 +88,16 @@ form input[type="tel"]:focus {
   max-width: 720px;
   padding: 30px;
   margin: 0 auto;
-  background: #0099ab url(../img/bg-blue.jpg) top center;
+  background: #0099AB;
+  /* url(../img/bg-blue.jpg) top center;*/
 }
 .active {
   display: block;
 }
 /* STATES */
 .panel,
-#share,
 #song-loading-overlay,
-#container-loading-overlay,
-#stand-by {
+#container-loading-overlay {
   display: none;
 }
 body.loading-song #song-loading-overlay {
@@ -129,16 +128,13 @@ body[data-container="room"].alone #room header .players li {
 body[data-container="room"].alone #room header .players li:not(.master) {
   display: none;
 }
-body[data-container="room"].alone #room #share {
-  display: none;
-}
-body[data-container="room"].standing-by #stand-by {
+body[data-container="waitingroom"] #waiting-room {
   display: block;
 }
-body[data-container="room"].playing #share {
+body[data-container="waitingroom"].playing #share {
   display: none;
 }
-body[data-container="room"].master #share {
+body[data-container="waitingroom"].master #share {
   display: block;
 }
 body[data-container="gameover"] #gameover {
