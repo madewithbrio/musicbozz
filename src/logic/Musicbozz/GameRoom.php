@@ -179,7 +179,7 @@ class GameRoom extends Topic
 	}
 	
 	protected function isAllPlayersReadyToStartMusic() {
-		return $this->playersReadyToPlayMusic== sizeof($this->readyToPlay);
+		return $this->playersReadyToPlayMusic == sizeof($this->readyToPlay);
 	}
 
 	protected function isAllPlayersAlreadyResponde() {
@@ -276,19 +276,26 @@ class GameRoom extends Topic
 	/** @Public Interface for WS **/
 	public function getNewQuestion($player, $id){
 		$this->log(sprintf("new question asked by %s", $player->getPlayerId()));
-		/**
+
 		if (!$player->isMaster()) {
 			$this->log(sprintf("player %s is not master", $player->getPlayerId()));
 			$player->callError($id, $this->getRoomId(), "you are not master in this room");
 			return;
 		}
-		**/
+
+		if ($this->waiting) {
+			foreach ($this as $_player) {
+				if (!in_array($player->getPlayerId(), $this->readyToPlay)) {
+					$this->log(sprintf("disconnect player %s",$player->getPlayerId()));ß
+					$_player->close(); // disconect player
+				}
+			}
+		}
 
 		if ($this->isOver()) {
 			$this->onGameOver();
 			$player->callError($id, $this->getRoomId(), "game allready over");
-			return;
-			
+			return;		
 		} else {
 			$this->waiting = false;
 			// reset question 
@@ -393,7 +400,7 @@ class GameRoom extends Topic
 	public function setRematch(ConnectionInterface $player, $id) {
 		$this->log(sprintf("player %s set rematch", $player->getPlayerId()));
 		if (!in_array($player->getPlayerId(), $this->readyToPlay)) {
-			$this->questionNumber = 0; // reset question counter;
+			$this->questionNumber = 0; // reset question counter, game change state from over to new
 			$this->readyToPlay[] = $player->getPlayerId();
 			$player->setScore(0);
 			$this->broadcast(array('action' => 'readyToPlay', 'data'   => $this->getPlayers()));

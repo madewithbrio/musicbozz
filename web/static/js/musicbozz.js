@@ -603,6 +603,7 @@ var musicbozz = (function(facebookSDK){
 				});
 			}, function(){
 				ws_session = undefined;
+				alert ("conection closed"); 
 				console.log("session closed");
 			},
 			{
