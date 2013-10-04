@@ -103,7 +103,7 @@ class GameRoom extends Topic
 	}
 
 	protected function getPlayersWithRank() {
-		$leaderboad_type = LeaderboardType::factory($this->getGameRoomType());
+		$leaderboad_type = LeaderboardType::factory('common'); //$this->getGameRoomType());
 		$players = $this->getPlayers();
 		usort($players, function($p1, $p2) {
 			if (!isset($p1['score'])) return 1;
@@ -209,7 +209,7 @@ class GameRoom extends Topic
 	}
 	
 	protected function storeScore() {
-		$leaderboad_type = LeaderboardType::factory($this->getGameRoomType());
+		$leaderboad_type = LeaderboardType::factory('common'); //$this->getGameRoomType());
 		foreach ($this as $player) {
 			PlayerPersistence::save($player->getPlayerId(), $player->toPersistence());
 			Leaderboard::save($leaderboad_type, $player->getScore(), $player->getPlayerId());
