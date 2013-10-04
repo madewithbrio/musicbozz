@@ -14,11 +14,12 @@ class GameRoom extends Topic
 	const NUMBER_QUESTIONS = 5;
 	const SITEURL = 'vmdev-musicbozz.vmdev.bk.sapo.pt';
 	private $questionNumber = 0;
+	private $waiting = true;
 	private $question;
-	private $answers;
-	private $playersReadyToPlay = 0;
+	private $answers = array();
+	private $playersReadyToPlayMusic= 0;
 	private $gameMode;
-	private $rematch = array();
+	private $readyToPlay = array();
 	private $logger;
 
 	public function __construct($topicId) {
@@ -29,7 +30,6 @@ class GameRoom extends Topic
 	public function __destruct() {
 		\Sapo\Redis::getInstance()->hdel('rooms', $this->getRoomId());
 	}
-    
 
 	private function getLogger() {
     	if (null === $this->logger) {
@@ -39,14 +39,15 @@ class GameRoom extends Topic
 	}
 
 	private function resetRoom() {
+		$this->waiting = true;
 		$this->questionNumber = 0;
-		$this->rematch = array();
+		$this->readyToPlay = array();
 		$this->resetQuestion();
 	}
 
 	private function resetQuestion() {
 		$this->question = null;
-		$this->playersReadyToPlay = 0;
+		$this->playersReadyToPlayMusic= 0;
 		$this->answers = array();
 	}
 
@@ -95,6 +96,7 @@ class GameRoom extends Topic
 	protected function getPlayers () {
 		$result = array_fill(0,4,array()); $i = 0;
 		foreach ($this as $player) {
+			if (!in_array($player->getPlayerId(), $this->readyToPlay)) continue;
 		    $result[$i++] = $player->toWs();
 		}
 		return $result;
@@ -140,7 +142,7 @@ class GameRoom extends Topic
 			'players' => $players,
 			'isOpen'  => $this->isOpen(),
 			'isOver'  => $this->isOver(),
-			
+			'isWating'=> $this->isWaiting(),
 			'isPublic'=> $this->isPublic(),
 			'isPrivate' => $this->isPrivate(),
 			'isAlone' => $this->isAlone(),
@@ -176,8 +178,8 @@ class GameRoom extends Topic
 		} 
 	}
 	
-	protected function isAllPlayersReady() {
-		return $this->playersReadyToPlay == $this->count();
+	protected function isAllPlayersReadyToStartMusic() {
+		return $this->playersReadyToPlayMusic== sizeof($this->readyToPlay);
 	}
 
 	protected function isAllPlayersAlreadyResponde() {
@@ -186,16 +188,21 @@ class GameRoom extends Topic
 	}
 
 	protected function isOver() {
-		return ($this->questionNumber > self::NUMBER_QUESTIONS);
-	}
-
-	protected function isLastQuestion() {
-		return ($this->questionNumber == self::NUMBER_QUESTIONS);
+		return ($this->isLastQuestion() && $this->isWaiting());
 	}
 
 	protected function isOpen() {
-		return ($this->questionNumber === 0 &&  $this->count() < 4);
+		return ($this->waiting && $this->count() < 4);
 	}
+
+	protected function isWaiting() {
+		return $this->waiting;
+	}
+	
+	protected function isLastQuestion() {
+		return ($this->questionNumber >= self::NUMBER_QUESTIONS);
+	}
+
 
 	protected function notificationStatus() {
 		\Sapo\Redis::getInstance()->hset('rooms', $this->getRoomId(), serialize($this->getStatus()));
@@ -236,20 +243,22 @@ class GameRoom extends Topic
 
 	protected function getGameMode() {
 		if (null === $this->gameMode) {
-			if ($this->isAlone()) {
-				$this->gameMode = GameMode::factory('Alone');
-			} else {
-				$this->gameMode = GameMode::factory('Standard');
-			}
+			//if ($this->isAlone()) {
+			$this->gameMode = GameMode::factory('Alone');
+			//} else {
+			//	$this->gameMode = GameMode::factory('Standard');
+			//}
 		}
 		return $this->gameMode;
 	}
 
 	/** @Triggers **/
 	protected function onGameOver() {
-		$this->question = null;
-		$this->questionNumber = 0;
-
+		$this->log("Game is over");
+		$this->readyToPlay = array();
+		$this->resetQuestion();
+		$this->waiting = true;
+		
 		// save score
 		$this->storeScore();
 
@@ -280,10 +289,10 @@ class GameRoom extends Topic
 			return;
 			
 		} else {
+			$this->waiting = false;
 			// reset question 
-			$this->question = null;
-			$this->answers = array();
-			$this->playersReadyToPlay = 0;
+			$this->resetQuestion();
+			
 		 	// load and increment this will close room if open
 		 	try {
 		 		$this->broadcast(array('action' => 'newQuestion', 'data' => $this->getQuestion()->toWs()));
@@ -354,14 +363,15 @@ class GameRoom extends Topic
         $player->callResult($id, $this->getPlayers());	
 	}
 
-	public function setReadyToPlay(ConnectionInterface $player, $id, array $params) {
+	public function setReadyToPlayMusic(ConnectionInterface $player, $id, array $params) {
 		$this->log(sprintf("player %s set ready to play", $player->getPlayerId()));
         try {
         	if ($params['hash'] !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
-            ++$this->playersReadyToPlay;
-            if ($this->isAllPlayersReady()) {
+            ++$this->playersReadyToPlayMusic;
+			$this->log("players " . $this->playersReadyToPlayMusic);
+            if ($this->isAllPlayersReadyToStartMusic()) {
             	$this->getQuestion()->setTimer(microtime(true));
-                $this->broadcast(array('action' => 'allPlayersReady'));
+                $this->broadcast(array('action' => 'allPlayersReadyToPlayMusic'));
             }
         } catch (Exception $e) {
              $player->callError($id, $this->getRoomId(), $e->getMessage());
@@ -378,6 +388,20 @@ class GameRoom extends Topic
              $player->callError($id, $this->getRoomId(), $e->getMessage());
         }
     }
+	
+	public function setRematch(ConnectionInterface $player, $id) {
+		$this->log(sprintf("player %s set rematch", $player->getPlayerId()));
+		if (!in_array($player->getPlayerId(), $this->readyToPlay)) {
+			$this->questionNumber = 0; // reset question counter;
+			$this->readyToPlay[] = $player->getPlayerId();
+			$player->setScore(0);
+			$this->broadcast(array('action' => 'readyToPlay', 'data'   => $this->getPlayers()));
+			$this->notificationStatus();
+			$player->callResult($id, array());
+		} else {
+			$player->callError($id, $this->getRoomId(), 'you have already set rematch');
+		}
+	}
 
     public function setPlayerConfig(ConnectionInterface $player, $id, $config) {
     	$this->log(sprintf("player %s set configuration", $player->getPlayerId()));
@@ -397,7 +421,10 @@ class GameRoom extends Topic
         		}
         	}
            
-
+		   	if (!in_array($player->getPlayerId(), $this->readyToPlay)) {
+		   		$this->readyToPlay[] = $player->getPlayerId();
+			}
+			
 			$result = array();
 			if ($player->isMaster()) {
 				$url = $this->getShareUrl();
@@ -406,9 +433,7 @@ class GameRoom extends Topic
 			}
             $player->callResult($id, $result);
 
-            $playersList = $this->getPlayers();
-            $this->broadcast(array('action' => 'playerConfigChange', 
-                                       'data'   => $playersList));
+            $this->broadcast(array('action' => 'readyToPlay', 'data'   => $this->getPlayers()));
             $this->notificationStatus();
         }
     }

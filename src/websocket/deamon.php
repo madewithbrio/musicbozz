@@ -13,4 +13,5 @@ $server = IoServer::factory(
             new Service
         )
     ), $port);
+printf("\n\nStarting deamon in port %s\n", $port);
 $server->run();

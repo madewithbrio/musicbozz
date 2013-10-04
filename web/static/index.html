@@ -47,21 +47,21 @@
                             <div class="game-mode">
                                 <h3>Joga com amigos</h3>
                                 <p>Começa um jogo e convida mais três amigos do Facebook para jogarem.</p>
-                                <a href="" class="button main-action" data-game-type="private" data-action="start">Começar jogo!</a>
+                                <a href="" class="button main-action" data-game-type="private" data-type="joinRoom">Começar jogo!</a>
                             </div>
                         </div>
                         <div class="small-100 medium-33 large-33 multi-private enter-multi-private" id="joinPrivateRoom">
                             <div class="game-mode">
                                 <h3>Recebeste um convite</h3>
                                 <p>Convidaram-te para um jogo, agora mete os teus amigos a chorar.</p>
-                                <a href="" class="button main-action" data-game-type="private" data-action="start">Entrar no jogo!</a>
+                                <a href="" class="button main-action" data-game-type="private" data-type="joinRoom">Entrar no jogo!</a>
                             </div>
                         </div>
                         <div class="small-100 medium-33 large-33 single start-single">
                             <div class="game-mode">
                                 <h3>Joga para o record</h3>
                                 <p>Se jogar com os amigos já não te dá pica então estás pronto para desafiar o top.<!--Os 10 melhores ganham contas <i>music box</i> durante um ano.--></p>
-                                <a href="" class="button" data-game-type="alone" data-action="start">Jogar sozinho</a>
+                                <a href="" class="button" data-game-type="alone" data-type="joinRoom">Jogar sozinho</a>
                             </div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                             <ul class="rooms clearfix" id="public_rooms">
                                 
                             </ul>
-                             <a href="#" class="button" data-game-type="private" data-action="start">Comecar jogo!</a>
+                             <a href="#" class="button" data-game-type="private" data-type="joinRoom">Comecar jogo!</a>
                         </section>
                         <section class="prizes">
                             <h2>Prémios</h2>
@@ -159,7 +159,7 @@
                 </section>
                 <div class="ink-grid">
                     <div class="small-100 medium-50 large-50">
-                        <a href="#" class="button main-action">Jogar de novo</a>
+                        <a href="#" class="button main-action" data-type="rematchGame">Jogar de novo</a>
                     </div>
                     <div class="small-100 medium-50 large-50">
                         <a href="#" class="button" data-type="goHome">Voltar ao início</a>
@@ -183,7 +183,7 @@
             <p class="query" data-hash="{{hash}}">{{query}}</p>
             <ul class="answers">
                 {{#solutions}}
-                <li><a href="#" data-element="answer">{{.}}</a></li>
+                <li><a href="#" data-type="answer">{{.}}</a></li>
                 {{/solutions}}
             </ul>
         </script>
@@ -253,7 +253,7 @@
 
         <script type="text/mustache" data-element="template" data-name="roomitem">
             <li class="{{#isClosed}} closed{{/isClosed}}">
-                <a href="#" class="clearfix" data-game-type="public" data-action="start" data-room-name="{{name}}">
+                <a href="#" class="clearfix" data-game-type="public" data-type="joinRoom" data-room-name="{{name}}">
                     <p class="room-name">Sala {{name}}</p>
                     <ul class="players clearfix">
                         {{#players}}
