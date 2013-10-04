@@ -23,6 +23,7 @@ a {
 }
 a:hover {
   text-decoration: none;
+  color: #FFF;
 }
 p {
   margin: 0;
@@ -111,7 +112,6 @@ form input[type="tel"]:focus {
 /* STATES */
 .panel,
 .standing-by-master,
-.standing-by-slave,
 #song-loading-overlay,
 #container-loading-overlay {
   display: none;
@@ -137,11 +137,11 @@ body[data-container="homepage"].invite #homepage .enter-multi-private {
 body[data-container="waitingroom"] #waiting-room {
   display: block;
 }
-body[data-container="waitingroom"].slave .standing-by-slave {
-  display: block;
-}
 body[data-container="waitingroom"].master .standing-by-master {
   display: block;
+}
+body[data-container="waitingroom"].master .standing-by-slave {
+  display: none;
 }
 body[data-container="room"] #room {
   display: block;
@@ -222,7 +222,7 @@ body[data-container="gameover"] #gameover {
 }
 #homepage ul.rooms li a {
   display: block;
-  padding: 5px 5px 5px 10px;
+  padding: 10px;
   background-color: rgba(255, 255, 255, 0.15);
 }
 #homepage ul.rooms li a .room-name {
@@ -233,10 +233,12 @@ body[data-container="gameover"] #gameover {
 }
 #homepage ul.rooms li a ul.players {
   float: right;
+  margin: 0;
 }
 #homepage ul.rooms li a ul.players li.player {
   float: left;
   width: 25%;
+  margin: 0;
 }
 #homepage ul.rooms li a ul.players li.player .avatar {
   width: 50px;
@@ -333,7 +335,7 @@ body[data-container="gameover"] #gameover {
   left: 0;
   width: 100%;
   margin: 0;
-  background: rgba(77, 77, 77, 0.7);
+  background: rgba(77, 77, 77, 0.8);
   font-size: 26px;
   font-weight: 900;
   line-height: 60px;
@@ -344,13 +346,25 @@ body[data-container="gameover"] #gameover {
   display: block;
 }
 .room header .players li .player .thumb .score.positive {
-  background: rgba(163, 179, 0, 0.7);
+  background: rgba(163, 179, 0, 0.8);
 }
 .room header .players li .player .thumb .score.positive:before {
   content: "+";
 }
 .room header .players li .player .thumb .score.negative {
-  background: rgba(226, 74, 74, 0.7);
+  background: rgba(226, 74, 74, 0.8);
+}
+.room header .players li .player .thumb .score.rank-1 {
+  background: #d9a441;
+  background: rgba(217, 164, 65, 0.8);
+}
+.room header .players li .player .thumb .score.rank-2 {
+  background: #ccc2c2;
+  background: rgba(204, 194, 194, 0.8);
+}
+.room header .players li .player .thumb .score.rank-3 {
+  background: #b3734f;
+  background: rgba(179, 115, 79, 0.8);
 }
 .room header .players li .player .name {
   margin: 0;
