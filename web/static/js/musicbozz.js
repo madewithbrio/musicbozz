@@ -1,4 +1,5 @@
-
+WEB_SOCKET_SWF_LOCATION = "/swf/WebSocketMain.swf";
+WEB_SOCKET_DEBUG = true;
 
 var musicbozz = (function(facebookSDK){
 	'use strict';
@@ -10,6 +11,8 @@ var musicbozz = (function(facebookSDK){
 	  		return secs;
 	    },
 	    player = new MediaElementPlayer('#player', {
+	    	pluginPath: '/swf/',
+		    flashName: 'flashmediaelement.swf',
 			type: 'audio/mp3',
 			success: function(media, node, player) {
 				media.addEventListener('timeupdate', function(e){
