@@ -782,7 +782,7 @@ form.i_know_the_room input[type="submit"] {top:50px;}
   .room header .players {
     float: none;
     display: block;
-    margin: 0;
+    margin: 60px 0 0 0;
   }
   .room header .players li {
     margin: 0;
