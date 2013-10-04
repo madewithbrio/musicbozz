@@ -47,6 +47,12 @@ class RoomsService extends ServiceImplementation {
 			$idx = rand(0, sizeof($rooms)-1);
 			$rooms = array($rooms[$idx]);
 		}
+
+		// martelado do luis
+		foreach ($rooms as &$_room) {
+			$default = array_fill(0,4,null);
+			$_room['players'] = array_slice( array_merge($_room['players'], $default), 0,4);
+		}
 		$this->sendResponse($rooms);
 	}
 
