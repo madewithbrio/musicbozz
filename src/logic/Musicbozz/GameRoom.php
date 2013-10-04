@@ -286,7 +286,7 @@ class GameRoom extends Topic
 		if ($this->waiting) {
 			foreach ($this as $_player) {
 				if (!in_array($_player->getPlayerId(), $this->readyToPlay)) {
-					$this->log(sprintf("disconnect player %s",$_player->getPlayerId()));ß
+					$this->log(sprintf("disconnect player %s",$_player->getPlayerId()));
 					$_player->close(); // disconect player
 				}
 			}
