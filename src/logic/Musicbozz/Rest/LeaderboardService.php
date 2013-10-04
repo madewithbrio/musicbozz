@@ -9,7 +9,7 @@ use \Musicbozz\Persistence\Leaderboard\Type as LeaderboardType;
 
 class LeaderboardService extends ServiceImplementation {
 	public function getItem() {
-		if (preg_match('@top/(alone|private|public)@', $this->getPath(), $match)) {
+		if (preg_match('@top/(alone|private|public|common)@', $this->getPath(), $match)) {
 			$type = LeaderboardType::factory($match[1]);
 			$top = Leaderboard::getTop($type, 10);
 			$leaderboard = array();

@@ -2,6 +2,7 @@
 namespace Musicbozz\Persistence\Leaderboard;
 use \Exception;
 class Type {
+	const COMMON = 'leaderboard::common';
 	const ALONE = 'leaderboard::alone';
 	const ROOMPRIVATE = 'leaderboard::private';
 	const ROOMPUBLIC = 'leaderboard::public';
