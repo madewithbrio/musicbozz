@@ -2,7 +2,7 @@
 
 var musicbozz = (function(facebookSDK){
 	'use strict';
-	var roomInstance, 
+	var roomInstance, playerInit = false, 
 		location = 'vmdev-musicbozz.vmdev.bk.sapo.pt',
 	    convertDecimalToSec = function(decimal) {
 			var secs  = Math.floor(decimal) || 0;
@@ -418,7 +418,12 @@ var musicbozz = (function(facebookSDK){
 		// prevent default all link and submit actions
 		//$(document).delegate('a', 'click', function(e){e.preventDefault();});
 		$(document).delegate('form', 'submit', function(e){e.preventDefault();});
-
+		$(document).delegate('a[data-type="joinRoom"]').bind('touchstart', function(){
+			if (playerInit) return;
+			player.play();
+			player.pause();
+			playerInit = true;
+		});
 		$(document).delegate('a[data-type="joinRoom"]').bind('click', function(e){
 			var $target = $(e.target || e.srcElement);
 			if (!$target.is('a[data-type="joinRoom"]')) {
