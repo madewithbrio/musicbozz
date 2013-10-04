@@ -438,7 +438,7 @@ var musicbozz = (function(facebookSDK){
 			e.preventDefault();
 			service.findPublicFreeRoom(function(res){
 				if (typeof res === 'undefined') return;
-				controller.goRoom($target.attr('data-game-type'), res[0].id);
+				controller.goRoom($target.attr('data-game-type'), res[0].name);
 			});
 			
 		});
