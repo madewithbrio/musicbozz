@@ -50,7 +50,7 @@ class RoomsService extends ServiceImplementation {
 
 		// martelado do luis
 		foreach ($rooms as &$_room) {
-			$default = array_fill(0,4,null);
+			$default = array_fill(0,4,false);
 			$_room['players'] = array_slice( array_merge($_room['players'], $default), 0,4);
 		}
 		$this->sendResponse($rooms);
