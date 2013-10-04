@@ -603,6 +603,11 @@ var musicbozz = (function(facebookSDK){
 				});
 			}, function(){
 				ws_session = undefined;
+				if ($('body').attr('data-container') == 'gameover') {
+					controller.goHomepage();
+				} else {
+					//alert("closed ")
+				}
 				console.log("session closed");
 			},
 			{
