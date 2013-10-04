@@ -147,9 +147,11 @@
         </div>
 
 
-        <div id="gameover" class="ink-grid panel">
-            <header>
-                <img src="img/header.png" alt="" />
+        <div id="gameover" class="panel room">
+            <header class="clearfix">
+                <a href="#" class="logo">music box quiz</a>
+                <h2 class="room-name">Sala <span class="room-id">10</span></h2>
+                <ul class="players clearfix" data-template="players"></ul>
             </header>
             <div class="content">
                 <h2>Game Over</h2>
@@ -158,11 +160,13 @@
                     </ol>
                 </section>
                 <div class="ink-grid">
-                    <div class="small-100 medium-50 large-50">
-                        <a href="#" class="button main-action" data-type="rematchGame">Jogar de novo</a>
-                    </div>
-                    <div class="small-100 medium-50 large-50">
-                        <a href="#" class="button" data-type="goHome">Voltar ao início</a>
+                    <div class="column-group">
+                        <div class="small-100 medium-50 large-50">
+                            <a href="#" class="button main-action" data-type="rematchGame">Jogar de novo</a>
+                        </div>
+                        <div class="small-100 medium-50 large-50">
+                            <a href="#" class="button" data-type="goHome">Voltar ao início</a>
+                        </div>
                     </div>
                 </div>
             </div>
