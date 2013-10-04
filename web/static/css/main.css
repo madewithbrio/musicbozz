@@ -159,6 +159,18 @@ body[data-container="room"].alone #room header .players li:not(.master) {
 body[data-container="gameover"] #gameover {
   display: block;
 }
+#homepage {
+  /*
+	ol.top-list {
+		li {
+			a {display:block;padding:10px;background-color:rgba(255,255,255,0.15);line-height:50px;
+				&:hover {background-color:rgba(0,0,0,0.2);}
+			}
+		}
+	}
+	*/
+
+}
 #homepage section .multi-private {
   display: none;
 }
@@ -254,6 +266,34 @@ body[data-container="gameover"] #gameover {
 }
 #homepage ul.rooms li a:hover {
   background-color: rgba(0, 0, 0, 0.2);
+}
+#homepage table.top-list tr {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+#homepage table.top-list tr td {
+  padding: 10px;
+  line-height: 50px;
+  border: none;
+}
+#homepage table.top-list tr td.rank {
+  width: 50px;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+}
+#homepage table.top-list tr td.thumb {
+  width: 50px;
+  padding: 0;
+  text-align: center;
+}
+#homepage table.top-list tr td.thumb img {
+  width: 100%;
+}
+#homepage table.top-list tr td.name {
+  text-align: left;
+}
+#homepage table.top-list tr td.max-score {
+  text-align: right;
 }
 .room {
   position: absolute;

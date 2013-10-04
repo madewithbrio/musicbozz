@@ -94,8 +94,12 @@
                         </section>
                         <section class="top">
                             <h2>Top</h2>
-                            <ol class="top-list" id="top-rank">
-                            </ol>
+                            <!--ol class="top-list" id="top-rank">
+                            </ol-->
+                            <table class="ink-table top-list">
+                                <tbody id="top-rank">
+                                </tbody>
+                            </table>
                         </section>
                         <!--section class="prizes">
                             <h2>Prémios</h2>
@@ -230,18 +234,28 @@
             {{/items}}
         </script>
 
-        <script type="text/mustache" data-element="template" data-name="topitem">
+        <!--script type="text/mustache" data-element="template" data-name="topitem">
             <li>
                 <a href="{{player.others.link}}" data-player-id="{{player.id}}" class="player" target="_blank">
-                <p class="rank">#{{rank}}</p>
-                <div class="thumb">
-                    <img src="{{player.others.avatar}}" alt="" />
-                </div>
-                <p class="name">{{player.name}}</p>
-                <!--<p class="games-played">Jogos jogados</p>-->
-                <p class="max-score">{{score}}</p>
+                    <p class="rank">#{{rank}}</p>
+                    <div class="thumb">
+                        <img src="{{player.others.avatar}}" alt="" />
+                    </div>
+                    <p class="name">{{player.name}}</p>
+                    <p class="max-score">{{score}}</p>
                 </a>
             </li>
+        </script-->
+
+        <script type="text/mustache" data-element="template" data-name="topitem">
+            <tr>
+                <td class="rank">{{rank}}</td>
+                <td class="thumb">
+                    <img src="{{player.others.avatar}}" alt="" />
+                </td>
+                <td class="name">{{player.name}}</td>
+                <td class="max-score">{{score}} pontos</td>
+            </tr>
         </script>
 
         <script type="text/mustache" data-element="template" data-name="playersrank">
