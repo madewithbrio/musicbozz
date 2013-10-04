@@ -232,6 +232,7 @@
 
         <script type="text/mustache" data-element="template" data-name="topitem">
             <li>
+                <a href="{{player.others.link}}" data-player-id="{{player.id}}" class="player" target="_blank">
                 <p class="rank">#{{rank}}</p>
                 <div class="thumb">
                     <img src="{{player.others.avatar}}" alt="" />
@@ -239,6 +240,7 @@
                 <p class="name">{{player.name}}</p>
                 <!--<p class="games-played">Jogos jogados</p>-->
                 <p class="max-score">{{score}}</p>
+                </a>
             </li>
         </script>
 
