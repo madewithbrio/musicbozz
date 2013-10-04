@@ -126,6 +126,10 @@ var musicbozz = (function(facebookSDK){
 			$('#public_rooms').html(Mustache.render(getTemplate('roomslist'), {rooms: data}, getTemplate()));
 		};
 
+		view.renderTopRank = function(data) {
+			$('#top-rank').html(Mustache.render(getTemplate('toprank'), {items: data}, getTemplate()));
+		}
+
 		view.renderPlayers = function(data) {
 	        $('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: data}, getTemplate()));
 	        if (roomInstance.isMaster()) $body.addClass('master');
@@ -208,6 +212,7 @@ var musicbozz = (function(facebookSDK){
 		var controller = {}, 
 			hasAnswer = false, 
 			timeoutQuestion,
+			timeoutTopRank,
 			timeoutReadyStatusForce,
 			timeoutPublicRoomsStatus,
 			errorHandling = function(error, desc){ 
@@ -223,6 +228,7 @@ var musicbozz = (function(facebookSDK){
 				$body.addClass('invite');
 			}
 			controller.refreshPublicRooms();
+			controller.refreshTopRank();
 			service.outRoom(roomInstance);
 			view.showHomepage();
 		};
@@ -271,6 +277,15 @@ var musicbozz = (function(facebookSDK){
 				console.error(e);
 			}
 			timeoutPublicRoomsStatus = setTimeout(controller.refreshPublicRooms, 5000);
+		};
+
+		controller.refreshTopRank = function(){
+			try {
+				service.getTopRank(view.renderTopRank);
+			} catch(e) {
+				console.error(e);
+			}
+			timeoutTopRank = setTimeout(controller.refreshTopRank, 60000);
 		};
 
 		controller.login = function(type, roomName) {
@@ -551,6 +566,17 @@ var musicbozz = (function(facebookSDK){
 			}).done(onSuccess).fail(onError);
 		};
 		
+		service.getTopRank = function(onSuccess, onError) {
+			if (typeof onSuccess !== 'function') onSuccess = function(){};
+			if (typeof onError !== 'function') onError = function(){};
+			
+			$.ajax({
+				url: 'http://'+location+'/rest.php/top/common',
+				dataType: 'jsonp',
+				jsonp: 'jsonp',
+			}).done(onSuccess).fail(onError);
+		};
+
 		service.findPublicFreeRoom = function(onSuccess, onError) {
 			if (typeof onSuccess !== 'function') onSuccess = function(){};
 			if (typeof onError !== 'function') onError = function(){};

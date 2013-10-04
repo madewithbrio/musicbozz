@@ -94,16 +94,7 @@
                         </section>
                         <section class="top">
                             <h2>Top</h2>
-                            <ol class="top-list">
-                                <li>
-                                    <p class="rank">#1</p>
-                                    <div class="thumb">
-                                        <img src="" alt="" />
-                                    </div>
-                                    <p class="name">Nome</p>
-                                    <p class="games-played">Jogos jogados</p>
-                                    <p class="max-score">pontos máximos</p>
-                                </li>
+                            <ol class="top-list" id="top-rank">
                             </ol>
                         </section>
                         <!--section class="prizes">
@@ -230,6 +221,24 @@
                     <div class="thumb"></div>
                 </div>
                 {{/name}}
+            </li>
+        </script>
+
+        <script type="text/mustache" data-element="template" data-name="toprank">
+            {{#items}}
+                {{> topitem}}
+            {{/items}}
+        </script>
+
+        <script type="text/mustache" data-element="template" data-name="topitem">
+            <li>
+                <p class="rank">#{{rank}}</p>
+                <div class="thumb">
+                    <img src="{{player.others.avatar}}" alt="" />
+                </div>
+                <p class="name">{{player.name}}</p>
+                <!--<p class="games-played">Jogos jogados</p>-->
+                <p class="max-score">{{score}}</p>
             </li>
         </script>
 
