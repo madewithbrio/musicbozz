@@ -269,19 +269,19 @@
         </script>
 
         <script type="text/mustache" data-element="template" data-name="roomplayer">
-            {{#name}}
+            {{#.}}
             <li class="player">
                 <div class="avatar">
                     <img src="{{others.avatar}}" alt="" />
                 </div>
                 <p class="player-name">{{name}}</p>
             </li>
-            {{/name}}
-            {{^name}}
+            {{/.}}
+            {{^.}}
             <li class="player">
                 <div class="avatar"></div>
             </li>
-            {{/name}}
+            {{/.}}
         </script>
 
         <script src="http://connect.facebook.net/en_US/all.js"></script>

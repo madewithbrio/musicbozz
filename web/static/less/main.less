@@ -136,10 +136,10 @@ body[data-container="gameover"] {
 	ul.rooms {margin:10px 0;
 		p {margin:0;line-height:normal;}
 		li {
-			a {display:block;padding:5px 5px 5px 10px;background-color:rgba(255,255,255,0.15);
+			a {display:block;padding:10px;background-color:rgba(255,255,255,0.15);
 				.room-name {float:left;line-height:50px;text-transform:uppercase;font-weight:900;}
-				ul.players {float:right;
-					li.player {float:left;width:25%;
+				ul.players {float:right;margin:0;
+					li.player {float:left;width:25%;margin:0;
 						.avatar {width:50px;height:50px;margin:0 0 0 4px;background-color:rgba(255,255,255,0.4);
 							img {width:100%;}
 						}
@@ -164,15 +164,15 @@ body[data-container="gameover"] {
 					.total-points {margin:0;font-size:20px;font-weight:900;}
 					.thumb {position:relative;width:60px;height:60px;margin:0 auto;background:rgba(255,255,255,0.1) url(../img/bg_thumb.png) no-repeat 0 0;background-size:60px auto;.rounded(2px);
 						img {width:100%;.rounded(2px);}
-						.score {position:absolute;top:0;left:0;width:100%;margin:0;background:rgba(77,77,77,0.7);font-size:26px;font-weight:900;line-height:60px;color:#FFF;display:none;
+						.score {position:absolute;top:0;left:0;width:100%;margin:0;background:rgba(77,77,77,0.8);font-size:26px;font-weight:900;line-height:60px;color:#FFF;display:none;
 							&.active {display:block;}
-							&.positive {background:rgba(163,179,0,0.7);
+							&.positive {background:rgba(163,179,0,0.8);
 								&:before {content:"+";}
 							}
-							&.negative {background:rgba(226,74,74,0.7);}
-							&.rank-1 {background:@gold-color;}
-							&.rank-2 {background:@silver-color;}
-							&.rank-3 {background:@bronze-color;}
+							&.negative {background:rgba(226,74,74,0.8);}
+							&.rank-1 {background:@gold-color;background:rgba(red(@gold-color),green(@gold-color),blue(@gold-color),0.8);}
+							&.rank-2 {background:@silver-color;background:rgba(red(@silver-color),green(@silver-color),blue(@silver-color),0.8);}
+							&.rank-3 {background:@bronze-color;background:rgba(red(@bronze-color),green(@bronze-color),blue(@bronze-color),0.8);}
 						}
 					}
 					.name {margin:0;font-size:10px;font-weight:900;text-transform:uppercase;line-height:20px;}
