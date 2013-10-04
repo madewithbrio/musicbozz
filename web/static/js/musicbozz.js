@@ -429,6 +429,20 @@ var musicbozz = (function(facebookSDK){
 			controller.goRoom($target.attr('data-game-type'), $target.attr('data-room-name'));
 		});
 		
+		$('a[data-type="joinRoomFree"]').bind('click', function(e) {
+			var $target = $(e.target || e.srcElement);
+			if (!$target.is('a[data-type="joinRoomFree"]')) {
+				$target = $target.parents('a[data-type="joinRoomFree"]');
+			}
+			if ($target.size() === 0) return;
+			e.preventDefault();
+			service.findPublicFreeRoom(function(res){
+				if (typeof res === 'undefined') return;
+				controller.goRoom($target.attr('data-game-type'), res[0].id);
+			});
+			
+		});
+		
 		$('a[data-type="startGame"]').bind('click', function(e) {
 			e.preventDefault();
 			controller.startGame();
@@ -487,7 +501,7 @@ var musicbozz = (function(facebookSDK){
 	          if (typeof onResponseClb === 'function') onResponseClb.apply(null, playerConfig);
 	        });
 		};
-
+/**
 		service.getFriends = function() {
 			facebookSDK.api({
 			    method: 'fql.query',
@@ -506,7 +520,7 @@ var musicbozz = (function(facebookSDK){
 			  link: url,
 			});
 		};
-		
+**/		
 		service.inviteViaFacebook = function(url) {
 			facebookSDK.ui({
 				method: 'apprequests',
@@ -527,6 +541,17 @@ var musicbozz = (function(facebookSDK){
 			
 			$.ajax({
 				url: 'http://'+location+'/rest.php/rooms/public?onlyWithPlayers=true&onlyOpen=true',
+				dataType: 'jsonp',
+				jsonp: 'jsonp',
+			}).done(onSuccess).fail(onError);
+		};
+		
+		service.findPublicFreeRoom = function(onSuccess, onError) {
+			if (typeof onSuccess !== 'function') onSuccess = function(){};
+			if (typeof onError !== 'function') onError = function(){};
+			
+			$.ajax({
+				url: 'http://'+location+'/rest.php/rooms/public?withoutPlayers=true&random=true',
 				dataType: 'jsonp',
 				jsonp: 'jsonp',
 			}).done(onSuccess).fail(onError);
