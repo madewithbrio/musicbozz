@@ -728,21 +728,64 @@ form.i_know_the_room input[type="submit"] {top:50px;}
 }
 /* SMALL SCREENS */
 @media screen and (max-width: 649px) {
-  .ink-grid {
+  body {
     background: #0099ab url(../img/bg-blue.jpg) top center;
   }
+  h2 {
+    font-size: 26px;
+  }
+  .button {
+    margin: 10px;
+  }
+  .ink-grid {
+    padding: 0;
+  }
   .content {
+    padding: 10px;
+  }
+  #homepage section {
+    margin-bottom: 0;
+  }
+  #homepage section .game-mode {
     padding: 0;
     background: none;
   }
-  #homepage section {
-    margin-bottom: 50px;
+  #homepage section .game-mode p {
+    margin-top: 0.5em;
   }
-  #homepage section.play .column {
-    float: none;
-    width: 100%;
+  #homepage section .single,
+  #homepage section .multi-public {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .room {
+    position: static;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: auto;
     margin: 0;
-    margin-bottom: 30px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+  }
+  .room header .logo {
+    display: block;
+    width: 100px;
+    height: 50px;
+    background-size: 100px auto;
+    margin: 5px;
+  }
+  .room header .room-name {
+    line-height: 60px;
+  }
+  .room header .players {
+    float: none;
+    display: block;
+    margin: 0;
+  }
+  .room header .players li {
+    margin: 0;
   }
 }
 .clearfix:before,
