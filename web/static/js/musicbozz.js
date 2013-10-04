@@ -112,7 +112,7 @@ var musicbozz = (function(facebookSDK){
 		view.showGameover = function(data) {
 			$body.addClass('loading-container');
 			setTimeout(function(){
-				$('#gameRank').html(Mustache.render(getTemplate('playersrank'), {players: data}, getTemplate()));
+				$('ul[data-template="players"]').html(Mustache.render(getTemplate('playersrank'), {players: data}, getTemplate()));
 				$body.attr('data-container', 'gameover');
 				$body.removeClass('loading-container');
 			}, transationTimeout);

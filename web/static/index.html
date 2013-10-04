@@ -226,24 +226,24 @@
         </script>
 
         <script type="text/mustache" data-element="template" data-name="playerscore">
-            {{#name}}
-            <li>
+            <li {{#master}}class="master"{{/master}}>
+                {{#name}}
                 <a href="{{others.link}}" data-player-id="{{id}}" class="player" target="_blank">
-                    <div class="game-ranking">
-                        <p class="game-rank"><span>{{gamerank}}</span></p>
-                        <p class="game-score">{{score}}</p>
-                    </div>
+                    <p class="total-points" data-element="points">{{score}}</p>
                     <div class="thumb">
                         <img src="{{#others.avatar}}{{others.avatar}}{{/others.avatar}}{{^others.avatar}}img/avatar.png{{/others.avatar}}" alt="" />
+                        <p class="score active rank-{{gamerank}}">#{{gamerank}}</p>
                     </div>
                     <p class="name ellipsis">{{name}}</p>
-                    <div class="overall-ranking">
-                        <p class="overall-rank">#{{rank}} na geral</p>
-                        <p class="overall-score">{{topscore}} pontos na geral</p>
-                    </div>
                 </a>
+                {{/name}}
+                {{^name}}
+                <div class="player">
+                    <p class="total-points">&nbsp;</p>
+                    <div class="thumb"></div>
+                </div>
+                {{/name}}
             </li>
-            {{/name}}
         </script>
 
         <script type="text/mustache" data-element="template" data-name="roomslist">

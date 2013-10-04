@@ -255,14 +255,15 @@ class GameRoom extends Topic
 	/** @Triggers **/
 	protected function onGameOver() {
 		$this->log("Game is over");
+		$playersList = $this->getPlayersWithRank();
+		
+		// save score
+		$this->storeScore();
+		
 		$this->readyToPlay = array();
 		$this->resetQuestion();
 		$this->waiting = true;
 		
-		// save score
-		$this->storeScore();
-
-		$playersList = $this->getPlayersWithRank();
 		$this->broadcast(array('action' => 'gameOver','data'   => $playersList));
 		$this->notificationStatus();
 	}
