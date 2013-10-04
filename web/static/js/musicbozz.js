@@ -222,11 +222,13 @@ var musicbozz = (function(facebookSDK){
 		controller.goHomepage = function() {
 			var $body = $('body'), 
 				room = /room=(.+)/.exec(window.location.hash);
+			$body.removeClass('alone').removeClass('multi');
 			if (!room){ $body.addClass('start');
 			} else {
 				$("#joinPrivateRoom").find('a').attr('data-room-name', room[1]);
 				$body.addClass('invite');
 			}
+			$body.removeClass('alone').removeClass('multi');
 			controller.refreshPublicRooms();
 			controller.refreshTopRank();
 			service.outRoom(roomInstance);
