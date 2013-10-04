@@ -64,7 +64,7 @@ var musicbozz = (function(facebookSDK){
 			return ((this.type == 'alone') ? 'alone/' : 'room/') + this.roomName;
 		};
 		Room.prototype.getLocation = function() {
-			return 'ws://'+location+''/ws/' + this.getRoomId();
+			return 'ws://'+location+'/ws/' + this.getRoomId();
 		};
 		Room.prototype.setUrl = function(url) { this.url = url; };
 		Room.prototype.getUrl = function() { return this.url; };
