@@ -1,24 +1,18 @@
-
-window.fbAsyncInit = function() {
-      FB.init({
-        appId      : '667899479901883', // App ID
-        channelUrl : '//vmdev-musicbozz.vmdev.bk.sapo.pt/channel.html', // Channel File
-        status     : true, // check login status
-        cookie     : true, // enable cookies to allow the server to access the session
-        xfbml      : true,  // parse XFBML
-        frictionlessRequests : true
-      });
-};
+WEB_SOCKET_SWF_LOCATION = "/swf/WebSocketMain.swf";
+WEB_SOCKET_DEBUG = true;
 
 var musicbozz = (function(facebookSDK){
 	'use strict';
-	var roomInstance, 
+	var roomInstance, playerInit = false, 
+		location = 'vmdev-musicbozz.vmdev.bk.sapo.pt',
 	    convertDecimalToSec = function(decimal) {
 			var secs  = Math.floor(decimal) || 0;
 	  		if (secs < 10) secs = "0" + secs;
 	  		return secs;
 	    },
 	    player = new MediaElementPlayer('#player', {
+	    	pluginPath: '/swf/',
+		    flashName: 'flashmediaelement.swf',
 			type: 'audio/mp3',
 			success: function(media, node, player) {
 				media.addEventListener('timeupdate', function(e){
@@ -31,8 +25,7 @@ var musicbozz = (function(facebookSDK){
 					}
 				});
 				media.addEventListener('canplay', function() {
-					var hash = $('div[data-template="question"] .query').attr('data-hash');
-					service.setReadyToPlay(roomInstance, hash);
+					controller.setReadyToPlayMusic();
 				});
 				media.addEventListener('ended', function() { 
 					var hash = $('div[data-template="question"] .query').attr('data-hash');
@@ -49,9 +42,19 @@ var musicbozz = (function(facebookSDK){
 			this.player = player;
 			this.players = [];
 			this.question = undefined;
-			this.roomName = roomName || this.player.username;
+			this.roomName = roomName || this.player.username + "/" + makeid();
 			this.master = !roomName;
 			this.url = undefined;
+		};
+
+		var makeid = function(len){
+		    var text = "", i,
+		    	possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		    if (typeof len === 'undefined') len = 8;
+		    for( i=0; i < len; i++ )
+		        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+		    return text;
 		};
 
 		Room.prototype.addPlayer = function() {};
@@ -64,7 +67,7 @@ var musicbozz = (function(facebookSDK){
 			return ((this.type == 'alone') ? 'alone/' : 'room/') + this.roomName;
 		};
 		Room.prototype.getLocation = function() {
-			return 'ws://vmdev-musicbozz.vmdev.bk.sapo.pt/ws/' + this.getRoomId();
+			return 'ws://'+location+'/ws/' + this.getRoomId();
 		};
 		Room.prototype.setUrl = function(url) { this.url = url; };
 		Room.prototype.getUrl = function() { return this.url; };
@@ -94,12 +97,12 @@ var musicbozz = (function(facebookSDK){
 				$body.attr('data-container', 'waitingroom');
 				$body.removeClass('loading-container');
 			}, transationTimeout);
-		}
+		};
 
 		view.renderGameType = function(isAlone) {
 			if (isAlone) $body.addClass('alone');
 			else $body.addClass('multi');			
-		}
+		};
 
 		view.showHomepage = function() {
 			$body.addClass('loading-container');
@@ -112,7 +115,7 @@ var musicbozz = (function(facebookSDK){
 		view.showGameover = function(data) {
 			$body.addClass('loading-container');
 			setTimeout(function(){
-				$('#gameRank').html(Mustache.render(getTemplate('playersrank'), {players: data}, getTemplate()));
+				$('ul[data-template="players"]').html(Mustache.render(getTemplate('playersrank'), {players: data}, getTemplate()));
 				$body.attr('data-container', 'gameover');
 				$body.removeClass('loading-container');
 			}, transationTimeout);
@@ -125,6 +128,10 @@ var musicbozz = (function(facebookSDK){
 		view.renderPublicRoomsStatus = function(data) {
 			$('#public_rooms').html(Mustache.render(getTemplate('roomslist'), {rooms: data}, getTemplate()));
 		};
+
+		view.renderTopRank = function(data) {
+			$('#top-rank').html(Mustache.render(getTemplate('toprank'), {items: data}, getTemplate()));
+		}
 
 		view.renderPlayers = function(data) {
 	        $('ul[data-template="players"]').html(Mustache.render(getTemplate('players'), {players: data}, getTemplate()));
@@ -148,7 +155,9 @@ var musicbozz = (function(facebookSDK){
 			//
 			$('ul.players .score').removeClass('active positive negative');
 			$('div[data-template="question"]').html(Mustache.render(getTemplate('question'), data));
+			player.pause();
 			player.setSrc(data.url);
+			//player.src = data.url;
 			player.load();
 		};
 
@@ -206,6 +215,7 @@ var musicbozz = (function(facebookSDK){
 		var controller = {}, 
 			hasAnswer = false, 
 			timeoutQuestion,
+			timeoutTopRank,
 			timeoutReadyStatusForce,
 			timeoutPublicRoomsStatus,
 			errorHandling = function(error, desc){ 
@@ -215,12 +225,15 @@ var musicbozz = (function(facebookSDK){
 		controller.goHomepage = function() {
 			var $body = $('body'), 
 				room = /room=(.+)/.exec(window.location.hash);
+			$body.removeClass('alone').removeClass('multi');
 			if (!room){ $body.addClass('start');
 			} else {
 				$("#joinPrivateRoom").find('a').attr('data-room-name', room[1]);
 				$body.addClass('invite');
 			}
+			$body.removeClass('alone').removeClass('multi');
 			controller.refreshPublicRooms();
+			controller.refreshTopRank();
 			service.outRoom(roomInstance);
 			view.showHomepage();
 		};
@@ -252,6 +265,16 @@ var musicbozz = (function(facebookSDK){
 			});
 		};
 
+		controller.rematchGame = function() {
+			service.setRematch(roomInstance, function(){
+				if (roomInstance.isAlone()) {
+	  				view.showRoom(function(){ controller.startGame(); });
+	  			} else {
+	  				view.showWaitingRoom();
+	  			}
+	  		});
+		};
+		
 		controller.refreshPublicRooms = function(){
 			try {
 				service.getPublicRoomsStatus(view.renderPublicRoomsStatus);
@@ -259,6 +282,15 @@ var musicbozz = (function(facebookSDK){
 				console.error(e);
 			}
 			timeoutPublicRoomsStatus = setTimeout(controller.refreshPublicRooms, 5000);
+		};
+
+		controller.refreshTopRank = function(){
+			try {
+				service.getTopRank(view.renderTopRank);
+			} catch(e) {
+				console.error(e);
+			}
+			timeoutTopRank = setTimeout(controller.refreshTopRank, 60000);
 		};
 
 		controller.login = function(type, roomName) {
@@ -272,43 +304,42 @@ var musicbozz = (function(facebookSDK){
 		  	facebookSDK.login();
 		};
 
-		controller.startGame = function() {
-			var onStart = function() {
+		controller.startGame = function() { //@todo rever isto
+			view.showRoom(function() {
 				view.loadingSong();
 				service.getNewQuestion(roomInstance, function(question) {
 					view.renderGamestart();
 				}, errorHandling);
-			}
-			if (!roomInstance.isAlone()) {
-				view.showRoom(onStart);
-			} else {
-				onStart.call();
-			}
-			
+			});
 		};
 
 		controller.newQuestion = function(question) {
 			hasAnswer = false;
-			if (roomInstance.isMaster()) {
-				timeoutReadyStatusForce = setTimeout(function() { 
-					var hash = $('div[data-template="question"] .query').attr('data-hash');
-					service.broadcastStart(roomInstance, hash); 
-				}, 5000);
+			var clbF = function () {
+				view.loadingSong();
+				if (roomInstance.isMaster()) {
+					timeoutReadyStatusForce = setTimeout(function() { 
+						var hash = $('div[data-template="question"] .query').attr('data-hash');
+						service.broadcastStart(roomInstance, hash); 
+					}, 5000);
+				} else {
+					timeoutReadyStatusForce = setTimeout(function() { 
+						var hash = $('div[data-template="question"] .query').attr('data-hash');
+						service.setReadyToPlayMusic(roomInstance, hash); 
+					}, 5000);
+				}
+				view.renderQuestion(question);
+			};
+			if ($('body').attr('data-container') == 'room') {
+				clbF.call();
 			} else {
-				timeoutReadyStatusForce = setTimeout(function() { 
-					var hash = $('div[data-template="question"] .query').attr('data-hash');
-					service.setReadyToPlay(roomInstance, hash); 
-				}, 5000);
+				view.showRoom(clbF);
 			}
-			view.loadingSong();
-			view.renderQuestion(question);
 		};
 
 		controller.startAudioPlayer = function() {
 			view.startSong();
-			setTimeout( function() { 
-				player.play(); 
-			}, 250);
+			setTimeout( function() { player.play(); }, 250);
 		};
 
 		controller.playersAnswerResult = function(result) {
@@ -355,10 +386,16 @@ var musicbozz = (function(facebookSDK){
 			clearTimeout(timeoutQuestion);
 			view.showGameover(res);
 		};
-
+		
+		controller.setReadyToPlayMusic = function() {
+			clearTimeout(timeoutReadyStatusForce);
+			var hash = $('div[data-template="question"] .query').attr('data-hash');
+			service.setReadyToPlayMusic(roomInstance, hash);	
+		};
+		
 		controller.eventHandler = function(t, e) {
 			switch (e.action) {
-				case 'playerConfigChange':
+				case 'readyToPlay':
 				case 'newPlayer':
 				case 'playerLeave':
 					service.listPlayers(roomInstance, controller.setPlayers  , errorHandling);
@@ -371,8 +408,8 @@ var musicbozz = (function(facebookSDK){
 					timeoutQuestion = setTimeout( controller.questionOver, 45000);
 					break;
 
-				case 'allPlayersReady':
-					clearTimeout(timeoutReadyStatusForce);
+				case 'allPlayersReadyToPlayMusic':
+					if (roomInstance.isMaster()) clearTimeout(timeoutReadyStatusForce);
 					controller.startAudioPlayer();
 					break;
 
@@ -401,20 +438,44 @@ var musicbozz = (function(facebookSDK){
 		// prevent default all link and submit actions
 		//$(document).delegate('a', 'click', function(e){e.preventDefault();});
 		$(document).delegate('form', 'submit', function(e){e.preventDefault();});
-
-		$(document).delegate('a[data-action="start"]').bind('click', function(e){
+		$(document).delegate('a[data-type="joinRoom"]').bind('touchstart', function(){
+			if (playerInit) return;
+			player.play();
+			player.pause();
+			playerInit = true;
+		});
+		$(document).delegate('a[data-type="joinRoom"]').bind('click', function(e){
 			var $target = $(e.target || e.srcElement);
-			if (!$target.is('a[data-action="start"]')) {
-				$target = $target.parents('a[data-action="start"]');
+			if (!$target.is('a[data-type="joinRoom"]')) {
+				$target = $target.parents('a[data-type="joinRoom"]');
 			}
 			if ($target.size() === 0) return;
 			e.preventDefault();
 			controller.goRoom($target.attr('data-game-type'), $target.attr('data-room-name'));
 		});
 		
+		$('a[data-type="joinRoomFree"]').bind('click', function(e) {
+			var $target = $(e.target || e.srcElement);
+			if (!$target.is('a[data-type="joinRoomFree"]')) {
+				$target = $target.parents('a[data-type="joinRoomFree"]');
+			}
+			if ($target.size() === 0) return;
+			e.preventDefault();
+			service.findPublicFreeRoom(function(res){
+				if (typeof res === 'undefined') return;
+				controller.goRoom($target.attr('data-game-type'), res[0].name);
+			});
+			
+		});
+		
 		$('a[data-type="startGame"]').bind('click', function(e) {
 			e.preventDefault();
 			controller.startGame();
+		});
+		
+		$('a[data-type="rematchGame"]').bind('click', function(e) {
+			e.preventDefault();
+			controller.rematchGame();
 		});
 
 		$('a[data-type="goHome"]').bind('click', function(e){
@@ -430,7 +491,7 @@ var musicbozz = (function(facebookSDK){
 			service.inviteViaFacebook(roomInstance.getUrl());
 		});
 		
-		$(document).delegate('a[data-element="answer"]', 'click.answer', function(e){
+		$(document).delegate('a[data-type="answer"]', 'click.answer', function(e){
 			e.preventDefault();
 			controller.setAnswer(this);
 		});
@@ -465,7 +526,7 @@ var musicbozz = (function(facebookSDK){
 	          if (typeof onResponseClb === 'function') onResponseClb.apply(null, playerConfig);
 	        });
 		};
-
+/**
 		service.getFriends = function() {
 			facebookSDK.api({
 			    method: 'fql.query',
@@ -484,7 +545,7 @@ var musicbozz = (function(facebookSDK){
 			  link: url,
 			});
 		};
-		
+**/		
 		service.inviteViaFacebook = function(url) {
 			facebookSDK.ui({
 				method: 'apprequests',
@@ -504,7 +565,29 @@ var musicbozz = (function(facebookSDK){
 			if (typeof onError !== 'function') onError = function(){};
 			
 			$.ajax({
-				url: 'http://vmdev-musicbozz.vmdev.bk.sapo.pt/rest.php/rooms/public',
+				url: 'http://'+location+'/rest.php/rooms/public?onlyWithPlayers=true&onlyOpen=true',
+				dataType: 'jsonp',
+				jsonp: 'jsonp',
+			}).done(onSuccess).fail(onError);
+		};
+		
+		service.getTopRank = function(onSuccess, onError) {
+			if (typeof onSuccess !== 'function') onSuccess = function(){};
+			if (typeof onError !== 'function') onError = function(){};
+			
+			$.ajax({
+				url: 'http://'+location+'/rest.php/top/common',
+				dataType: 'jsonp',
+				jsonp: 'jsonp',
+			}).done(onSuccess).fail(onError);
+		};
+
+		service.findPublicFreeRoom = function(onSuccess, onError) {
+			if (typeof onSuccess !== 'function') onSuccess = function(){};
+			if (typeof onError !== 'function') onError = function(){};
+			
+			$.ajax({
+				url: 'http://'+location+'/rest.php/rooms/public?withoutPlayers=true&random=true',
 				dataType: 'jsonp',
 				jsonp: 'jsonp',
 			}).done(onSuccess).fail(onError);
@@ -525,6 +608,11 @@ var musicbozz = (function(facebookSDK){
 				});
 			}, function(){
 				ws_session = undefined;
+				if ($('body').attr('data-container') == 'gameover') {
+					controller.goHomepage();
+				} else {
+					//alert("closed ")
+				}
 				console.log("session closed");
 			},
 			{
@@ -555,11 +643,11 @@ var musicbozz = (function(facebookSDK){
 			ws_session.call(gameRoom.getRoomId(), 'getNewQuestion').then(onSuccess, onError);
 		};
 
-		service.setReadyToPlay = function (gameRoom, hash, onSuccess, onError) {
+		service.setReadyToPlayMusic = function (gameRoom, hash, onSuccess, onError) {
 			if (typeof onSuccess !== 'function') onSuccess = function(){};
 			if (typeof onError !== 'function') onError = function(){};
 			
-			ws_session.call(gameRoom.getRoomId(), 'setReadyToPlay', {hash: hash}).then(onSuccess, onError);
+			ws_session.call(gameRoom.getRoomId(), 'setReadyToPlayMusic', {hash: hash}).then(onSuccess, onError);
 		};
 
 		service.notifyTimeEnded = function (gameRoom, hash, onSuccess, onError) {
@@ -575,6 +663,13 @@ var musicbozz = (function(facebookSDK){
 
 			ws_session.call(gameRoom.getRoomId(), 'setAnswer', {answer: answer, hash: hash}).then(onSuccess, onError);
 		};
+		
+		service.setRematch = function(gameRoom, onSuccess, onError) {
+			if (typeof onSuccess !== 'function') onSuccess = function(){};
+			if (typeof onError !== 'function') onError = function(){};
+
+			ws_session.call(gameRoom.getRoomId(), 'setRematch').then(onSuccess, onError);
+		};
 
 		service.broadcastStart = function (gameRoom, hash) {
 			if (!gameRoom.isMaster()) return;
@@ -584,24 +679,5 @@ var musicbozz = (function(facebookSDK){
 		return service;
 	})();
 
-	return {
-		getPlayer: function() {
-			return player;
-		},
-		getRoom: function() {
-			return roomInstance;
-		},
-
-		getController: function() {
-			return controller;
-		},
-
-		getService: function() {
-			return service;
-		},
-
-		getView: function() {
-			return view;
-		}
-	};
+	return {};
 })(FB);

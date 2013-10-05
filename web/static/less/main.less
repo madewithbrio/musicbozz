@@ -19,7 +19,7 @@
 }
 body {background-color:@bg-color;font-family:'Open Sans',sans-serif;color:#FFF;}
 a {text-decoration:none;color:#FFF;
-	&:hover {text-decoration:none;}
+	&:hover {text-decoration:none;color:#FFF;}
 }
 p {margin:0;}
 ul {padding:0;margin:0;list-style:none;}
@@ -43,8 +43,13 @@ form input[type="submit"] {}
 .mejs-container {display:none;}
 
 .ink-grid {}
-.content {padding:30px;margin:0 0 30px 0;background:#0099AB url(../img/bg-blue.jpg) top center;.rounded(40px);}
+.content {padding:30px;margin:0;background:#0099AB url(../img/bg-blue.jpg) top center;}
 .active {display:block;}
+.panel {
+	header {background-color:@bg-color;
+		img {display:block;width:100%;max-width:960px;height:auto;margin:0 auto;}
+	}
+}
 
 
 
@@ -53,11 +58,13 @@ form input[type="submit"] {}
 
 /* STATES */
 .panel,
+.standing-by-master,
 #song-loading-overlay,
 #container-loading-overlay {display:none;}
 body {
 	&.loading-song {
 		#song-loading-overlay {display:block;}
+		.question {visibility:hidden;}
 	}
 	&.loading-container {
 		#container-loading-overlay {display:block;}
@@ -79,11 +86,9 @@ body[data-container="homepage"] {
 }
 body[data-container="waitingroom"] {
 	#waiting-room {display:block;}
-	&.playing {
-		#share {display:none;}
-	}
 	&.master {
-		#share {display:block;}
+		.standing-by-master {display:block;}
+		.standing-by-slave {display:none;}
 	}
 }
 body[data-container="room"] {
@@ -111,33 +116,30 @@ body[data-container="gameover"] {
 
 
 #homepage {
-	header {background-color:@bg-color;
-		img {display:block;width:100%;max-width:960px;height:auto;margin:0 auto;}
-	}
 	section {
-		&.how-to {margin:50px auto;
-			img {display:block;width:100%;max-width:520px;margin:20px auto;}
-			.video-wrapper {position:relative;padding-bottom:56.25%;padding-top:25px;height:0;//max-width:520px;margin:0 auto;
-				.twerker {display:block;z-index:999999;
-					img {position:absolute;top:0;left:0;width:100%;height:auto;max-width:100%;margin:0 auto;z-index:999999;}
-				}
-				iframe {position:absolute;top:0;left:0;width:100%;height:100%;}
-			}
-		}
 		.multi-private {display:none;
 			.game-mode {padding:50px 10px;}
 		}
 		.single,
 		.multi-public {margin-top:30px;margin-bottom:30px;}
-		.game-mode {padding:20px 10px 10px 10px;background-color:rgba(255,255,255,0.2);text-align:center;.rounded(20px);}
+		.game-mode {padding:20px 10px 10px 10px;background-color:rgba(255,255,255,0.2);text-align:center;}
+		&.how-to {margin:50px auto;max-width:520px;margin:0 auto;
+			img {display:block;width:100%;max-width:520px;margin:20px auto;}
+			.video-wrapper {position:relative;padding-bottom:56.25%;padding-top:25px;height:0;
+				.twerker {display:block;z-index:999999;
+					img {position:absolute;top:0;left:0;width:100%;height:auto;max-width:100%;margin:0 auto;z-index:999999;}
+				}
+				video {position:absolute;top:0;left:0;width:100%;height:100%;}
+			}
+		}
 	}
 	ul.rooms {margin:10px 0;
 		p {margin:0;line-height:normal;}
-		li {float:left;width:50%;
-			a {display:block;padding:5px 5px 5px 10px;background-color:rgba(255,255,255,0.15);
+		li {
+			a {display:block;padding:10px;background-color:rgba(255,255,255,0.15);
 				.room-name {float:left;line-height:50px;text-transform:uppercase;font-weight:900;}
-				ul.players {float:right;
-					li.player {float:left;width:25%;
+				ul.players {float:right;margin:0;
+					li.player {float:left;width:25%;margin:0;
 						.avatar {width:50px;height:50px;margin:0 0 0 4px;background-color:rgba(255,255,255,0.4);
 							img {width:100%;}
 						}
@@ -148,27 +150,53 @@ body[data-container="gameover"] {
 			}
 		}
 	}
+	/*
+	ol.top-list {
+		li {
+			a {display:block;padding:10px;background-color:rgba(255,255,255,0.15);line-height:50px;
+				&:hover {background-color:rgba(0,0,0,0.2);}
+			}
+		}
+	}
+	*/
+	table.top-list {
+		tr {background-color:rgba(255,255,255,0.15);//border-bottom:5px solid rgba(0,0,0,0.2);
+			td {padding:10px;line-height:50px;border:none;
+				&.rank {width:50px;font-size:30px;font-weight:bold;text-align:center;}
+				&.thumb {width:50px;padding:0;text-align:center;
+					img {width:100%;}
+				}
+				&.name {text-align:left;}
+				&.max-score {text-align:right;}
+			}
+		}
+	}
 }
 
-.room {position:absolute;top:50%;left:50%;width:700px;height:500px;margin:-250px 0 0 -350px;
-	header {max-width:720px;padding:0 0 0 360px;margin:0 auto;background: url(../img/header.png) no-repeat 0 0;background-size:contain;color:#666;
-		.room-name {float:left;font-size:20px;line-height:120px;}
-		.players {float:right;
+.room {position:absolute;top:50%;left:50%;width:700px;height:600px;margin:-300px 0 0 -350px;.rounded(2px);overflow:hidden;
+	header {/*background: url(../img/header.png) no-repeat 0 0;background-size:contain;*/background:#444 url(../img/bg-black.jpg) top center;
+		.logo {float:left;width:200px;height:100px;margin:13px 10px;background:transparent url(../img/logo.png) no-repeat center center;background-size:200px auto;text-indent:-999999px;}
+		.room-name {float:left;font-size:20px;line-height:126px;}
+		.players {float:right;margin:0 10px;
 			li {float:left;width:25%;
-				.player {display:block;margin-left:5px;text-align:center;color:#666;
+				.player {display:block;margin-left:5px;text-align:center;
+					&:hover {color:#FFF;.opacity(0.8);}
 					//p {margin:0;line-height:normal;}
-					.total-points {font-size:20px;font-weight:900;}
-					.thumb {position:relative;width:60px;height:60px;margin:0 auto;background:rgba(0,0,0,0.1) url(../img/bg_thumb.png) no-repeat 0 0;background-size:60px auto;
-						img {width:100%;}
-						.score {position:absolute;top:0;left:0;width:100%;background:rgba(77,77,77,0.7);font-size:26px;font-weight:900;line-height:60px;color:#FFF;display:none;
+					.total-points {margin:0;font-size:20px;font-weight:900;}
+					.thumb {position:relative;width:60px;height:60px;margin:0 auto;background:rgba(255,255,255,0.1) url(../img/bg_thumb.png) no-repeat 0 0;background-size:60px auto;.rounded(2px);
+						img {width:100%;.rounded(2px);}
+						.score {position:absolute;top:0;left:0;width:100%;margin:0;background:rgba(77,77,77,0.8);font-size:26px;font-weight:900;line-height:60px;color:#FFF;display:none;
 							&.active {display:block;}
-							&.positive {background:rgba(163,179,0,0.7);
+							&.positive {background:rgba(163,179,0,0.8);
 								&:before {content:"+";}
 							}
-							&.negative {background:rgba(226,74,74,0.7);}
+							&.negative {background:rgba(226,74,74,0.8);}
+							&.rank-1 {background:@gold-color;background:rgba(red(@gold-color),green(@gold-color),blue(@gold-color),0.8);}
+							&.rank-2 {background:@silver-color;background:rgba(red(@silver-color),green(@silver-color),blue(@silver-color),0.8);}
+							&.rank-3 {background:@bronze-color;background:rgba(red(@bronze-color),green(@bronze-color),blue(@bronze-color),0.8);}
 						}
 					}
-					.name {font-size:10px;font-weight:900;text-transform:uppercase;line-height:20px;}
+					.name {margin:0;font-size:10px;font-weight:900;text-transform:uppercase;line-height:20px;}
 				}
 			}
 		}
@@ -188,8 +216,8 @@ body[data-container="gameover"] {
 		.timer {font-size:30px;line-height:40px;text-align:center;color:#333;color:rgba(0,0,0,0.3);}
 	}
 	.question {padding:10px;
-		.question_number {font-size:12px;}
-		.query {font-size:22px;font-weight:700;text-transform:uppercase;}
+		.question_number {margin:0;font-size:12px;}
+		.query {margin:0;font-size:22px;font-weight:700;text-transform:uppercase;}
 		.answers {padding:5px 0;
 			li {margin:0 0 10px 0;background:#FFF;
 				a {display:block;position:relative;padding:5px 10px 5px 15px;font-size:18px;border:2px solid #FFF;color:#555;
@@ -208,7 +236,7 @@ body[data-container="gameover"] {
 			}
 		}
 	}
-	.game {position:relative;}
+	.game {position:relative;min-height:300px;}
 }
 
 #gameover {
@@ -248,19 +276,13 @@ body[data-container="gameover"] {
 
 #container-loading-overlay {position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(255,255,255,0.9);z-index:999999;
 	img {position:absolute;top:50%;left:50%;width:50px;height:50px;margin:-25px 0 0 -25px;
-		-webkit-animation-iteration-count:infinite;
-		-webkit-animation-timing-function:linear;
-		-webkit-animation-name:rotate;
-		-webkit-animation-duration:2s;
+		.animation(rotate 2s linear 0s infinite normal none);
 	}
 }
 
-#song-loading-overlay {position:absolute;top:0;left:0;width:100%;height:100%;background-color:#0099AB;z-index:999999;
+#song-loading-overlay {position:absolute;top:0;left:0;width:100%;height:100%;z-index:999998;
 	img {position:absolute;top:50%;left:50%;width:50px;height:50px;margin:-25px 0 0 -25px;
-		-webkit-animation-iteration-count:infinite;
-		-webkit-animation-timing-function:linear;
-		-webkit-animation-name:rotate;
-		-webkit-animation-duration:2s;
+		.animation(rotate 2s linear 0s infinite normal none);
 	}
 }
 
@@ -271,9 +293,13 @@ body[data-container="gameover"] {
 
 
 @-webkit-keyframes rotate {
-  0%	{-webkit-transform:rotate3d(0,0,1,0deg);}
+  0%	{
+  	.transform(rotate3d(0,0,1,0deg));
+  }
   50%	{}
-  100%	{-webkit-transform:rotate3d(0,0,1,360deg);}
+  100%	{
+  	.transform(rotate3d(0,0,1,360deg));
+  }
 }
 
 /*
@@ -433,17 +459,31 @@ form.i_know_the_room input[type="submit"] {top:50px;}
 
 /* SMALL SCREENS */
 @media screen and (max-width: 649px) {
-.ink-grid {background:#0099AB url(../img/bg-blue.jpg) top center;}
-.content {padding:0;background:none;}
+body {background:#0099AB url(../img/bg-blue.jpg) top center;}
+h2 {font-size:26px;}
+.button {margin:10px;}
+.ink-grid {padding:0;}
+.content {padding:10px;}
 #homepage {
-	section {margin-bottom:50px;
-		&.play {
-			.column {float:none;width:100%;margin:0;margin-bottom:30px;}
+	section {margin-bottom:0;
+		.game-mode {padding:0;background:none;
+			p {margin-top:0.5em;}
+		}
+		.single,
+		.multi-public {margin-top:0;margin-bottom:0;}
+	}
+}
+.room {position:static;top:0;left:0;width:auto;height:auto;margin:0;.rounded(0);
+	header {
+		.logo {display:block;width:100px;height:50px;background-size:100px auto;margin:5px;}
+		.room-name {line-height:60px;}
+		.players {float:none;display:block;margin:60px 0 0 0;
+			li {margin:0;}
 		}
 	}
 }
-}
 
+}
 
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }  

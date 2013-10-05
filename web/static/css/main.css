@@ -23,6 +23,7 @@ a {
 }
 a:hover {
   text-decoration: none;
+  color: #FFF;
 }
 p {
   margin: 0;
@@ -92,23 +93,34 @@ form input[type="tel"]:focus {
 }
 .content {
   padding: 30px;
-  margin: 0 0 30px 0;
+  margin: 0;
   background: #0099ab url(../img/bg-blue.jpg) top center;
-  -webkit-border-radius: 40px;
-  -moz-border-radius: 40px;
-  border-radius: 40px;
 }
 .active {
   display: block;
 }
+.panel header {
+  background-color: #ffffff;
+}
+.panel header img {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  margin: 0 auto;
+}
 /* STATES */
 .panel,
+.standing-by-master,
 #song-loading-overlay,
 #container-loading-overlay {
   display: none;
 }
 body.loading-song #song-loading-overlay {
   display: block;
+}
+body.loading-song .question {
+  visibility: hidden;
 }
 body.loading-container #container-loading-overlay {
   display: block;
@@ -125,11 +137,11 @@ body[data-container="homepage"].invite #homepage .enter-multi-private {
 body[data-container="waitingroom"] #waiting-room {
   display: block;
 }
-body[data-container="waitingroom"].playing #share {
-  display: none;
-}
-body[data-container="waitingroom"].master #share {
+body[data-container="waitingroom"].master .standing-by-master {
   display: block;
+}
+body[data-container="waitingroom"].master .standing-by-slave {
+  display: none;
 }
 body[data-container="room"] #room {
   display: block;
@@ -147,18 +159,38 @@ body[data-container="room"].alone #room header .players li:not(.master) {
 body[data-container="gameover"] #gameover {
   display: block;
 }
-#homepage header {
-  background-color: #ffffff;
+#homepage {
+  /*
+	ol.top-list {
+		li {
+			a {display:block;padding:10px;background-color:rgba(255,255,255,0.15);line-height:50px;
+				&:hover {background-color:rgba(0,0,0,0.2);}
+			}
+		}
+	}
+	*/
+
 }
-#homepage header img {
-  display: block;
-  width: 100%;
-  max-width: 960px;
-  height: auto;
-  margin: 0 auto;
+#homepage section .multi-private {
+  display: none;
+}
+#homepage section .multi-private .game-mode {
+  padding: 50px 10px;
+}
+#homepage section .single,
+#homepage section .multi-public {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+#homepage section .game-mode {
+  padding: 20px 10px 10px 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+  text-align: center;
 }
 #homepage section.how-to {
   margin: 50px auto;
+  max-width: 520px;
+  margin: 0 auto;
 }
 #homepage section.how-to img {
   display: block;
@@ -186,31 +218,12 @@ body[data-container="gameover"] #gameover {
   margin: 0 auto;
   z-index: 999999;
 }
-#homepage section.how-to .video-wrapper iframe {
+#homepage section.how-to .video-wrapper video {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-}
-#homepage section .multi-private {
-  display: none;
-}
-#homepage section .multi-private .game-mode {
-  padding: 50px 10px;
-}
-#homepage section .single,
-#homepage section .multi-public {
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-#homepage section .game-mode {
-  padding: 20px 10px 10px 10px;
-  background-color: rgba(255, 255, 255, 0.2);
-  text-align: center;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  border-radius: 20px;
 }
 #homepage ul.rooms {
   margin: 10px 0;
@@ -219,13 +232,9 @@ body[data-container="gameover"] #gameover {
   margin: 0;
   line-height: normal;
 }
-#homepage ul.rooms li {
-  float: left;
-  width: 50%;
-}
 #homepage ul.rooms li a {
   display: block;
-  padding: 5px 5px 5px 10px;
+  padding: 10px;
   background-color: rgba(255, 255, 255, 0.15);
 }
 #homepage ul.rooms li a .room-name {
@@ -236,10 +245,12 @@ body[data-container="gameover"] #gameover {
 }
 #homepage ul.rooms li a ul.players {
   float: right;
+  margin: 0;
 }
 #homepage ul.rooms li a ul.players li.player {
   float: left;
   width: 25%;
+  margin: 0;
 }
 #homepage ul.rooms li a ul.players li.player .avatar {
   width: 50px;
@@ -256,29 +267,67 @@ body[data-container="gameover"] #gameover {
 #homepage ul.rooms li a:hover {
   background-color: rgba(0, 0, 0, 0.2);
 }
+#homepage table.top-list tr {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+#homepage table.top-list tr td {
+  padding: 10px;
+  line-height: 50px;
+  border: none;
+}
+#homepage table.top-list tr td.rank {
+  width: 50px;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+}
+#homepage table.top-list tr td.thumb {
+  width: 50px;
+  padding: 0;
+  text-align: center;
+}
+#homepage table.top-list tr td.thumb img {
+  width: 100%;
+}
+#homepage table.top-list tr td.name {
+  text-align: left;
+}
+#homepage table.top-list tr td.max-score {
+  text-align: right;
+}
 .room {
   position: absolute;
   top: 50%;
   left: 50%;
   width: 700px;
-  height: 500px;
-  margin: -250px 0 0 -350px;
+  height: 600px;
+  margin: -300px 0 0 -350px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  overflow: hidden;
 }
 .room header {
-  max-width: 720px;
-  padding: 0 0 0 360px;
-  margin: 0 auto;
-  background: url(../img/header.png) no-repeat 0 0;
-  background-size: contain;
-  color: #666;
+  /*background: url(../img/header.png) no-repeat 0 0;background-size:contain;*/
+  background: #444444 url(../img/bg-black.jpg) top center;
+}
+.room header .logo {
+  float: left;
+  width: 200px;
+  height: 100px;
+  margin: 13px 10px;
+  background: transparent url(../img/logo.png) no-repeat center center;
+  background-size: 200px auto;
+  text-indent: -999999px;
 }
 .room header .room-name {
   float: left;
   font-size: 20px;
-  line-height: 120px;
+  line-height: 126px;
 }
 .room header .players {
   float: right;
+  margin: 0 10px;
 }
 .room header .players li {
   float: left;
@@ -288,9 +337,18 @@ body[data-container="gameover"] #gameover {
   display: block;
   margin-left: 5px;
   text-align: center;
-  color: #666;
+}
+.room header .players li .player:hover {
+  color: #FFF;
+  -moz-opacity: 0.8;
+  -khtml-opacity: 0.8;
+  -webkit-opacity: 0.8;
+  opacity: 0.8;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+  filter: alpha(opacity=80);
 }
 .room header .players li .player .total-points {
+  margin: 0;
   font-size: 20px;
   font-weight: 900;
 }
@@ -299,18 +357,25 @@ body[data-container="gameover"] #gameover {
   width: 60px;
   height: 60px;
   margin: 0 auto;
-  background: rgba(0, 0, 0, 0.1) url(../img/bg_thumb.png) no-repeat 0 0;
+  background: rgba(255, 255, 255, 0.1) url(../img/bg_thumb.png) no-repeat 0 0;
   background-size: 60px auto;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
 }
 .room header .players li .player .thumb img {
   width: 100%;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
 }
 .room header .players li .player .thumb .score {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  background: rgba(77, 77, 77, 0.7);
+  margin: 0;
+  background: rgba(77, 77, 77, 0.8);
   font-size: 26px;
   font-weight: 900;
   line-height: 60px;
@@ -321,15 +386,28 @@ body[data-container="gameover"] #gameover {
   display: block;
 }
 .room header .players li .player .thumb .score.positive {
-  background: rgba(163, 179, 0, 0.7);
+  background: rgba(163, 179, 0, 0.8);
 }
 .room header .players li .player .thumb .score.positive:before {
   content: "+";
 }
 .room header .players li .player .thumb .score.negative {
-  background: rgba(226, 74, 74, 0.7);
+  background: rgba(226, 74, 74, 0.8);
+}
+.room header .players li .player .thumb .score.rank-1 {
+  background: #d9a441;
+  background: rgba(217, 164, 65, 0.8);
+}
+.room header .players li .player .thumb .score.rank-2 {
+  background: #ccc2c2;
+  background: rgba(204, 194, 194, 0.8);
+}
+.room header .players li .player .thumb .score.rank-3 {
+  background: #b3734f;
+  background: rgba(179, 115, 79, 0.8);
 }
 .room header .players li .player .name {
+  margin: 0;
   font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;
@@ -383,9 +461,11 @@ body[data-container="gameover"] #gameover {
   padding: 10px;
 }
 #room .question .question_number {
+  margin: 0;
   font-size: 12px;
 }
 #room .question .query {
+  margin: 0;
   font-size: 22px;
   font-weight: 700;
   text-transform: uppercase;
@@ -441,6 +521,7 @@ body[data-container="gameover"] #gameover {
 }
 #room .game {
   position: relative;
+  min-height: 300px;
 }
 #gameover .final-score {
   list-style: none;
@@ -503,10 +584,11 @@ body[data-container="gameover"] #gameover {
   width: 50px;
   height: 50px;
   margin: -25px 0 0 -25px;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  -webkit-animation-name: rotate;
-  -webkit-animation-duration: 2s;
+  -webkit-animation: rotate 2s linear 0s infinite normal none;
+  -moz-animation: rotate 2s linear 0s infinite normal none;
+  -o-animation: rotate 2s linear 0s infinite normal none;
+  -ms-animation: rotate 2s linear 0s infinite normal none;
+  animation: rotate 2s linear 0s infinite normal none;
 }
 #song-loading-overlay {
   position: absolute;
@@ -514,8 +596,7 @@ body[data-container="gameover"] #gameover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #0099AB;
-  z-index: 999999;
+  z-index: 999998;
 }
 #song-loading-overlay img {
   position: absolute;
@@ -524,17 +605,26 @@ body[data-container="gameover"] #gameover {
   width: 50px;
   height: 50px;
   margin: -25px 0 0 -25px;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  -webkit-animation-name: rotate;
-  -webkit-animation-duration: 2s;
+  -webkit-animation: rotate 2s linear 0s infinite normal none;
+  -moz-animation: rotate 2s linear 0s infinite normal none;
+  -o-animation: rotate 2s linear 0s infinite normal none;
+  -ms-animation: rotate 2s linear 0s infinite normal none;
+  animation: rotate 2s linear 0s infinite normal none;
 }
 @-webkit-keyframes rotate {
   0% {
     -webkit-transform: rotate3d(0, 0, 1, 0deg);
+    -moz-transform: rotate3d(0, 0, 1, 0deg);
+    -o-transform: rotate3d(0, 0, 1, 0deg);
+    -ms-transform: rotate3d(0, 0, 1, 0deg);
+    transform: rotate3d(0, 0, 1, 0deg);
   }
   100% {
     -webkit-transform: rotate3d(0, 0, 1, 360deg);
+    -moz-transform: rotate3d(0, 0, 1, 360deg);
+    -o-transform: rotate3d(0, 0, 1, 360deg);
+    -ms-transform: rotate3d(0, 0, 1, 360deg);
+    transform: rotate3d(0, 0, 1, 360deg);
   }
 }
 /*
@@ -678,21 +768,64 @@ form.i_know_the_room input[type="submit"] {top:50px;}
 }
 /* SMALL SCREENS */
 @media screen and (max-width: 649px) {
-  .ink-grid {
+  body {
     background: #0099ab url(../img/bg-blue.jpg) top center;
   }
+  h2 {
+    font-size: 26px;
+  }
+  .button {
+    margin: 10px;
+  }
+  .ink-grid {
+    padding: 0;
+  }
   .content {
+    padding: 10px;
+  }
+  #homepage section {
+    margin-bottom: 0;
+  }
+  #homepage section .game-mode {
     padding: 0;
     background: none;
   }
-  #homepage section {
-    margin-bottom: 50px;
+  #homepage section .game-mode p {
+    margin-top: 0.5em;
   }
-  #homepage section.play .column {
-    float: none;
-    width: 100%;
+  #homepage section .single,
+  #homepage section .multi-public {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .room {
+    position: static;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: auto;
     margin: 0;
-    margin-bottom: 30px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+  }
+  .room header .logo {
+    display: block;
+    width: 100px;
+    height: 50px;
+    background-size: 100px auto;
+    margin: 5px;
+  }
+  .room header .room-name {
+    line-height: 60px;
+  }
+  .room header .players {
+    float: none;
+    display: block;
+    margin: 60px 0 0 0;
+  }
+  .room header .players li {
+    margin: 0;
   }
 }
 .clearfix:before,

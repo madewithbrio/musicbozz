@@ -7,12 +7,26 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>music box quiz</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+        <meta name="description" content="Quiz">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
         <link rel="stylesheet" href="http://cdn.ink.sapo.pt/2.1.1/css/ink.css">
         <link rel="stylesheet" href="css/font-awesome.css">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/main.css">
+        <script>
+            window.fbAsyncInit = function() {
+                  FB.init({
+                    appId      : window.location.hostname == 'vmdev-musicbozz.vmdev.bk.sapo.pt' 
+                    ? '207478279423110'
+                    : '667899479901883', // App ID
+                    channelUrl : '//vmdev-musicbozz.vmdev.bk.sapo.pt/channel.html', // Channel File
+                    status     : true, // check login status
+                    cookie     : true, // enable cookies to allow the server to access the session
+                    xfbml      : true,  // parse XFBML
+                    frictionlessRequests : true
+                  });
+            };
+        </script>
     </head>
     <body>
         <div id="homepage" class="ink-grid panel">
@@ -22,6 +36,13 @@
             <div class="content">
                 <section class="play clearfix">
                     <div class="column-group horizontal-gutters">
+                        <div class="small-100 medium-33 large-33 multi-private enter-multi-private" id="joinPrivateRoom">
+                            <div class="game-mode">
+                                <h3>Recebeste um convite</h3>
+                                <p>Convidaram-te para um jogo, agora mete os teus amigos a chorar.</p>
+                                <a href="" class="button main-action" data-game-type="private" data-type="joinRoom">Entrar no jogo!</a>
+                            </div>
+                        </div>
                         <div class="small-100 medium-33 large-33 multi-public">
                             <div class="game-mode">
                                 <h3>Joga com outros</h3>
@@ -33,67 +54,84 @@
                             <div class="game-mode">
                                 <h3>Joga com amigos</h3>
                                 <p>Começa um jogo e convida mais três amigos do Facebook para jogarem.</p>
-                                <a href="" class="button main-action" data-game-type="private" data-action="start">Começar jogo!</a>
-                            </div>
-                        </div>
-                        <div class="small-100 medium-33 large-33 multi-private enter-multi-private" id="joinPrivateRoom">
-                            <div class="game-mode">
-                                <h3>Joga com amigos</h3>
-                                <p>Convidaram-te para um jogo, agora mete os teus amigos a chorar.</p>
-                                <a href="" class="button main-action" data-game-type="private" data-action="start">Entrar no jogo!</a>
+                                <a href="" class="button main-action" data-game-type="private" data-type="joinRoom">Começar jogo!</a>
                             </div>
                         </div>
                         <div class="small-100 medium-33 large-33 single start-single">
                             <div class="game-mode">
                                 <h3>Joga para o record</h3>
                                 <p>Se jogar com os amigos já não te dá pica então estás pronto para desafiar o top.<!--Os 10 melhores ganham contas <i>music box</i> durante um ano.--></p>
-                                <a href="" class="button" data-game-type="alone" data-action="start">Jogar sozinho</a>
+                                <a href="" class="button" data-game-type="alone" data-type="joinRoom">Jogar sozinho</a>
                             </div>
                         </div>
                     </div>
                 </section>
-                <section class="how-to">
-                    <h2>Lembras-te do Buzz?</h2>
-                    <p>Aquele jogo que tinha a voz do Jorge Gabriel! Não? Ok, pouco importa!<br />Se achas que sabes tudo sobre música, então convida mais três amigos para uma batalha online de conhecimento musical. Nós passamos 30 segundos de uma música e tu tens de adivinhar o nome ou o artista.</p>
-                    <div class="musicboxquiz-for-dummies">
-                        <img src="img/how-to.png" alt="" />
+                <div class="column-group gutters">
+                    <div class="small-100 medium-50 large-50">
+                        <section class="how-to">
+                            <h2>Lembras-te do Buzz?</h2>
+                            <p>Aquele jogo que tinha a voz do Jorge Gabriel! Não? Ok, pouco importa! Se achas que sabes tudo sobre música, então convida mais três amigos para uma batalha online de conhecimento musical. Nós passamos 30 segundos de uma música e tu tens de adivinhar o nome ou o artista.</p>
+                            <div class="musicboxquiz-for-dummies">
+                                <img src="img/how-to.png" alt="" />
+                            </div>
+                            <div class="video-wrapper">
+                                <video controls>
+                                    <source src="http://rd3.videos.sapo.pt/JVuFIZKKf8AtJ5pAAjvP/mov/1?player=EXTERNO&time=1380819886&token=_8851a668eb52269941afbb8e34af63ee" type='video/mp4' />
+                                </video>
+                                <a href="#" class="twerker">
+                                    <img src="img/twerker.jpg" alt="" />
+                                </a>
+                            </div>
+                        </section>
                     </div>
-                    <div class="video-wrapper">
-                        <iframe src="http://videos.sapo.pt/playhtml?file=http://rd3.videos.sapo.pt/JVuFIZKKf8AtJ5pAAjvP/mov/1" frameborder="0" scrolling="no" width="400" height="350"></iframe>
-                        <a href="#" class="twerker">
-                            <img src="img/twerker.jpg" alt="" />
-                        </a>
+                    <div class="small-100 medium-50 large-50">
+                        <section id="open-rooms" class="open-rooms">
+                            <h2>Joga com outros</h2>
+                            <ul class="rooms clearfix" id="public_rooms">
+                                
+                            </ul>
+                             <a href="#" class="button" data-game-type="public" data-type="joinRoomFree">Criar jogo aberto</a>
+                        </section>
+                        <section class="top">
+                            <h2>Top</h2>
+                            <!--ol class="top-list" id="top-rank">
+                            </ol-->
+                            <table class="ink-table top-list">
+                                <tbody id="top-rank">
+                                </tbody>
+                            </table>
+                        </section>
+                        <!--section class="prizes">
+                            <h2>Prémios</h2>
+                            <p>Bacon ipsum dolor sit amet flank shoulder sausage doner, cow ribeye beef tail meatball fatback jowl salami prosciutto pork belly. Short ribs bresaola sirloin cow pig chuck flank, bacon meatloaf corned beef boudin biltong drumstick shank sausage. Biltong venison chuck pancetta tongue t-bone short loin bresaola tail corned beef jowl sausage strip steak ribeye spare ribs. Ground round tongue filet mignon frankfurter.</p>
+                            <p>Rump hamburger chicken short loin biltong filet mignon cow swine boudin venison capicola spare ribs andouille pork loin brisket. Meatloaf shoulder ball tip prosciutto, t-bone short loin rump brisket pancetta. Beef ribs andouille bresaola cow biltong, chicken ham hock doner. Pork loin capicola swine leberkas jerky bacon chicken pastrami. Ground round frankfurter pig, beef ribs salami tail drumstick pork chop turducken rump. Corned beef tongue beef ribs, strip steak tenderloin doner kevin. Beef ball tip swine, jowl flank tongue meatloaf capicola shankle.</p>
+                        </section-->
                     </div>
-                </section>
-                <section id="open-rooms" class="open-rooms">
-                    <h2>Joga com outros</h2>
-                    <ul class="rooms clearfix" id="public_rooms">
-                        
-                    </ul>
-                     <a href="#" class="button" data-game-type="private" data-action="start">Comecar jogo!</a>
-                </section>
-                <section class="prizes">
-                    <h2>Prémios</h2>
-                    <p>Bacon ipsum dolor sit amet flank shoulder sausage doner, cow ribeye beef tail meatball fatback jowl salami prosciutto pork belly. Short ribs bresaola sirloin cow pig chuck flank, bacon meatloaf corned beef boudin biltong drumstick shank sausage. Biltong venison chuck pancetta tongue t-bone short loin bresaola tail corned beef jowl sausage strip steak ribeye spare ribs. Ground round tongue filet mignon frankfurter.</p>
-                    <p>Rump hamburger chicken short loin biltong filet mignon cow swine boudin venison capicola spare ribs andouille pork loin brisket. Meatloaf shoulder ball tip prosciutto, t-bone short loin rump brisket pancetta. Beef ribs andouille bresaola cow biltong, chicken ham hock doner. Pork loin capicola swine leberkas jerky bacon chicken pastrami. Ground round frankfurter pig, beef ribs salami tail drumstick pork chop turducken rump. Corned beef tongue beef ribs, strip steak tenderloin doner kevin. Beef ball tip swine, jowl flank tongue meatloaf capicola shankle.</p>
-                </section>
+                </div>
             </div>
         </div>
 
 
         <div id="waiting-room" class="panel room">
             <header class="clearfix">
+                <a href="#" class="logo">music box quiz</a>
                 <h2 class="room-name">Sala <span class="room-id">10</span></h2>
                 <ul class="players clearfix" data-template="players"></ul>
             </header>
-            <div class="content">
+            <div class="ink-grid content">
                 <div class="standing-by-master">
-                    <p>Partilha este link com os teus amigos.</p>
-                    <form>
-                        <input id="room_link" type="text" name="link" value="http://ron.honho.sl.pt" />
-                    </form>
+                    <div class="column-group gutters">
+                        <div class="small-100 medium-50 large-50">
+                            <p>Partilha este link com os teus amigos.</p>
+                            <form>
+                                <input id="room_link" type="text" name="link" value="http://ron.honho.sl.pt" />
+                            </form>
+                        </div>
+                        <div class="small-100 medium-50 large-50">
+                            <a href="" class="button" data-type="inviteGame">Convida 3 amigos</a>
+                        </div>
+                    </div>
                     <a href="" class="button main-action" data-type="startGame">Começar o jogo!</a>
-                    <a href="" class="button" data-type="inviteGame">Convida 3 amigos</a>
                 </div>
                 <div class="standing-by-slave">
                     <p>Agora tem calma contigo enquanto o teu amigo não arranca o jogo...</p>
@@ -104,35 +142,42 @@
 
         <div id="room" class="panel room">
             <header class="clearfix">
+                <a href="#" class="logo">music box quiz</a>
                 <h2 class="room-name">Sala <span class="room-id">10</span></h2>
                 <ul class="players clearfix" data-template="players"></ul>
             </header>
-            <div class="content">
-                <div id="gameBoard" class="game step">
-                    <audio id="player" preload><source></source type="audio/mp3"></audio>
-                    <div class="question" data-template="question"></div>
-                    <div id="song-loading-overlay">
-                        <img src="img/loader-01.png" alt="a carregar..." />
-                    </div>
+            <div id="gameBoard" class="content game">
+                <audio id="player" preload><source></source type="audio/mp3"></audio>
+                <div class="question" data-template="question"></div>
+                <div id="song-loading-overlay">
+                    <img src="img/loader-02.png" alt="a carregar..." />
                 </div>
             </div>
         </div>
 
 
-        <div id="gameover" class="panel">
+        <div id="gameover" class="panel room">
+            <header class="clearfix">
+                <a href="#" class="logo">music box quiz</a>
+                <h2 class="room-name">Sala <span class="room-id">10</span></h2>
+                <ul class="players clearfix" data-template="players"></ul>
+            </header>
             <div class="content">
                 <h2>Game Over</h2>
                 <section>
                     <ol class="final-score clearfix" id="gameRank">
                     </ol>
                 </section>
-                <section class="play clearfix">
-                    <div class="column">
-                        <a href="#" class="button main-action">Jogar de novo</a>
+                <div class="ink-grid">
+                    <div class="column-group">
+                        <div class="small-100 medium-50 large-50">
+                            <a href="#" class="button main-action" data-type="rematchGame">Jogar de novo</a>
+                        </div>
+                        <div class="small-100 medium-50 large-50">
+                            <a href="#" class="button" data-type="goHome">Voltar ao início</a>
+                        </div>
                     </div>
-                    <div class="column">
-                        <a href="#" class="button" data-type="goHome">Voltar ao início</a>
-                    </div>
+                </div>
             </div>
         </div>
 
@@ -151,7 +196,7 @@
             <p class="query" data-hash="{{hash}}">{{query}}</p>
             <ul class="answers">
                 {{#solutions}}
-                <li><a href="#" data-element="answer">{{.}}</a></li>
+                <li><a href="#" data-type="answer">{{.}}</a></li>
                 {{/solutions}}
             </ul>
         </script>
@@ -183,6 +228,36 @@
             </li>
         </script>
 
+        <script type="text/mustache" data-element="template" data-name="toprank">
+            {{#items}}
+                {{> topitem}}
+            {{/items}}
+        </script>
+
+        <!--script type="text/mustache" data-element="template" data-name="topitem">
+            <li>
+                <a href="{{player.others.link}}" data-player-id="{{player.id}}" class="player" target="_blank">
+                    <p class="rank">#{{rank}}</p>
+                    <div class="thumb">
+                        <img src="{{player.others.avatar}}" alt="" />
+                    </div>
+                    <p class="name">{{player.name}}</p>
+                    <p class="max-score">{{score}}</p>
+                </a>
+            </li>
+        </script-->
+
+        <script type="text/mustache" data-element="template" data-name="topitem">
+            <tr>
+                <td class="rank">{{rank}}</td>
+                <td class="thumb">
+                    <img src="{{player.others.avatar}}" alt="" />
+                </td>
+                <td class="name">{{player.name}}</td>
+                <td class="max-score">{{score}} pontos</td>
+            </tr>
+        </script>
+
         <script type="text/mustache" data-element="template" data-name="playersrank">
             {{#players}}
                 {{> playerscore}}
@@ -190,35 +265,38 @@
         </script>
 
         <script type="text/mustache" data-element="template" data-name="playerscore">
-            {{#name}}
-            <li>
+            <li {{#master}}class="master"{{/master}}>
+                {{#name}}
                 <a href="{{others.link}}" data-player-id="{{id}}" class="player" target="_blank">
-                    <div class="game-ranking">
-                        <p class="game-rank"><span>{{gamerank}}</span></p>
-                        <p class="game-score">{{score}}</p>
-                    </div>
+                    <p class="total-points" data-element="points">{{score}}</p>
                     <div class="thumb">
                         <img src="{{#others.avatar}}{{others.avatar}}{{/others.avatar}}{{^others.avatar}}img/avatar.png{{/others.avatar}}" alt="" />
+                        <p class="score active rank-{{gamerank}}">#{{gamerank}}</p>
                     </div>
                     <p class="name ellipsis">{{name}}</p>
-                    <div class="overall-ranking">
-                        <p class="overall-rank">#{{rank}} na geral</p>
-                        <p class="overall-score">{{topscore}} pontos na geral</p>
-                    </div>
                 </a>
+                {{/name}}
+                {{^name}}
+                <div class="player">
+                    <p class="total-points">&nbsp;</p>
+                    <div class="thumb"></div>
+                </div>
+                {{/name}}
             </li>
-            {{/name}}
         </script>
 
         <script type="text/mustache" data-element="template" data-name="roomslist">
             {{#rooms}}
                 {{> roomitem}}
             {{/rooms}}
+            {{^rooms}}
+            <div class="blankstate">Não existem salas disponíveis</div>
+            {{/rooms}}
         </script>
 
         <script type="text/mustache" data-element="template" data-name="roomitem">
             <li class="{{#isClosed}} closed{{/isClosed}}">
-                <a href="#" class="clearfix" data-game-type="public" data-action="start" data-room-name="{{name}}">
+                <a href="#" class="clearfix" data-game-type="public" data-type="joinRoom" data-room-name="{{name}}">
                     <p class="room-name">Sala {{name}}</p>
                     <ul class="players clearfix">
                         {{#players}}
@@ -230,22 +308,35 @@
         </script>
 
         <script type="text/mustache" data-element="template" data-name="roomplayer">
+            {{#.}}
             <li class="player">
                 <div class="avatar">
                     <img src="{{others.avatar}}" alt="" />
                 </div>
                 <p class="player-name">{{name}}</p>
             </li>
+            {{/.}}
+            {{^.}}
+            <li class="player">
+                <div class="avatar"></div>
+            </li>
+            {{/.}}
         </script>
 
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-        <script src="http://autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
-        <script src="js/mustache.js"></script>
-        <script src="js/plugins.js"></script>
         <script src="http://connect.facebook.net/en_US/all.js"></script>
-        <script src="js/mediaelement.min.js"></script>
-        <script src="js/mediaelementplayer.min.js"></script>
-        <script src="js/musicbozz.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.2.min.js"><\/script>');</script>
+     
+        <script type="text/javascript" src="js/vendor/mediaelement.min.js"></script>
+        <script type="text/javascript" src="js/vendor/mediaelementplayer.min.js"></script>
+        
+        <script type="text/javascript" src="js/vendor/swfobject.js"></script>
+		<script type="text/javascript" src="js/vendor/web_socket.js"></script>
+        <script type="text/javascript" src="js/vendor/autobahn.min.js"></script>
+        <script type="text/javascript" src="js/vendor/mustache.js"></script>
+        
+        <script type="text/javascript" src="js/plugins.js"></script>
+        <script type="text/javascript" src="js/musicbozz.js"></script>
+        
     </body>
 </html>

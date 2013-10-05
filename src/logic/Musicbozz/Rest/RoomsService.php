@@ -8,8 +8,13 @@ use Musicbozz\Question_Type;
 
 class RoomsService extends ServiceImplementation {
 	public function getItem() {
+		$onlyWithPlayers = filter_input(INPUT_GET, 'onlyWithPlayers', FILTER_VALIDATE_BOOLEAN, array('flags' => FILTER_NULL_ON_FAILURE));
+		$withoutPlayers = filter_input(INPUT_GET, 'withoutPlayers', FILTER_VALIDATE_BOOLEAN, array('flags' => FILTER_NULL_ON_FAILURE));
+		$filterOpen = filter_input(INPUT_GET, 'onlyOpen', FILTER_VALIDATE_BOOLEAN, array('flags' => FILTER_NULL_ON_FAILURE));
+		$random = filter_input(INPUT_GET, 'random', FILTER_VALIDATE_BOOLEAN, array('flags' => FILTER_NULL_ON_FAILURE));
+		
 		$publicRoomIds = array();
-		for ($i = 1; $i <= 10; $i++) {
+		for ($i = 1; $i <= 99; $i++) {
 			$publicRoomIds[] = 'room/'.$i;
 		}
 		$_rooms = \Sapo\Redis::getInstance()->hmget('rooms', $publicRoomIds);
@@ -20,6 +25,7 @@ class RoomsService extends ServiceImplementation {
 				$room['name'] = str_replace('room/', '', $room['id']);
 				
 			} else {
+
 				$room = array(
 					'players' 	=> array(),
 					'isOpen' 	=> true,
@@ -31,8 +37,21 @@ class RoomsService extends ServiceImplementation {
 					'id' 		=> $publicRoomIds[$i]
 				);
 			}
+			if ($onlyWithPlayers && sizeof($room['players']) === 0) continue;
+			if ($withoutPlayers && sizeof($room['players']) > 0) continue;
+			if ($filterOpen && !$room['isOpen']) continue;
 			$rooms[] = $room;
+		}
+		
+		if ($random) {
+			$idx = rand(0, sizeof($rooms)-1);
+			$rooms = array($rooms[$idx]);
+		}
 
+		// martelado do luis
+		foreach ($rooms as &$_room) {
+			$default = array_fill(0,4,false);
+			$_room['players'] = array_slice( array_merge($_room['players'], $default), 0,4);
 		}
 		$this->sendResponse($rooms);
 	}

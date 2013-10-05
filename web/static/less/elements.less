@@ -92,6 +92,13 @@
   -ms-transform: @arguments;
   transform: @arguments;
 }
+.animation(...) {
+  -webkit-animation: @arguments;
+  -moz-animation: @arguments;
+  -o-animation: @arguments;
+  -ms-animation: @arguments;
+  animation: @arguments;
+}
 .rotation(@deg:5deg){
   .transform(rotate(@deg));
 }

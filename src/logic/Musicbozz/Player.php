@@ -20,6 +20,9 @@ class Player extends WampConnection {
 		$this->playerId = null;
 	}
 
+	public function getSessionId() {
+		return $this->WAMP->sessionId;
+	}
 	public function getPlayerId() {
 		return !empty($this->playerId) ? $this->playerId : $this->WAMP->sessionId;
 	}
@@ -32,6 +35,7 @@ class Player extends WampConnection {
 
 	public function getName() { return $this->name; }
 	public function getScore() { return $this->score; }
+	public function setScore($score) { $this->score = $score; }
 	public function getOthers() { return $this->others; }
 
 	public function setMaster($master) { $this->master = $master; }

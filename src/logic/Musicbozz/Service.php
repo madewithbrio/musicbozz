@@ -31,8 +31,8 @@ class Service implements WampServerInterface {
                 $gameRoom->setAnswer($player, $id, $params[0]);
                 break;
 
-            case 'setReadyToPlay':
-                $gameRoom->setReadyToPlay($player, $id, $params[0]);
+            case 'setReadyToPlayMusic':
+                $gameRoom->setReadyToPlayMusic($player, $id, $params[0]);
                 break;
 
             case 'setRematch':

@@ -4,6 +4,8 @@ namespace Musicbozz;
 use Musicbozz\Catalog\Service as CatalogService;
 
 class Question {
+	
+	private static $logger;
 	private static $catalogServiceInstance;
 
 	public $trackPreview;
@@ -24,7 +26,16 @@ class Question {
 		return self::$catalogServiceInstance;
 	}
 
+	private static function getLogger() {
+    	if (null === self::$logger) {
+    		self::$logger = \Logger::getLogger(__CLASS__);
+    	}
+    	return self::$logger;
+	}
+
 	public static function factory($type = Question_Type::ARTIST, $number = 1, $retry = 0) {
+		self::getLogger()->debug(sprintf("Load question #%s retry: %s",$number,$retry));
+		
 		//$source = 'TrackFromArtistList'; //$number > 15 ? 'RecommendedTracks' : 'TopTracks' : 
 		$source = $number > 15 ? 'TrackFromArtistList' : 'RecommendedTracks';
 		if ($number < 5) { $slice = array(1,100); }
