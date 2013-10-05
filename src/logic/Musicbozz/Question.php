@@ -50,7 +50,7 @@ class Question {
 
 		$question->trackPreview = str_replace ('streamer.nmusic.sapo.pt', 'vmdev-musicbozz.vmdev.bk.sapo.pt', $track->PreviewUrl).".mp3";
 		$question->image = str_replace ('streamer.nmusic.sapo.pt', 'vmdev-musicbozz.vmdev.bk.sapo.pt', $track->LargeAlbumCover);
-		$question->hash = md5($question->trackPreview . $question->type . $question->number);
+		$question->hash = md5($question->trackPreview . $question->type);
 
 		switch ($type) {
 			case Question_Type::TRACK:
@@ -81,6 +81,10 @@ class Question {
 	public function isCorrectAnswer($answer) { 
 		if ($answer === null) return true;
 		return $answer === $this->correct; 
+	}
+
+	public function getHash() {
+		return $this->hash;
 	}
 
 	public function toWs() {

@@ -4,6 +4,7 @@ namespace Musicbozz;
 use \Ratchet\ConnectionInterface;
 use \Ratchet\Wamp\Topic;
 use \Exception;
+use \Musicbozz\Persistence\Room as RoomPersistence;
 use \Musicbozz\Persistence\Player as PlayerPersistence;
 use \Musicbozz\Persistence\Leaderboard;
 use \Musicbozz\Persistence\Leaderboard\Type as LeaderboardType;
@@ -13,9 +14,10 @@ class GameRoom extends Topic
 {
 	const NUMBER_QUESTIONS = 5;
 	const SITEURL = 'vmdev-musicbozz.vmdev.bk.sapo.pt';
-	private $questionNumber = 0;
+
 	private $waiting = true;
-	private $question;
+	private $questionsHash = array();
+	private $question = null;
 	private $answers = array();
 	private $playersReadyToPlayMusic= 0;
 	private $gameMode;
@@ -24,11 +26,11 @@ class GameRoom extends Topic
 
 	public function __construct($topicId) {
 		parent::__construct($topicId);
-		\Sapo\Redis::getInstance()->hdel('rooms', $this->getRoomId());
+		RoomPersistence::delete($this->getRoomId());
 	}
 
 	public function __destruct() {
-		\Sapo\Redis::getInstance()->hdel('rooms', $this->getRoomId());
+		RoomPersistence::delete($this->getRoomId());
 	}
 
 	private function getLogger() {
@@ -40,7 +42,7 @@ class GameRoom extends Topic
 
 	private function resetRoom() {
 		$this->waiting = true;
-		$this->questionNumber = 0;
+		$this->questionsHash = array();
 		$this->readyToPlay = array();
 		$this->resetQuestion();
 	}
@@ -142,7 +144,7 @@ class GameRoom extends Topic
 			'players' => $players,
 			'isOpen'  => $this->isOpen(),
 			'isOver'  => $this->isOver(),
-			'isWating'=> $this->isWaiting(),
+			'isWaiting'=> $this->isWaiting(),
 			'isPublic'=> $this->isPublic(),
 			'isPrivate' => $this->isPrivate(),
 			'isAlone' => $this->isAlone(),
@@ -200,12 +202,11 @@ class GameRoom extends Topic
 	}
 	
 	protected function isLastQuestion() {
-		return ($this->questionNumber >= self::NUMBER_QUESTIONS);
+		return (sizeof($this->questionsHash) >= self::NUMBER_QUESTIONS);
 	}
 
-
 	protected function notificationStatus() {
-		\Sapo\Redis::getInstance()->hset('rooms', $this->getRoomId(), serialize($this->getStatus()));
+		RoomPersistence::save($this->getRoomId(), $this->getStatus());
 	}
 	
 	protected function storeScore() {
@@ -218,7 +219,8 @@ class GameRoom extends Topic
 	
 	protected function getQuestion() {
 		if (null === $this->question) {
-			$this->question = Question::factory(Question_Type::getRandom(), ++$this->questionNumber);
+			$this->question = Question::factory(Question_Type::getRandom(), 
+												sizeof($this->questionsHash)+1);
 		}
 		return $this->question;
 	}
@@ -244,7 +246,7 @@ class GameRoom extends Topic
 	protected function getGameMode() {
 		if (null === $this->gameMode) {
 			//if ($this->isAlone()) {
-			$this->gameMode = GameMode::factory('Alone');
+			$this->gameMode = GameMode::factory('Standard');
 			//} else {
 			//	$this->gameMode = GameMode::factory('Standard');
 			//}
@@ -283,7 +285,7 @@ class GameRoom extends Topic
 			return;
 		}
 
-		if ($this->waiting) {
+		if ($this->isWaiting()) {
 			foreach ($this as $_player) {
 				if (!in_array($_player->getPlayerId(), $this->readyToPlay)) {
 					$this->log(sprintf("disconnect player %s",$_player->getPlayerId()));
@@ -303,7 +305,12 @@ class GameRoom extends Topic
 			
 		 	// load and increment this will close room if open
 		 	try {
-		 		$this->broadcast(array('action' => 'newQuestion', 'data' => $this->getQuestion()->toWs()));
+		 		do {
+		 			$question = $this->getQuestion();
+		 		} while (!in_array($question->getHash(), $this->questionsHash));
+		 		$this->questionsHash[] = $question->getHash();
+
+		 		$this->broadcast(array('action' => 'newQuestion', 'data' => $question->toWs()));
 		 		$this->notificationStatus();
 		 	} catch (\Exception $e) {
 		 		if (!empty($id) && !empty($player)) {
@@ -374,7 +381,8 @@ class GameRoom extends Topic
 	public function setReadyToPlayMusic(ConnectionInterface $player, $id, array $params) {
 		$this->log(sprintf("player %s set ready to play", $player->getPlayerId()));
         try {
-        	if ($params['hash'] !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
+        	if ($params['hash'] !== $this->getQuestion()->getHash()) 
+        		throw new Exception("Hash not valid", 1);
             ++$this->playersReadyToPlayMusic;
 			$this->log("players " . $this->playersReadyToPlayMusic);
             if ($this->isAllPlayersReadyToStartMusic()) {
@@ -389,8 +397,10 @@ class GameRoom extends Topic
     public function forcePlay(ConnectionInterface $player, $id, array $params) {
 		$this->log(sprintf("player %s force play", $player->getPlayerId()));
         try {
-        	if (!$player->isMaster()) throw new Exception("player is not master", 1);
-        	if ($params['hash'] !== $this->getQuestion()->hash) throw new Exception("Hash not valid", 1);
+        	if (!$player->isMaster()) 
+        		throw new Exception("player is not master", 1);
+        	if ($params['hash'] !== $this->getQuestion()->getHash()) 
+        		throw new Exception("Hash not valid", 1);
 			$this->broadcast(array('action' => 'allPlayersReady'));
         } catch (Exception $e) {
              $player->callError($id, $this->getRoomId(), $e->getMessage());

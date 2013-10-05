@@ -22,25 +22,6 @@ interface GameMode_Workflow {
 	public function getScoreForBadAnswer();
 }
 
-final class GameMode_Standard implements GameMode_Workflow {
-	public function isBroadcastPlayerHaveAnswer() { return true; }
-	public function isBroadcastPlayerAnswer() { return false; }
-	public function isBroadcastPlayerQuestionScore() { return true; }
-	public function isBroadcastPlayerTotalScore() { return true; }
-
-	public function getScoreForCorrectAnswer($position, $timespend){
-		switch($position) {
-			case 1: return 50;
-			case 2: return 40;
-			case 3: return 30;
-			case 4: return 20;
-			default: return 0;
-		}		
-	}
-	public function getScoreForBadAnswer() {
-		return -20;
-	}
-}
 
 final class GameMode_Normal implements GameMode_Workflow {
 
@@ -81,7 +62,7 @@ final class GameMode_Speed implements GameMode_Workflow {
 }
 
 
-final class GameMode_Alone implements GameMode_Workflow {
+final class GameMode_Standard implements GameMode_Workflow {
 
 	public function isBroadcastPlayerHaveAnswer() { return true; }
 	public function isBroadcastPlayerAnswer() { return true; }

@@ -2,15 +2,12 @@
 
 namespace Musicbozz\Rest;
 
-use Sapo\Rest\ServiceImplementation;
-use Musicbozz\Question;
-use Musicbozz\Question_Type;
+use Musicbozz\Persistence\Room;
 
 class RoomService extends ServiceImplementation {
 	public function getItem() {
 		if (preg_match('@/room/(.+)@', $this->getPath(), $match)) {
-			$room = \Sapo\Redis::getInstance()->hget('rooms', 'room/' . $match[1]);
-			if (!empty($room)) $room = unserialize($room);
+			$room = Room::get('room/' . $match[1]);
 			$this->sendResponse($room, 'room');		
 		}
 	}

@@ -2,9 +2,7 @@
 
 namespace Musicbozz\Rest;
 
-use Sapo\Rest\ServiceImplementation;
-use Musicbozz\Question;
-use Musicbozz\Question_Type;
+use Musicbozz\Persistence\Room;
 
 class RoomsService extends ServiceImplementation {
 	public function getItem() {
@@ -17,13 +15,11 @@ class RoomsService extends ServiceImplementation {
 		for ($i = 1; $i <= 99; $i++) {
 			$publicRoomIds[] = 'room/'.$i;
 		}
-		$_rooms = \Sapo\Redis::getInstance()->hmget('rooms', $publicRoomIds);
+		$_rooms = Room::mget($publicRoomIds);
 		$rooms = array();
 		for($i = 0, $j = count($_rooms); $i < $j; $i++) {
 			if (!empty($_rooms[$i])){
-				$room = unserialize($_rooms[$i]);
 				$room['name'] = str_replace('room/', '', $room['id']);
-				
 			} else {
 
 				$room = array(
